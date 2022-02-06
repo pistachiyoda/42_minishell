@@ -6,7 +6,9 @@ CFLAGS = -Wall -Wextra -Werror $(INCLUDES)
 LIBS = -L./libft/ -lft -lreadline
 LIBFT = ./libft/libft.a
 CFILES =\
-	sources/main.c
+	sources/main.c\
+	sources/parser/parse_data.c\
+	sources/runner/run_command.c
 OBJ = $(CFILES:.c=.o)
 
 all: $(NAME)
