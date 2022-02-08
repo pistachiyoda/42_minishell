@@ -6,7 +6,12 @@ CFLAGS = -Wall -Wextra -Werror $(INCLUDES)
 LIBS = -L./libft/ -lft -lreadline
 LIBFT = ./libft/libft.a
 CFILES =\
-	sources/main.c
+	sources/main.c\
+	sources/exec_command/exec_command.c\
+	sources/exec_command/resolve_env.c\
+	sources/exec_command/utils.c\
+	sources/utils/free.c\
+	sources/utils/print_error.c
 OBJ = $(CFILES:.c=.o)
 
 all: $(NAME)
