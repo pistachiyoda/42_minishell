@@ -1,39 +1,32 @@
 #include "minishell.h"
 
-int	received_signal;
+volatile sig_atomic_t	received_signal;
 
-void	handler(int sig, siginfo_t *info, void *q)
+void	handler(int sig)
 {
-	(void)info;
-	(void)q;
-	received_signal = sig;
+	(void)sig;
+	rl_replace_line("\n", 1); //0?
+	rl_clear_history();
+	rl_redisplay();
 }
 
 void	set_sigaction(void)
 {
+	received_signal = 0;
 	struct sigaction	act;
-	// siginfo_t			siginfo;
+	struct sigaction	act2;
 
-	act.sa_sigaction = handler;
-	act.sa_flags = SA_SIGINFO;
+	act.sa_handler = handler;
+	act2.sa_handler = SIG_IGN;
 	sigemptyset(&act.sa_mask);
 	sigaction(SIGINT, &act, NULL);
+	sigaction(SIGQUIT, &act2, NULL);
 }
 
-int	wait_signal(void)
+void	wait_signal(void)
 {
-	received_signal = 0;
-	set_sigaction();
-	while (1)
+	if (received_signal == SIGINT)
 	{
-		if (received_signal == SIGINT)
-		{
-			printf("SIGINT\n");
-		}
-		else if (received_signal == SIGQUIT)
-			return (SIGQUIT);
-		else if (received_signal == SIGKILL)
-			printf("ctrl -D\n");
-		pause();
+		printf("SIGINT\n");
 	}
 }

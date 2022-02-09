@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+volatile sig_atomic_t	received_signal;
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	*str;
@@ -11,6 +13,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	while (1)
 	{
+		set_sigaction();
 		str = readline("minishell$ ");
 		if (ft_strlen(str) == 0)
 			continue ;

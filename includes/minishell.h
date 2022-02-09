@@ -1,10 +1,12 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include "libft.h"
-# include <readline/readline.h>
-# include <readline/history.h>
 # include <unistd.h>
 # include <stdbool.h>
+# include <stdio.h>
+# include <signal.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 # define EMESS_NO_FILE_DIR "No such file or directory\n"
 
@@ -23,4 +25,7 @@ void	free_2d_array(char **two_d_array);
 
 // utils/print_error.c
 void	print_error(char *target, char *message);
+
+void	set_sigaction(void);
+void	wait_signal(void);
 #endif
