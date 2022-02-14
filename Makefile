@@ -10,15 +10,19 @@ CFILES =\
 	sources/exec_command/exec_command.c\
 	sources/exec_command/resolve_env.c\
 	sources/exec_command/utils.c\
+	sources/exec_command_line/exec_command_line.c\
+	sources/tmp_parser/tmp_parse_data.c\
+	sources/runner/run_builtin_command.c\
 	sources/utils/free.c\
-	sources/utils/print_error.c
+	sources/utils/print_error.c\
+	sources/debug/debug_funcs.c
 OBJ = $(CFILES:.c=.o)
 
 all: $(NAME)
 $(NAME): $(OBJ) $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(LIBS) 
 $(LIBFT):
-	make -C ./libft/
+	make -C ./libft bonus
 clean:
 	rm -f $(OBJ)
 	make -C ./libft clean
