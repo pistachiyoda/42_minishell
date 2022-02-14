@@ -5,7 +5,6 @@ int	main(int argc, char **argv, char **envp)
 	char		*str;
 	int			pid;
 	int			status;
-	int			is_error;
 	t_list		*cmd_list;
 
 	(void)argc;
@@ -16,7 +15,8 @@ int	main(int argc, char **argv, char **envp)
 		str = readline("minishell$ ");
 		if (ft_strlen(str) == 0)
 			continue ;
-		is_error = set_cmd_lst(&cmd_list, str);
+		tmp_parse_data(&cmd_list, str);
+		// print_cmd_lst(cmd_list);
 		if (is_fork_required(cmd_list))
 		{
 			pid = fork();
