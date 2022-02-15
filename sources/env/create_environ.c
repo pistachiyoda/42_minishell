@@ -52,6 +52,5 @@ t_environ	*create_environ(char **envp)
 		env = add_environ(env, first_ele, envp[i]);
 		i++;
 	}
-	env = env->next;
-	return (env);
+	return (env = env->next);
 }
