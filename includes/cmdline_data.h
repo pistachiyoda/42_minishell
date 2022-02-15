@@ -13,6 +13,14 @@ enum e_REDIRECTS
 	HEREDOC
 };
 
+typedef struct s_environ
+{
+	char	*key;
+	char	*value;
+	struct s_environ	*prev;
+	struct s_environ	*next;
+}	t_environ;
+
 typedef struct s_redirects
 {
 	enum e_REDIRECTS	redirect;
