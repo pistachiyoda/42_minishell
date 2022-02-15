@@ -1,13 +1,13 @@
 #include "minishell.h"
 
-t_environ	*init_environ(char *msg)
+t_environ	*init_environ(char *target)
 {
 	t_environ	*env;
 
 	env = (t_environ *)malloc(sizeof(t_environ));
 	if (env == NULL)
 	{
-		print_error(msg, EMESS_MALLOC_FAIL);
+		print_error(target, EMESS_MALLOC_FAIL);
 		exit(EXIT_FAILURE);
 	}
 	env->key = NULL;
@@ -17,28 +17,28 @@ t_environ	*init_environ(char *msg)
 	return (env);
 }
 
-char	**split_by_delimiter(char *env_str, char *msg)
+char	**split_by_delimiter(char *env_str, char *target)
 {
 	char		**split_ele;
 
 	split_ele = ft_split(env_str, '=');
 	if (split_ele == NULL)
 	{
-		print_error(msg, EMESS_MALLOC_FAIL);
+		print_error(target, EMESS_MALLOC_FAIL);
 		exit(EXIT_FAILURE);
 	}
 	return (split_ele);
 }
 
 t_environ	*add_environ(t_environ *env, t_environ *first_ele,
-							char **split_ele, char *msg)
+							char **split_ele, char *target)
 {
 	t_environ	*new_ele;
 
 	new_ele = (t_environ *)malloc(sizeof(t_environ));
 	if (new_ele == NULL)
 	{
-		print_error(msg, EMESS_MALLOC_FAIL);
+		print_error(target, EMESS_MALLOC_FAIL);
 		exit(EXIT_FAILURE);
 	}
 	new_ele->key = split_ele[0];
@@ -55,16 +55,16 @@ t_environ	*create_environ(char **envp)
 	int			i;
 	t_environ	*env;
 	t_environ	*first_ele;
-	char		*msg;
+	char		*target;
 
 	i = 0;
-	msg = "create_environ";
-	env = init_environ(msg);
+	target = "create_environ";
+	env = init_environ(target);
 	first_ele = env;
 	while (envp[i] != NULL)
 	{
 		env = add_environ(env, first_ele,
-				split_by_delimiter(envp[i], msg), msg);
+				split_by_delimiter(envp[i], target), target);
 		i++;
 	}
 	return (env = env->next);
