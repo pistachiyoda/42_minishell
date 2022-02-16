@@ -29,7 +29,7 @@ void		free_2d_array(char **two_d_array);
 void		print_error(char *target, char *message);
 
 // exec_command_line/exec_command_line.c
-int			exec_command_line(t_cmd_block *cmd_block, char **envp);
+int			exec_command_line(t_list *cmd_list, char **envp);
 
 // runner/run_builtin_command.c
 bool		is_fork_required(t_list *cmd_list);

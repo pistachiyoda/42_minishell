@@ -51,7 +51,7 @@ void	print_cmd_lst(t_list *cmd_lst)
 	i = 0;
 	while (1)
 	{
-		printf("====== block %d ======\n", i);
+		printf("\n====== block %d ======\n", i);
 		printf("cmd: %s\n", ((t_cmd_block *)cmd_lst->content)->command);
 		print_string_array(((t_cmd_block *)cmd_lst->content)->args, "args");
 		if (((t_cmd_block *)cmd_lst->content)->redirects)

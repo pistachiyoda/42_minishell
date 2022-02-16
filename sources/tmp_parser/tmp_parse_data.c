@@ -9,5 +9,6 @@ void	tmp_parse_data(t_list **cmd_lst, char *str)
 	datas = ft_split(str, ' ');
 	cmd_block->command = datas[0];
 	cmd_block->args = datas;
+	cmd_block->redirects = NULL;
 	*cmd_lst = ft_lstnew(cmd_block);
 }
