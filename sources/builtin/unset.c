@@ -19,6 +19,8 @@ void	ft_unset(t_cmd_block *cmd_block, t_environ *env)
 				env->next->prev = env->prev;
 				tmp = env;
 				env = env->prev;
+				free(tmp->key);
+				free(tmp->value);
 				free(tmp);
 			}
 			env = env->next;
