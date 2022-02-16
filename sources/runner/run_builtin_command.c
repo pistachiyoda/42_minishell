@@ -33,6 +33,5 @@ int	run_builtin_command(t_cmd_block *cmd_block, t_environ *env)
 		ft_env(env);
 	if (ft_strncmp(cmd_block->command, "exit", 4) == 0)
 		ft_putstr_fd(cmd_block->command, 1);
-	ft_putchar_fd('\n', 1);
 	return (0);
 }
