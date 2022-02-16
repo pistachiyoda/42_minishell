@@ -147,7 +147,7 @@ TEST(exec_command_line_G, cat_with_append_redirect) {
 	cmd_lst = cat_with_append_redirect();
 	// exec_command_and_output_file(cmd_lst);
 	// exec_command_and_output_file(cmd_lst); 2回実行する
-	compare_file("expected/cat_with_append_redirect.txt", "out.txt")
+	compare_file("expected/cat_with_append_redirect.txt", "out.txt");
 	FAIL("Fail!");
 }
 
@@ -241,7 +241,7 @@ TEST(exec_command_line_G, cat_with_input_append_redirect_data) {
 	cmd_lst = cat_with_input_append_redirect_data();
 	// exec_command_and_output_file(cmd_lst);
 	// exec_command_and_output_file(cmd_lst); 2回実行する
-	compare_file("expected/cat_with_append_redirect.txt", "out.txt")
+	compare_file("expected/cat_with_append_redirect.txt", "out.txt");
 	FAIL("Fail!");
 }
 
@@ -273,7 +273,7 @@ TEST(exec_command_line_G, cat_with_append_input_redirect_data) {
 	cmd_lst = cat_with_append_input_redirect_data();
 	// exec_command_and_output_file(cmd_lst);
 	// exec_command_and_output_file(cmd_lst); 2回実行する
-	compare_file("expected/cat_with_append_redirect.txt", "out.txt")
+	compare_file("expected/cat_with_append_redirect.txt", "out.txt");
 	FAIL("Fail!");
 }
 
