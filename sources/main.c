@@ -4,9 +4,11 @@ int	main(int argc, char **argv, char **envp)
 {
 	char		*str;
 	t_list		*cmd_list;
+	t_environ	*env;
 
 	(void)argc;
 	(void)argv;
+	env = create_environ(envp);
 	while (1)
 	{
 		cmd_list = NULL;
@@ -17,7 +19,7 @@ int	main(int argc, char **argv, char **envp)
 		if (is_fork_required(cmd_list))
 			exec_command_line(cmd_list, envp);
 		else
-			run_builtin_command(cmd_list->content);
+			run_builtin_command(cmd_list->content, env);
 		free(str);
 	}
 }
