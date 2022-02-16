@@ -15,8 +15,8 @@ enum e_REDIRECTS
 
 typedef struct s_environ
 {
-	char	*key;
-	char	*value;
+	char				*key;
+	char				*value;
 	struct s_environ	*prev;
 	struct s_environ	*next;
 }	t_environ;
