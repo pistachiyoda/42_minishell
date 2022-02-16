@@ -15,12 +15,17 @@ CFILES =\
 	sources/runner/run_builtin_command.c\
 	sources/utils/free.c\
 	sources/utils/print_error.c\
-	sources/debug/debug_funcs.c
+	sources/debug/debug_funcs.c\
+	sources/env/create_environ.c\
+    sources/env/t_environ_to_vector.c\
+    sources/builtin/env.c\
+    sources/builtin/export.c\
+    sources/builtin/unset.c
 OBJ = $(CFILES:.c=.o)
 
 all: $(NAME)
 $(NAME): $(OBJ) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(LIBS) 
+	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(LIBS)
 $(LIBFT):
 	make -C ./libft bonus
 clean:
