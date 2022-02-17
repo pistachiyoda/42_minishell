@@ -131,17 +131,14 @@ t_list *cat_with_append_redirect()
 	cmd_block_1->redirects = ft_lstnew(input_redirect);
 	return ft_lstnew(cmd_block_1);
 }
-// TEST(exec_command_line_G, cat_with_append_redirect) {
-// 	t_list *cmd_lst;
+TEST(exec_command_line_G, cat_with_append_redirect) {
+	t_list *cmd_lst;
 
-// 	printf("\n##### cat_with_append_redirect #####\n");
-// 	printf("##### cat ./exec_cmdline/in.txt >> ./exec_cmdline/out.txt");
-// 	cmd_lst = cat_with_append_redirect();
-// 	exec_command_and_output_file(cmd_lst);
-// 	exec_command_and_output_file(cmd_lst); 2回実行する
-// 	compare_file("expected/cat_with_append_redirect.txt", "out.txt");
-// 	FAIL("Fail!");
-// }
+	cmd_lst = cat_with_append_redirect();
+	exec_command_and_output_file(cmd_lst);
+	exec_command_and_output_file(cmd_lst); // 2回実行する
+	compare_file("expected/cat_with_append_redirect.txt", "out.txt");
+}
 
 // cat < ./exec_cmdline/in.txt > ./exec_cmdline/out.txt
 t_list *cat_with_input_write_redirect_data()

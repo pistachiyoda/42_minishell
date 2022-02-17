@@ -48,26 +48,29 @@ bool	is_writable(char *file)
 	return (true);
 }
 
-// ファイルを読み込み、書き込みができる状態で開く。ファイルが存在しない場合は読み込み、書き込み権限を与えた状態でファイルを新規作成する。
-int	open_or_create_file(char *file)
+// ファイルを読み込み、書き込みができる状態で開く。ファイルが存在しない場合はopen_flagに従った権限を与えた状態でファイルを新規作成する。
+int	open_or_create_file(char *file, int open_flag)
 {
 	int	file_fd;
 
-	file_fd = open(file, O_WRONLY | O_CREAT | O_TRUNC,
+	file_fd = open(file, open_flag,
 			S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	if (file_fd == -1)
 		return (-1);
 	return (file_fd);
 }
 
-// >の処理
-void	handle_output(char *filename)
+// >, >>の処理
+void	handle_output(char *filename, enum e_REDIRECTS	redirect)
 {
 	int fd;
 
 	if (!(is_writable(filename)))
 		exit(0);
-	fd = open_or_create_file(filename);
+	if (redirect == WRITE)
+		fd = open_or_create_file(filename, O_WRONLY | O_CREAT | O_TRUNC);
+	if (redirect == APPEND)
+		fd = open_or_create_file(filename, O_APPEND | O_WRONLY | O_CREAT);
 	if (fd == -1)
 		exit(1);
 	if (dup2(fd, 1) == -1)
@@ -110,10 +113,8 @@ int		handle_input_redirect(t_cmd_block *cmd_block)
 		redirect = redirect_node->content;
 		if (redirect->redirect == INPUT)
 			handle_input(redirect->target);
-		// if (redirect->redirect == HEREDOC)
-			// input = handle_heredoc(redirect->target);
 		if (redirect->redirect == WRITE || redirect->redirect == APPEND)
-			handle_output(redirect->target);
+			handle_output(redirect->target, redirect->redirect);
 		if (redirect_node->next == NULL)
 			break;
 		redirect_node = redirect_node->next;
