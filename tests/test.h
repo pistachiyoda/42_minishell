@@ -74,6 +74,14 @@ extern "C" {
 		t_list	*redirects;
 	}	t_cmd_block;
 
+	typedef struct s_environ
+	{
+		char				*key;
+		char				*value;
+		struct s_environ	*prev;
+		struct s_environ	*next;
+	}	t_environ;
+
 	/////////////////////////////////////////////////////////////////////////////////////
 	// minishell.h
 	// exec_command/exec_command.c
@@ -98,6 +106,26 @@ extern "C" {
 	// runner/run_builtin_command.c
 	bool	is_fork_required(t_list *cmd_list);
 	int		run_builtin_command(t_cmd_block *cmd_block);
+
+	// env/create_environ.c
+	t_environ	*init_environ(char *msg);
+	char		**split_by_delimiter(char *env_str, char *msg);
+	t_environ	*add_environ(t_environ *env, t_environ *first_ele,
+					char **split_ele, char *msg);
+	t_environ	*create_environ(char **envp);
+
+	// env/t_environ_to_vector.c
+	int			count_environ_ele(t_environ *env);
+	char		**t_environ_to_vector(t_environ *env);
+
+	// builtin/env.c
+	void		ft_env(t_environ *env);
+
+	// builtin/export.c
+	void		ft_export(t_cmd_block *cmd_block, t_environ *env);
+
+	// builtin/unset.c
+	void		ft_unset(t_cmd_block *cmd_block, t_environ *env);
 
 	// [後々削除]debug/debug_funcs.c
 	void	print_cmd_lst(t_list *cmd_lst);

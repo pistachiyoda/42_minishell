@@ -6,6 +6,9 @@
 # include <readline/history.h>
 # include <unistd.h>
 # include <stdbool.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <fcntl.h>
 
 # define EMESS_NO_FILE_DIR "No such file or directory\n"
 # define EMESS_REQUIRE_ARGS "Require argument\n"

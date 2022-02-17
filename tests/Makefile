@@ -16,7 +16,12 @@ SOURCES =\
 	../sources/runner/run_builtin_command.c\
 	../sources/utils/free.c\
 	../sources/utils/print_error.c\
-	../sources/debug/debug_funcs.c
+	../sources/debug/debug_funcs.c\
+	../sources/env/create_environ.c\
+    ../sources/env/t_environ_to_vector.c\
+    ../sources/builtin/env.c\
+    ../sources/builtin/export.c\
+    ../sources/builtin/unset.c
 OBJ = $(SOURCES:.c=.o)
 
 all: $(NAME)
