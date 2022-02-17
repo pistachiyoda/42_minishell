@@ -73,36 +73,40 @@ void	display_sorted_env(t_environ *env, int min_i, char *flags, int f_len)
 	print_statement(min, min_i, flags, f_len);
 }
 
-char	*omit_quoat(char *split_ele, char *non_quoat, int *quoat, int *dquoat)
+int	has_args(t_cmd_block *cmd_block, t_environ *env, int i)
 {
-	int	i;
-	int	j;
+	char	**split_ele;
+	bool	registered;
+	size_t	len;
 
-	i = 0;
-	j = 0;
-	while (split_ele[i] != '\0')
+	registered = false;
+	split_ele = ft_split(cmd_block->args[i], '=');
+	env = env->next;
+	len = ft_strlen(split_ele[0]);
+	while (env->key != NULL)
 	{
-		if (split_ele[i] != '"' && split_ele[i] != '\'')
-			non_quoat[j++] = split_ele[i];
-		else if (split_ele[i] == '\'')
-			(*quoat)++;
-		else if (split_ele[i] == '"')
-			(*dquoat)++;
-		i++;
+		if (ft_strncmp(env->key, split_ele[0], len) == 0)
+		{
+			env->value = split_ele[1];
+			registered = true;
+		}
+		env = env->next;
 	}
-	return (non_quoat);
+	if (!registered)
+	{
+		env = add_environ(env->prev, env, split_ele, "export");
+		env = env->next;
+	}
+	return (++i);
 }
 
 void	ft_export(t_cmd_block *cmd_block, t_environ *env)
 {
 	int		i;
 	char	*flags;
-	char	**split_ele;
-	bool	registered;
 	int		env_num;
 
 	i = 1;
-	registered = false;
 	if (cmd_block->args[i] == NULL)
 	{
 		env_num = count_environ_ele(env);
@@ -116,24 +120,5 @@ void	ft_export(t_cmd_block *cmd_block, t_environ *env)
 	}
 	i = 1;
 	while (cmd_block->args[i] != NULL)
-	{
-		split_ele = ft_split(cmd_block->args[i], '=');
-		env = env->next;
-		while (env->key != NULL)
-		{
-			if (ft_strncmp(env->key, split_ele[0], ft_strlen(split_ele[0])) == 0)
-			{
-				env->value = split_ele[1];
-				registered = true;
-			}
-			env = env->next;
-		}
-		if (!registered)
-		{
-			env = add_environ(env->prev, env, split_ele, "export");
-			env = env->next;
-			registered = false;
-		}
-		i++;
-	}
+		i = has_args(cmd_block, env, i);
 }
