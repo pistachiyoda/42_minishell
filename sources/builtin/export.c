@@ -73,7 +73,7 @@ void	display_sorted_env(t_environ *env, int min_i, char *flags, int f_len)
 	print_statement(min, min_i, flags, f_len);
 }
 
-int	has_args(t_cmd_block *cmd_block, t_environ *env, int i)
+int	update_environ(t_cmd_block *cmd_block, t_environ *env, int i)
 {
 	char	**split_ele;
 	bool	registered;
@@ -120,5 +120,5 @@ void	ft_export(t_cmd_block *cmd_block, t_environ *env)
 	}
 	i = 1;
 	while (cmd_block->args[i] != NULL)
-		i = has_args(cmd_block, env, i);
+		i = update_environ(cmd_block, env, i);
 }
