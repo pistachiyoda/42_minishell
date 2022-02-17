@@ -269,48 +269,45 @@ t_list *cat_with_append_input_redirect_data()
 // cat > ./exec_cmdline/out.txt < ./exec_cmdline/in.txt > ./exec_cmdline/out2.txt < ./exec_cmdline/in2.txt 
 t_list *cat_with_multi_redirect1_data()
 {
-	t_cmd_block *cmd_block_1;
+	t_cmd_block *cmd_block;
 	t_redirects	*write_redirect;
 	t_redirects *input_redirect;
-	t_redirects *input_redirect2;
 	t_redirects	*write_redirect2;
+	t_redirects *input_redirect2;
 
-	cmd_block_1 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
-	cmd_block_1->command = ft_strdup("cat");
-	cmd_block_1->args = ft_split("cat", ' ');
+	cmd_block = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block->command = ft_strdup("cat");
+	cmd_block->args = ft_split("cat", ' ');
 
 	write_redirect = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect->redirect = WRITE;
 	write_redirect->target = ft_strdup("./exec_cmdline/out.txt");
-	cmd_block_1->redirects = ft_lstnew(write_redirect);
+	cmd_block->redirects = ft_lstnew(write_redirect);
 
 	input_redirect = (t_redirects *)malloc(sizeof(t_redirects));
 	input_redirect->redirect = INPUT;
 	input_redirect->target = ft_strdup("./exec_cmdline/in.txt");
-	ft_lstadd_back(&cmd_block_1->redirects, ft_lstnew(input_redirect));
+	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(input_redirect));
 
 	write_redirect2 = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect2->redirect = WRITE;
 	write_redirect2->target = ft_strdup("./exec_cmdline/out2.txt");
-	ft_lstadd_back(&cmd_block_1->redirects, ft_lstnew(write_redirect2));
+	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect2));
 
 	input_redirect2 = (t_redirects *)malloc(sizeof(t_redirects));
 	input_redirect2->redirect = INPUT;
 	input_redirect2->target = ft_strdup("./exec_cmdline/in2.txt");
-	ft_lstadd_back(&cmd_block_1->redirects, ft_lstnew(input_redirect2));
-	return ft_lstnew(cmd_block_1);
+	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(input_redirect2));
+	return ft_lstnew(cmd_block);
 }
-// TEST(exec_command_line_G, cat_with_multi_redirect_data) {
-// 	t_list *cmd_lst;
+TEST(exec_command_line_G, cat_with_multi_redirect_data) {
+	t_list *cmd_lst;
 
-// 	printf("\n##### cat_with_multi_redirect1_data #####\n");
-// 	printf("##### cat > ./exec_cmdline/out.txt < ./exec_cmdline/in.txt > ./exec_cmdline/out2.txt < ./exec_cmdline/in2.txt ");
-// 	cmd_lst = cat_with_multi_redirect1_data();
-// 	exec_command_and_output_file(cmd_lst);
-// 	compare_file("expected/empty.txt", "out.txt");
-// 	compare_file("in2.txt", "out2.txt");
-// 	FAIL("Fail!");
-// }
+	cmd_lst = cat_with_multi_redirect1_data();
+	exec_command_and_output_file(cmd_lst);
+	compare_file("expected/empty.txt", "out.txt");
+	compare_file("in2.txt", "out2.txt");
+}
 
 // cmd | cmd | cmd
 

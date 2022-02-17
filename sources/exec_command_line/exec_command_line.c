@@ -28,13 +28,15 @@ int	open_file(char *file)
 }
 
 // <の処理
-void	handle_input(char *filename)
+void	handle_input(char *filename, bool is_last)
 {
 	int fd;
 
 	if (!(is_readable(filename)))
 		exit(1);
 	fd = open_file(filename);
+	if (!is_last)
+		return ;
 	if (dup2(fd, 0) == -1)
 		printf("dup2()"); // exit処理
 }
@@ -61,7 +63,7 @@ int	open_or_create_file(char *file, int open_flag)
 }
 
 // >, >>の処理
-void	handle_output(char *filename, enum e_REDIRECTS	redirect)
+void	handle_output(char *filename, enum e_REDIRECTS	redirect, bool is_last)
 {
 	int fd;
 
@@ -73,29 +75,56 @@ void	handle_output(char *filename, enum e_REDIRECTS	redirect)
 		fd = open_or_create_file(filename, O_APPEND | O_WRONLY | O_CREAT);
 	if (fd == -1)
 		exit(1);
+	if (!is_last)
+		return ;
 	if (dup2(fd, 1) == -1)
 		exit(1);
 }
-
-// char	*handle_file_input(char *filename)
-// {
-// 	int		fd;
-// 	char	buf[100];
-// 	char	*ret;
-
-// 	fd = open(filename);
-// 	ret = ft_strdup("");
-// 	while (read(fd, buf, 100))
-// 	{
-// 		ret = ft_strjoin(ret, buf);
-// 	}
-// 	return (ret);
-// }
 
 // char	*handle_heredoc(char *eof)
 // {
 // 	return ft_strdup("");
 // }
+
+bool	is_last_input_redirect(t_list *redirects, t_list *node)
+{
+	t_list		*current_node;
+	t_list		*last_input_node;
+	t_redirects	*current_redirect;
+	
+	current_node = redirects;
+	last_input_node = NULL;
+	while (1)
+	{
+		current_redirect = current_node->content;
+		if (current_redirect->redirect == INPUT || current_redirect->redirect == HEREDOC)
+			last_input_node = current_node;
+		if (!current_node->next)
+			break;
+		current_node = current_node->next;
+	}
+	return (last_input_node == node);
+}
+
+bool	is_last_output_redirect(t_list *redirects, t_list *node)
+{
+	t_list		*current_node;
+	t_list		*last_input_node;
+	t_redirects	*current_redirect;
+	
+	current_node = redirects;
+	last_input_node = NULL;
+	while (1)
+	{
+		current_redirect = current_node->content;
+		if (current_redirect->redirect == APPEND || current_redirect->redirect == WRITE)
+			last_input_node = current_node;
+		if (!current_node->next)
+			break;
+		current_node = current_node->next;
+	}
+	return (last_input_node == node);
+}
 
 int		handle_input_redirect(t_cmd_block *cmd_block)
 {
@@ -112,9 +141,9 @@ int		handle_input_redirect(t_cmd_block *cmd_block)
 		// free(input);
 		redirect = redirect_node->content;
 		if (redirect->redirect == INPUT)
-			handle_input(redirect->target);
+			handle_input(redirect->target, is_last_input_redirect(cmd_block->redirects, redirect_node));
 		if (redirect->redirect == WRITE || redirect->redirect == APPEND)
-			handle_output(redirect->target, redirect->redirect);
+			handle_output(redirect->target, redirect->redirect, is_last_output_redirect(cmd_block->redirects, redirect_node));
 		if (redirect_node->next == NULL)
 			break;
 		redirect_node = redirect_node->next;
