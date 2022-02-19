@@ -30,7 +30,8 @@ int	split_by_space(char *str, t_list *words, int *i, int start)
 {
 	t_list	*new_ele;
 
-	new_ele = ft_lstnew(ft_substr(str, start, *i - start));
+	new_ele = ft_lstnew(xsubstr(str, start, *i - start, "lexer"));
+	malloc_check(new_ele, "lexer");
 	ft_lstadd_back(&words, new_ele);
 	while (str[*i + 1] != '\0' && is_space_tab_newline(str[*i + 1]))
 		(*i)++;
@@ -45,18 +46,20 @@ int	split_by_redirect_pipe(char *str, t_list *words, int *i, int start)
 	if (is_space_tab_newline(str[*i - 1]) == false && str[*i - 1] != '|'
 		&& str[*i - 1] != '>' && str[*i - 1] != '<')
 	{
-		new_ele = ft_lstnew(ft_substr(str, start, *i - start));
+		new_ele = ft_lstnew(xsubstr(str, start, *i - start, "lexer"));
+		malloc_check(new_ele, "lexer");
 		ft_lstadd_back(&words, new_ele);
 		start = *i;
 	}
 	if (ft_strncmp(&str[*i], ">>", 2) == 0
 		|| ft_strncmp(&str[*i], "<<", 2) == 0)
 	{
-		new_ele = ft_lstnew(ft_substr(str, start, 2));
 		(*i)++;
+		new_ele = ft_lstnew(xsubstr(str, start, 2, "lexer"));
 	}
 	else
-		new_ele = ft_lstnew(ft_substr(str, start, 1));
+		new_ele = ft_lstnew(xsubstr(str, start, 1, "lexer"));
+	malloc_check(new_ele, "lexer");
 	ft_lstadd_back(&words, new_ele);
 	while (str[*i + 1] != '\0' && is_space_tab_newline(str[*i + 1]))
 		(*i)++;
@@ -75,6 +78,7 @@ bool	lexer(char *str)
 	start = 0;
 	status = NONE;
 	words = ft_lstnew(NULL);
+	malloc_check(words, "lexer");
 	while (str[i] != '\0')
 	{
 		if (str[i] == '\'' || str[i] == '"')
