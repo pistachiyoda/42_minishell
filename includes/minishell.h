@@ -15,6 +15,8 @@
 # define EMESS_REQUIRE_ARGS "Require argument\n"
 # define EMESS_INVALID_ARGS "Invalid argument\n"
 # define EMESS_MALLOC_FAIL "Memory allocation failure\n"
+# define EMESS_UNCLOSED_QUOAT "Unclosed quoat detected\n"
+# define EMESS_INVALID_ID "not a valid identifier\n"
 
 // exec_command/exec_command.c
 int			exec_command(char *command_path, char **args, char **envp);
@@ -65,7 +67,14 @@ char		**t_environ_to_vector(t_environ *env);
 void		ft_env(t_environ *env);
 
 // builtin/export.c
+int			update_environ(t_cmd_block *cmd_block, t_environ *env, int i);
 void		ft_export(t_cmd_block *cmd_block, t_environ *env);
+
+// builtin/export_display_env.c
+t_environ	*get_tmp_min(t_environ *env, int *min_i, char *flags, int f_len);
+void		print_statement(t_environ *min, int min_i, char *flags, int f_len);
+void		display_sorted_env(t_environ *env, int min_i,
+				char *flags, int f_len);
 
 // builtin/unset.c
 void		ft_unset(t_cmd_block *cmd_block, t_environ *env);
