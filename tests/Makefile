@@ -12,18 +12,29 @@ SOURCES =\
 	../sources/exec_command/resolve_env.c\
 	../sources/exec_command/utils.c\
 	../sources/exec_command_line/exec_command_line.c\
+	../sources/exec_command_line/handle_file.c\
 	../sources/tmp_parser/tmp_parse_data.c\
 	../sources/runner/run_builtin_command.c\
 	../sources/utils/free.c\
 	../sources/utils/print_error.c\
-	../sources/debug/debug_funcs.c
+	../sources/utils/malloc_check.c\
+	../sources/debug/debug_funcs.c\
+	../sources/env/create_environ.c\
+    ../sources/env/t_environ_to_vector.c\
+    ../sources/builtin/env.c\
+    ../sources/builtin/export.c\
+    ../sources/builtin/unset.c\
+	../sources/lexer/lexer.c\
+	../sources/lexer/add_last_str.c
 OBJ = $(SOURCES:.c=.o)
 
 all: $(NAME)
-$(NAME): minishell_test.o $(OBJ) $(LIBFT)
-	c++ $(CXXFLAGS) $(INCLUDES) minishell_test.o $(OBJ) -o $(NAME) $(LIBS) $(LDLIBS)
-minishell_test.o: ./exec_cmdline/minishell_test.cpp
-	c++ $(CXXFLAGS) $(INCLUDES) -c ./exec_cmdline/minishell_test.cpp $(LIBS)
+$(NAME): exec_cmdline.o lexer.o $(OBJ) $(LIBFT)
+	c++ $(CXXFLAGS) $(INCLUDES) exec_cmdline.o lexer.o $(OBJ) -o $(NAME) $(LIBS) $(LDLIBS)
+exec_cmdline.o: ./exec_cmdline/exec_cmdline.cpp
+	c++ $(CXXFLAGS) $(INCLUDES) -c ./exec_cmdline/exec_cmdline.cpp $(LIBS)
+lexer.o: ./lexer/lexer.cpp
+	c++ $(CXXFLAGS) $(INCLUDES) -c ./lexer/lexer.cpp $(LIBS)
 $(LIBFT):
 	make -C ./libft bonus
 clean:

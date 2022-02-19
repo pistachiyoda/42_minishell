@@ -74,6 +74,14 @@ extern "C" {
 		t_list	*redirects;
 	}	t_cmd_block;
 
+	typedef struct s_environ
+	{
+		char				*key;
+		char				*value;
+		struct s_environ	*prev;
+		struct s_environ	*next;
+	}	t_environ;
+
 	/////////////////////////////////////////////////////////////////////////////////////
 	// minishell.h
 	// exec_command/exec_command.c
@@ -95,13 +103,58 @@ extern "C" {
 	// exec_command_line/exec_command_line.c
 	int		exec_command_line(t_list *cmd_list, char **envp);
 
+	// exec_command_line/handle_file.c
+	bool		is_readable(char *file);
+	int			open_file(char *file);
+	bool		is_writable(char *file);
+	int			open_or_create_file(char *file, int open_flag);
+
 	// runner/run_builtin_command.c
 	bool	is_fork_required(t_list *cmd_list);
 	int		run_builtin_command(t_cmd_block *cmd_block);
+
+	// env/create_environ.c
+	t_environ	*init_environ(char *msg);
+	char		**split_by_delimiter(char *env_str, char *msg);
+	t_environ	*add_environ(t_environ *env, t_environ *first_ele,
+					char **split_ele, char *msg);
+	t_environ	*create_environ(char **envp);
+
+	// env/t_environ_to_vector.c
+	int			count_environ_ele(t_environ *env);
+	char		**t_environ_to_vector(t_environ *env);
+
+	// builtin/env.c
+	void		ft_env(t_environ *env);
+
+	// builtin/export.c
+	void		ft_export(t_cmd_block *cmd_block, t_environ *env);
+
+	// builtin/unset.c
+	void		ft_unset(t_cmd_block *cmd_block, t_environ *env);
 
 	// [後々削除]debug/debug_funcs.c
 	void	print_cmd_lst(t_list *cmd_lst);
 
 	// [後々削除]tmp_parser/tmp_parse_data.c 
 	void	tmp_parse_data(t_list **cmd_lst, char *str);
+
+	/////////////////////////////////////////////////////////////////////////////////////
+	// lexer.h
+	enum e_STATUS
+	{
+		QUOTE,
+		DQUOTE,
+		NONE
+	};
+
+	// lexer/add_last_str.c
+	bool	add_last_str(char *str, t_list *words, int i, int start);
+
+	// lexer/lexer.c
+	bool	is_space_tab_newline(char c);
+	int		is_in_quote_dquote(char *str, int i, int status);
+	int		split_by_space(char *str, t_list *words, int *i, int start);
+	int		split_by_redirect_pipe(char *str, t_list *words, int *i, int start);
+	bool	lexer(char *str);
 }

@@ -24,6 +24,7 @@ int	exec_command(char *command_path, char **args, char **envp)
 
 	if (is_relative_or_absolute(command_path))
 		return (exec_relative_or_absolute(command_path, args, envp));
+
 	path_val = get_env_val("PATH", envp);
 	real_command_path = resolve_path(command_path, path_val);
 	free(path_val);

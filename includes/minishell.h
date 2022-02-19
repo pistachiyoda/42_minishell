@@ -7,6 +7,9 @@
 # include <readline/history.h>
 # include <unistd.h>
 # include <stdbool.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <fcntl.h>
 
 # define EMESS_NO_FILE_DIR "No such file or directory\n"
 # define EMESS_REQUIRE_ARGS "Require argument\n"
@@ -36,6 +39,12 @@ void		malloc_check(void *words, char *target);
 
 // exec_command_line/exec_command_line.c
 int			exec_command_line(t_list *cmd_list, char **envp);
+
+// exec_command_line/handle_file.c
+bool		is_readable(char *file);
+int			open_file(char *file);
+bool		is_writable(char *file);
+int			open_or_create_file(char *file, int open_flag);
 
 // runner/run_builtin_command.c
 bool		is_fork_required(t_list *cmd_list);
