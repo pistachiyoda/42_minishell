@@ -23,6 +23,7 @@ SOURCES =\
     ../sources/env/t_environ_to_vector.c\
     ../sources/builtin/env.c\
     ../sources/builtin/export.c\
+	../sources/builtin/export_display_env.c\
     ../sources/builtin/unset.c\
 	../sources/lexer/lexer.c\
 	../sources/lexer/add_last_str.c
