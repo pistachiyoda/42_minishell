@@ -23,6 +23,17 @@ void exec_command_and_output_file(t_list *cmd_list)
 	close(bak_fd);
 }
 
+void exec_command_without_dup(t_list *cmd_list)
+{
+	int bak_fd = dup(1);
+	char **envp = (char **)malloc(sizeof(char *) * 2);
+	envp[0] = ft_strjoin("PATH=", getenv("PATH")); // ["PATH=xxx"]
+	envp[1] = NULL;
+	exec_command_line(cmd_list, envp);
+	dup2(bak_fd, 1);
+	close(bak_fd);
+}
+
 void compare_file(
 	std::string expected_filename,
 	std::string actual_filename = "stdout_result/result.txt")
@@ -109,11 +120,9 @@ TEST(exec_command_line_G, cat_with_write_redirect) {
 	t_list *cmd_lst;
 
 	cmd_lst = cat_with_write_redirect();
-	exec_command_and_output_file(cmd_lst);
+	exec_command_without_dup(cmd_lst);
 	// out.txtの比較
 	compare_file("in.txt", "out.txt");
-	// 標準出力の比較
-	compare_file("expected/empty.txt");
 }
 
 // cat ./exec_cmdline/in.txt >> ./exec_cmdline/out.txt
@@ -135,8 +144,8 @@ TEST(exec_command_line_G, cat_with_append_redirect) {
 	t_list *cmd_lst;
 
 	cmd_lst = cat_with_append_redirect();
-	exec_command_and_output_file(cmd_lst);
-	exec_command_and_output_file(cmd_lst); // 2回実行する
+	exec_command_without_dup(cmd_lst);
+	exec_command_without_dup(cmd_lst); // 2回実行する
 	compare_file("expected/cat_with_append_redirect.txt", "out.txt");
 }
 
@@ -164,7 +173,7 @@ TEST(exec_command_line_G, cat_with_input_write_redirect_data) {
 	t_list *cmd_lst;
 
 	cmd_lst = cat_with_input_write_redirect_data();
-	exec_command_and_output_file(cmd_lst);
+	exec_command_without_dup(cmd_lst);
 	compare_file("in.txt", "out.txt");
 }
 
@@ -192,7 +201,7 @@ TEST(exec_command_line_G, cat_with_write_input_redirect_data) {
 	t_list *cmd_lst;
 
 	cmd_lst = cat_with_write_input_redirect_data();
-	exec_command_and_output_file(cmd_lst);
+	exec_command_without_dup(cmd_lst);
 	compare_file("in.txt", "out.txt");
 }
 
@@ -220,8 +229,8 @@ TEST(exec_command_line_G, cat_with_input_append_redirect_data) {
 	t_list *cmd_lst;
 
 	cmd_lst = cat_with_input_append_redirect_data();
-	exec_command_and_output_file(cmd_lst);
-	exec_command_and_output_file(cmd_lst); // 2回実行する
+	exec_command_without_dup(cmd_lst);
+	exec_command_without_dup(cmd_lst); // 2回実行する
 	compare_file("expected/cat_with_append_redirect.txt", "out.txt");
 }
 
@@ -249,8 +258,8 @@ TEST(exec_command_line_G, cat_with_append_input_redirect_data) {
 	t_list *cmd_lst;
 
 	cmd_lst = cat_with_append_input_redirect_data();
-	exec_command_and_output_file(cmd_lst);
-	exec_command_and_output_file(cmd_lst); // 2回実行する
+	exec_command_without_dup(cmd_lst);
+	exec_command_without_dup(cmd_lst); // 2回実行する
 	compare_file("expected/cat_with_append_redirect.txt", "out.txt");
 }
 
@@ -292,10 +301,18 @@ TEST(exec_command_line_G, cat_with_multi_redirect_data) {
 	t_list *cmd_lst;
 
 	cmd_lst = cat_with_multi_redirect1_data();
-	exec_command_and_output_file(cmd_lst);
+	exec_command_without_dup(cmd_lst);
 	compare_file("expected/empty.txt", "out.txt");
 	compare_file("in2.txt", "out2.txt");
 }
+
+// append x 2
+// マルチのリダイレクトのテストのもう一件くらい追加
+// エラーケース
+	// <元ファイルがない時
+	// <元ファイルが読めない時
+	// >, >>先ファイルが開けない時
+	// コマンドが存在しない時
 
 // cmd | cmd | cmd
 
@@ -345,3 +362,19 @@ int main(int argc, char **argv)
 {
 	return CommandLineTestRunner::RunAllTests(argc, argv);
 }
+
+
+
+
+// // テストのターゲットとなる引数と返り値を決める
+// void exec_command_and_output_file(t_list *cmd_list)
+// {
+// 	t_list *cmd_lst;
+// 	char	*str;
+
+// 	cmd_lst = parser(str); "cat test.txt"
+// 	STRCMP_EQUAL("cat", ((t_cmd_block *)cmd_lst->content)->command);
+// 	STRCMP_EQUAL("cat", ((t_cmd_block *)cmd_lst->content)->args[0]);
+// 	STRCMP_EQUAL("test.txt", ((t_cmd_block *)cmd_lst->content)->args[1]);
+	
+// }
