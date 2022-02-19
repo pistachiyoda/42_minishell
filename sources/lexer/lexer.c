@@ -64,7 +64,7 @@ int	split_by_redirect_pipe(char *str, t_list *words, int *i, int start)
 	return (start);
 }
 
-void	lexer(char *str)
+bool	lexer(char *str)
 {
 	t_list	*words;
 	int		i;
@@ -86,5 +86,5 @@ void	lexer(char *str)
 			start = split_by_redirect_pipe(str, words, &i, start);
 		i++;
 	}
-	add_last_str(str, words, i, start);
+	return (add_last_str(str, words, i, start));
 }
