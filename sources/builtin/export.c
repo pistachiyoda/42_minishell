@@ -32,7 +32,7 @@ int	update_environ(t_cmd_block *cmd_block, t_environ *env, int i)
 	if (ft_strchr(cmd_block->args[i], '=') == NULL)
 		key_only = true;
 	split_ele = ft_split(cmd_block->args[i], '=');
-	// malloc_check(split_ele, "export");
+	malloc_check(split_ele, "export");
 	if (ft_isdigit(split_ele[0][0]) == 1)
 	{
 		free_2d_array(split_ele);
@@ -56,7 +56,7 @@ void	ft_export(t_cmd_block *cmd_block, t_environ *env)
 	{
 		env_num = count_environ_ele(env);
 		flags = malloc(sizeof(char) * (env_num + 1));
-		// malloc_check(flags, "export");
+		malloc_check(flags, "export");
 		flags = ft_memset(flags, '0', env_num);
 		flags[env_num + 1] = '\0';
 		display_sorted_env(env->next, 0, flags, env_num);
