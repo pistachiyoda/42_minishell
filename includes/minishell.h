@@ -2,6 +2,7 @@
 # define MINISHELL_H
 # include "libft.h"
 # include "cmdline_data.h"
+# include "lexer.h"
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <unistd.h>
@@ -27,6 +28,11 @@ void		free_2d_array(char **two_d_array);
 
 // utils/print_error.c
 void		print_error(char *target, char *message);
+
+// utils/malloc_check.c
+char		*xsubstr(char const *s, unsigned int start,
+				size_t len, char *target);
+void		malloc_check(void *words, char *target);
 
 // exec_command_line/exec_command_line.c
 int			exec_command_line(t_list *cmd_list, char **envp);
