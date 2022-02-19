@@ -51,10 +51,16 @@ TEST_GROUP(exec_command_line_G)
 {
 	void setup() {
 		remove("./exec_cmdline/out.txt");
+		remove("./exec_cmdline/out2.txt");
+		remove("./exec_cmdline/out3.txt");
+		remove("./exec_cmdline/out4.txt");
 		remove("./exec_cmdline/stdout_result/result.txt");
 	}
 	void teardown() {
 		remove("./exec_cmdline/out.txt");
+		remove("./exec_cmdline/out2.txt");
+		remove("./exec_cmdline/out3.txt");
+		remove("./exec_cmdline/out4.txt");
 		remove("./exec_cmdline/stdout_result/result.txt");
 	}
 };
@@ -263,6 +269,66 @@ TEST(exec_command_line_G, cat_with_append_input_redirect_data) {
 	compare_file("expected/cat_with_append_redirect.txt", "out.txt");
 }
 
+// cat ./exec_cmdline/in.txt >> ./exec_cmdline/out.txt >> ./exec_cmdline/out2.txt
+t_list *cat_with_2append_1_redirect_data()
+{
+	t_cmd_block *cmd_block_1;
+	t_redirects *input_redirect;
+	t_redirects	*write_redirect;
+
+	cmd_block_1 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block_1->command = ft_strdup("cat");
+	cmd_block_1->args = ft_split("cat ./exec_cmdline/in.txt", ' ');
+	input_redirect = (t_redirects *)malloc(sizeof(t_redirects));
+	input_redirect->redirect = APPEND;
+	input_redirect->target = ft_strdup("./exec_cmdline/out.txt");
+	cmd_block_1->redirects = ft_lstnew(input_redirect);
+	write_redirect = (t_redirects *)malloc(sizeof(t_redirects));
+	write_redirect->redirect = APPEND;
+	write_redirect->target = ft_strdup("./exec_cmdline/out2.txt");
+	ft_lstadd_back(&cmd_block_1->redirects, ft_lstnew(write_redirect));
+	return ft_lstnew(cmd_block_1);
+}
+TEST(exec_command_line_G, cat_with_2append_1_redirect_data) {
+	t_list *cmd_lst;
+
+	cmd_lst = cat_with_2append_1_redirect_data();
+	exec_command_without_dup(cmd_lst);
+	// 一つ目のファイルは空
+	compare_file("expected/empty.txt", "out.txt");
+	// ２つ目のファイルはin.txtと同様の内容が記入される
+	compare_file("expected/cat_with_2append_1_redirect_data.txt", "out2.txt");
+}
+
+// cat ./exec_cmdline/in.txt >> ./exec_cmdline/out.txt >> ./exec_cmdline/out.txt
+t_list *cat_with_2append_2_redirect_data()
+{
+	t_cmd_block *cmd_block_1;
+	t_redirects *input_redirect;
+	t_redirects	*write_redirect;
+
+	cmd_block_1 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block_1->command = ft_strdup("cat");
+	cmd_block_1->args = ft_split("cat ./exec_cmdline/in.txt", ' ');
+	input_redirect = (t_redirects *)malloc(sizeof(t_redirects));
+	input_redirect->redirect = APPEND;
+	input_redirect->target = ft_strdup("./exec_cmdline/out.txt");
+	cmd_block_1->redirects = ft_lstnew(input_redirect);
+	write_redirect = (t_redirects *)malloc(sizeof(t_redirects));
+	write_redirect->redirect = APPEND;
+	write_redirect->target = ft_strdup("./exec_cmdline/out.txt");
+	ft_lstadd_back(&cmd_block_1->redirects, ft_lstnew(write_redirect));
+	return ft_lstnew(cmd_block_1);
+}
+TEST(exec_command_line_G, cat_with_2append_2_redirect_data) {
+	t_list *cmd_lst;
+
+	cmd_lst = cat_with_2append_2_redirect_data();
+	exec_command_without_dup(cmd_lst);
+	// 追記は最後のものしか実行されないため、in.txtと同様の内容が記入される
+	compare_file("expected/cat_with_2append_2_redirect_data.txt", "out.txt");
+}
+
 // cat > ./exec_cmdline/out.txt < ./exec_cmdline/in.txt > ./exec_cmdline/out2.txt < ./exec_cmdline/in2.txt 
 t_list *cat_with_multi_redirect1_data()
 {
@@ -306,8 +372,53 @@ TEST(exec_command_line_G, cat_with_multi_redirect_data) {
 	compare_file("in2.txt", "out2.txt");
 }
 
-// append x 2
-// マルチのリダイレクトのテストのもう一件くらい追加
+// ls > ./exec_cmdline/out.txt > ./exec_cmdline/out2.txt > ./exec_cmdline/out3.txt > ./exec_cmdline/out4.txt
+// ls > ./exec_cmdline/expected/cat_with_multi_redirect2_data_out.txt > ./exec_cmdline/expected/cat_with_multi_redirect2_data_out2.txt > ./exec_cmdline/expected/cat_with_multi_redirect2_data_out3.txt > ./exec_cmdline/expected/cat_with_multi_redirect2_data_out4.txt
+t_list *cat_with_multi_redirect2_data()
+{
+	t_cmd_block *cmd_block;
+	t_redirects	*write_redirect1;
+	t_redirects *write_redirect2;
+	t_redirects	*write_redirect3;
+	t_redirects *write_redirect4;
+
+	cmd_block = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block->command = ft_strdup("ls");
+	cmd_block->args = ft_split("ls", ' ');
+
+	write_redirect1 = (t_redirects *)malloc(sizeof(t_redirects));
+	write_redirect1->redirect = WRITE;
+	write_redirect1->target = ft_strdup("./exec_cmdline/out.txt");
+	cmd_block->redirects = ft_lstnew(write_redirect1);
+
+	write_redirect2 = (t_redirects *)malloc(sizeof(t_redirects));
+	write_redirect2->redirect = WRITE;
+	write_redirect2->target = ft_strdup("./exec_cmdline/out2.txt");
+	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect2));
+
+	write_redirect3 = (t_redirects *)malloc(sizeof(t_redirects));
+	write_redirect3->redirect = WRITE;
+	write_redirect3->target = ft_strdup("./exec_cmdline/out3.txt");
+	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect3));
+
+	write_redirect4 = (t_redirects *)malloc(sizeof(t_redirects));
+	write_redirect4->redirect = WRITE;
+	write_redirect4->target = ft_strdup("./exec_cmdline/out4.txt");
+	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect4));
+	return ft_lstnew(cmd_block);
+}
+TEST(exec_command_line_G, cat_with_multi_redirect2_data) {
+	t_list *cmd_lst;
+
+	cmd_lst = cat_with_multi_redirect2_data();
+	exec_command_without_dup(cmd_lst);
+	// 最後のwriteリダイレクトのみ実行される
+	compare_file("expected/empty.txt", "out.txt");
+	compare_file("expected/empty.txt", "out2.txt");
+	compare_file("expected/empty.txt", "out3.txt");
+	compare_file("expected/cat_with_multi_redirect2_data_out4.txt", "out4.txt");
+}
+
 // エラーケース
 	// <元ファイルがない時
 	// <元ファイルが読めない時
