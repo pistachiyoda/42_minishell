@@ -81,6 +81,8 @@ int	update_environ(t_cmd_block *cmd_block, t_environ *env, int i)
 
 	registered = false;
 	split_ele = ft_split(cmd_block->args[i], '=');
+	printf("ele[0]: %s, ele[1]: %s\n", split_ele[0], split_ele[1]);
+	// malloc_check(split_ele, "export");
 	env = env->next;
 	len = ft_strlen(split_ele[0]);
 	while (env->key != NULL)
@@ -106,14 +108,13 @@ void	ft_export(t_cmd_block *cmd_block, t_environ *env)
 	char	*flags;
 	int		env_num;
 
-	i = 1;
-	if (cmd_block->args[i] == NULL)
+	if (cmd_block->args[1] == NULL)
 	{
 		env_num = count_environ_ele(env);
 		flags = malloc(sizeof(char) * (env_num + 1));
-		while (i < env_num + 1)
-			flags[i++] = '0';
-		flags[i] = '\0';
+		// malloc_check(flags, "export");
+		flags = ft_memset(flags, '0', env_num);
+		flags[env_num + 1] = '\0';
 		display_sorted_env(env->next, 0, flags, env_num);
 		free(flags);
 		return ;
