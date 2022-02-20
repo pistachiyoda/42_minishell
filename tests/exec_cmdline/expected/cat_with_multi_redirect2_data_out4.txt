@@ -4,5 +4,4 @@ exec_cmdline.o
 lexer
 lexer.o
 minishell_test
-minishell_test.o
 test.h

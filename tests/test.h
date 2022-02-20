@@ -130,6 +130,12 @@ extern "C" {
 	// builtin/export.c
 	void		ft_export(t_cmd_block *cmd_block, t_environ *env);
 
+	// builtin/export_display_env.c
+	t_environ	*get_tmp_min(t_environ *env, int *min_i, char *flags, int f_len);
+	void		print_statement(t_environ *min, int min_i, char *flags, int f_len);
+	void		display_sorted_env(t_environ *env, int min_i,
+					char *flags, int f_len);
+
 	// builtin/unset.c
 	void		ft_unset(t_cmd_block *cmd_block, t_environ *env);
 
