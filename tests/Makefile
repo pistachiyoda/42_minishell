@@ -23,6 +23,7 @@ SOURCES =\
     ../sources/env/t_environ_to_vector.c\
     ../sources/builtin/env.c\
     ../sources/builtin/export.c\
+	../sources/builtin/export_display_env.c\
     ../sources/builtin/unset.c\
 	../sources/lexer/lexer.c\
 	../sources/lexer/add_last_str.c
@@ -36,13 +37,13 @@ exec_cmdline.o: ./exec_cmdline/exec_cmdline.cpp
 lexer.o: ./lexer/lexer.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./lexer/lexer.cpp $(LIBS)
 $(LIBFT):
-	make -C ./libft bonus
+	make -C ../libft bonus
 clean:
 	rm -f $(OBJ)
-	make -C ./libft clean
+	make -C ../libft clean
 fclean: clean
 	rm -f $(NAME)
-	make -C ./libft fclean
+	make -C ..//libft fclean
 re: fclean all
 
 .PHONY: all clean fclean re
