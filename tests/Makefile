@@ -37,13 +37,13 @@ exec_cmdline.o: ./exec_cmdline/exec_cmdline.cpp
 lexer.o: ./lexer/lexer.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./lexer/lexer.cpp $(LIBS)
 $(LIBFT):
-	make -C ./libft bonus
+	make -C ../libft bonus
 clean:
 	rm -f $(OBJ)
-	make -C ./libft clean
+	make -C ../libft clean
 fclean: clean
 	rm -f $(NAME)
-	make -C ./libft fclean
+	make -C ..//libft fclean
 re: fclean all
 
 .PHONY: all clean fclean re
