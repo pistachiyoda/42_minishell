@@ -12,6 +12,9 @@ CFILES =\
 	sources/exec_command/utils.c\
 	sources/exec_command_line/exec_command_line.c\
 	sources/exec_command_line/handle_file.c\
+	sources/exec_command_line/handle_heredoc.c\
+	sources/exec_command_line/handle_redirect.c\
+	sources/exec_command_line/handle_input_redirect.c\
 	sources/tmp_parser/tmp_parse_data.c\
 	sources/runner/run_builtin_command.c\
 	sources/utils/free.c\

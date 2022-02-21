@@ -17,13 +17,14 @@ bool	is_readable(char *file)
 }
 
 // ファイルを読み込み、書き込みができる状態で開く
+// @todo エラー時のexit処理
 int	open_file(char *file)
 {
 	int	file_fd;
 
 	file_fd = open(file, O_RDWR);
 	if (file_fd == -1)
-		return (-1); //exit処理
+		return (-1);
 	return (file_fd);
 }
 
