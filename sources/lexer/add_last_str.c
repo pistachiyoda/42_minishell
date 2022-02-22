@@ -17,6 +17,9 @@ bool	add_last_str(char *str, t_list *words, int i, int start)
 			|| ft_strncmp(last->content, ">>", 2) == 0
 			|| ft_strncmp(last->content, "<<", 2) == 0
 			|| ft_strncmp(last->content, "|", 1) == 0))
+	{
 		print_error("lexer", EMESS_INVALID_ARGS);
+		ft_lstclear(&words, free);
+	}
 	return (false);
 }
