@@ -1,15 +1,16 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
-# include "libft.h"
-# include "cmdline_data.h"
-# include "lexer.h"
-# include <readline/readline.h>
-# include <readline/history.h>
 # include <unistd.h>
 # include <stdbool.h>
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include "libft.h"
+# include "cmdline_data.h"
+# include "lexer.h"
+# include "parser.h"
 
 # define EMESS_NO_FILE_DIR "No such file or directory\n"
 # define EMESS_REQUIRE_ARGS "Require argument\n"
@@ -17,6 +18,7 @@
 # define EMESS_MALLOC_FAIL "Memory allocation failure\n"
 # define EMESS_UNCLOSED_QUOAT "Unclosed quoat detected\n"
 # define EMESS_INVALID_ID "not a valid identifier\n"
+# define EMESS_SYNTAX "syntax error near unexpected token"
 
 // exec_command/exec_command.c
 int			exec_command(char *command_path, char **args, char **envp);
@@ -32,6 +34,7 @@ bool		is_executable(char *command_path);
 void		free_2d_array(char **two_d_array);
 
 // utils/print_error.c
+void		syntax_error(char *str);
 void		print_error(char *target, char *message);
 
 // utils/malloc_check.c

@@ -28,7 +28,9 @@ CFILES =\
 	sources/builtin/export_display_env.c\
 	sources/builtin/unset.c\
 	sources/lexer/lexer.c\
-	sources/lexer/add_last_str.c
+	sources/lexer/add_last_str.c\
+	sources/parser/parser.c\
+	sources/parser/is_valid_words.c
 OBJ = $(CFILES:.c=.o)
 
 all: $(NAME)

@@ -30,7 +30,8 @@ SOURCES =\
     ../sources/builtin/unset.c\
 	../sources/lexer/lexer.c\
 	../sources/lexer/add_last_str.c\
-	../sources/parser/parser.c
+	../sources/parser/parser.c\
+	../sources/parser/is_valid_words.c
 OBJ = $(SOURCES:.c=.o)
 
 all: $(NAME)
