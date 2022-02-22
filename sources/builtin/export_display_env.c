@@ -23,17 +23,36 @@ t_environ	*get_tmp_min(t_environ *env, int *min_i, char *flags, int f_len)
 	return (min);
 }
 
-void	print_statement(t_environ *min, int min_i, char *flags, int f_len)
+void	print_env(t_environ *min)
+{
+	int	i;
+
+	i = 0;
+	if (min->value == NULL)
+		printf("declare -x %s\n", min->key);
+	else
+	{
+		printf("declare -x %s=\"", min->key);
+		while (min->value[i] != '\0')
+		{
+			if (min->value[i] == '"')
+				printf("\\%c", min->value[i]);
+			else
+				printf("%c", min->value[i]);
+			i++;
+		}
+		printf("\"\n");
+	}
+}
+
+void	display_min_env(t_environ *min, int min_i, char *flags, int f_len)
 {
 	int			i;
 	t_environ	*head;
 
 	i = 0;
 	head = min;
-	if (min->value == NULL)
-		printf("declare -x %s\n", min->key);
-	else
-		printf("declare -x %s=\"%s\"\n", min->key, min->value);
+	print_env(min);
 	while (head->key != NULL)
 		head = head->next;
 	while (i < f_len)
@@ -72,5 +91,5 @@ void	display_sorted_env(t_environ *env, int min_i, char *flags, int f_len)
 		env = env->next;
 		i++;
 	}
-	print_statement(min, min_i, flags, f_len);
+	display_min_env(min, min_i, flags, f_len);
 }
