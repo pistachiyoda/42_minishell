@@ -29,23 +29,26 @@ SOURCES =\
 	../sources/builtin/export_display_env.c\
     ../sources/builtin/unset.c\
 	../sources/lexer/lexer.c\
-	../sources/lexer/add_last_str.c
+	../sources/lexer/add_last_str.c\
+	../sources/parser/parser.c
 OBJ = $(SOURCES:.c=.o)
 
 all: $(NAME)
-$(NAME): exec_cmdline.o lexer.o $(OBJ) $(LIBFT)
-	c++ $(CXXFLAGS) $(INCLUDES) exec_cmdline.o lexer.o $(OBJ) -o $(NAME) $(LIBS) $(LDLIBS)
+$(NAME): exec_cmdline.o lexer.o parser.o $(OBJ) $(LIBFT)
+	c++ $(CXXFLAGS) $(INCLUDES) exec_cmdline.o lexer.o parser.o $(OBJ) -o $(NAME) $(LIBS) $(LDLIBS)
 exec_cmdline.o: ./exec_cmdline/exec_cmdline.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./exec_cmdline/exec_cmdline.cpp $(LIBS)
 lexer.o: ./lexer/lexer.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./lexer/lexer.cpp $(LIBS)
+parser.o: ./parser/parser.cpp
+	c++ $(CXXFLAGS) $(INCLUDES) -c ./parser/parser.cpp $(LIBS)
 $(LIBFT):
 	make -C ../libft bonus
 clean:
 	rm -f $(OBJ)
 	make -C ../libft clean
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME) *.o
 	make -C ..//libft fclean
 re: fclean all
 
