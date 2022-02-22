@@ -48,6 +48,17 @@ int			open_file(char *file);
 bool		is_writable(char *file);
 int			open_or_create_file(char *file, int open_flag);
 
+// exec_command_line/handle_heredoc.c
+void		handle_heredoc(char *limiter, bool is_last, int	pipe_fds[2]);
+void		handle_heredoc_loop(t_cmd_block *cmd_block, int	pipe_fds[2]);
+
+// exec_command_line/handle_redirect.c
+int			handle_redirect(t_cmd_block *cmd_block, int	pipe_fds[2]);
+
+// exec_command_line/handle_input_redirect.c
+bool		is_last_input_redirect(t_list *redirects, t_list *node);
+void		handle_input(char *filename, bool is_last);
+
 // runner/run_builtin_command.c
 bool		is_fork_required(t_list *cmd_list);
 int			run_builtin_command(t_cmd_block *cmd_block, t_environ *env);
