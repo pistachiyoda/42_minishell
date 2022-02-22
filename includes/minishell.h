@@ -95,7 +95,7 @@ void		ft_unset(t_cmd_block *cmd_block, t_environ *env);
 
 // [後々削除]debug/debug_funcs.c
 void		print_cmd_lst(t_list *cmd_lst);
-
+t_list		*set_dataset(char *str);
 // [後々削除]tmp_parser/tmp_parse_data.c
 void		tmp_parse_data(t_list **cmd_lst, char *str);
 #endif

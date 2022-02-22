@@ -22,6 +22,7 @@ SOURCES =\
 	../sources/utils/print_error.c\
 	../sources/utils/malloc_check.c\
 	../sources/debug/debug_funcs.c\
+	../sources/debug/set_dataset.c\
 	../sources/env/create_environ.c\
     ../sources/env/t_environ_to_vector.c\
     ../sources/builtin/env.c\
