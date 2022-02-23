@@ -21,6 +21,7 @@ CFILES =\
 	sources/utils/print_error.c\
 	sources/utils/malloc_check.c\
 	sources/debug/debug_funcs.c\
+	sources/debug/set_dataset.c\
 	sources/env/create_environ.c\
 	sources/env/t_environ_to_vector.c\
 	sources/builtin/env.c\
@@ -28,7 +29,9 @@ CFILES =\
 	sources/builtin/export_display_env.c\
 	sources/builtin/unset.c\
 	sources/lexer/lexer.c\
-	sources/lexer/add_last_str.c
+	sources/lexer/add_last_str.c\
+	sources/parser/parser.c\
+	sources/parser/is_valid_words.c
 OBJ = $(CFILES:.c=.o)
 
 all: $(NAME)

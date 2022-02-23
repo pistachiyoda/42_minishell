@@ -100,6 +100,11 @@ extern "C" {
 	// utils/print_error.c
 	void	print_error(char *target, char *message);
 
+	// utils/malloc_check.c
+	char		*xsubstr(char const *s, unsigned int start,
+					size_t len, char *target);
+	void		malloc_check(void *words, char *target);
+
 	// exec_command_line/exec_command_line.c
 	int		exec_command_line(t_list *cmd_list, char **envp);
 
@@ -128,6 +133,7 @@ extern "C" {
 	void		ft_env(t_environ *env);
 
 	// builtin/export.c
+	int			update_environ(t_cmd_block *cmd_block, t_environ *env, int i);
 	void		ft_export(t_cmd_block *cmd_block, t_environ *env);
 
 	// builtin/export_display_env.c
@@ -142,7 +148,7 @@ extern "C" {
 	// [後々削除]debug/debug_funcs.c
 	void	print_cmd_lst(t_list *cmd_lst);
 
-	// [後々削除]tmp_parser/tmp_parse_data.c 
+	// [後々削除]tmp_parser/tmp_parse_data.c
 	void	tmp_parse_data(t_list **cmd_lst, char *str);
 
 	/////////////////////////////////////////////////////////////////////////////////////
@@ -162,5 +168,8 @@ extern "C" {
 	int		is_in_quote_dquote(char *str, int i, int status);
 	int		split_by_space(char *str, t_list *words, int *i, int start);
 	int		split_by_redirect_pipe(char *str, t_list *words, int *i, int start);
-	bool	lexer(char *str);
+	t_list	*lexer(char *str);
+
+	// parser/parser.c
+	t_list	*parser(t_list *words);
 }
