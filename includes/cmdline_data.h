@@ -25,6 +25,7 @@ typedef struct s_redirects
 {
 	enum e_REDIRECTS	redirect;
 	char				*target;
+	int					fd;
 }	t_redirects;
 
 typedef struct s_cmd_block
