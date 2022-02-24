@@ -38,6 +38,8 @@ void		syntax_error(char *str);
 void		print_error(char *target, char *message);
 
 // utils/malloc_check.c
+t_list		*xlstnew(void *content, char *target);
+char		*xstrdup(const char *src, char *target);
 char		*xsubstr(char const *s, unsigned int start,
 				size_t len, char *target);
 void		malloc_check(void *words, char *target);
