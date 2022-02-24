@@ -57,6 +57,7 @@ bool	add_last_str(char *str, t_list *words, int i, int start)
 	{
 		syntax_error("newline");
 		ft_lstclear(&words, free);
+		free(str);
 		return (false);
 	}
 	return (true);

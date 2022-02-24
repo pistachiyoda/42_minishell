@@ -163,7 +163,7 @@ extern "C" {
 	};
 
 	// lexer/split_by_redirect_pipe.c
-	bool	is_valid_redirect(t_list *words, char *str);
+	bool	is_valid_redirect(t_list *words, char *str, int i);
 	void	add_fd_num(char *str, t_list **words, int i, int start);
 	int		split_by_redirect_pipe(char *str, t_list *words, int *i, int start);
 
