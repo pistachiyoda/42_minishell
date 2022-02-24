@@ -59,8 +59,8 @@ void		handle_heredoc_loop(t_cmd_block *cmd_block, int	pipe_fds[2]);
 int			handle_redirect(t_cmd_block *cmd_block, int	pipe_fds[2]);
 
 // exec_command_line/handle_input_redirect.c
-bool		is_last_input_redirect(t_list *redirects, t_list *node);
-void		handle_input(char *filename, bool is_last);
+bool		is_last_input_redirect(t_redirects *redirect, t_list *redirects);
+void		handle_input(t_redirects *redirect, bool is_last);
 
 // runner/run_builtin_command.c
 bool		is_fork_required(t_list *cmd_list);

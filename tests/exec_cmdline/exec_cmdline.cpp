@@ -564,7 +564,7 @@ t_list	*two_unrelated_fd_write_redirect_with_echo_data()
 
 	write_redirect1 = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect1->redirect = WRITE;
-	write_redirect1->target = ft_strdup("./exec_cmdline/out.txt");
+	write_redirect1->target = ft_strdup("./exec_cmdline/out1.txt");
 	write_redirect1->fd = 100;
 	cmd_block->redirects = ft_lstnew(write_redirect1);
 
@@ -604,7 +604,7 @@ t_list	*two_unrelated_fd_and_1_write_with_echo_data()
 
 	write_redirect1 = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect1->redirect = WRITE;
-	write_redirect1->target = ft_strdup("./exec_cmdline/out.txt");
+	write_redirect1->target = ft_strdup("./exec_cmdline/out1.txt");
 	write_redirect1->fd = 100;
 	cmd_block->redirects = ft_lstnew(write_redirect1);
 
@@ -665,12 +665,11 @@ TEST(exec_command_line_G, two_fd_write_redirect_with_echo_date) {
 	t_list *cmd_lst;
 
 	cmd_lst = two_fd_write_redirect_with_echo_date();
-	// exec_command_without_dup(cmd_lst);
+	exec_command_without_dup(cmd_lst);
 	// echoから1に書き込まれる。
-	// compare_file("expected/two_fd_write_redirect_with_echo_out1.txt", "out1.txt");
+	compare_file("expected/two_fd_write_redirect_with_echo_out1.txt", "out1.txt");
 	// エラー出力（2）は何も受け取らないので空
-	// compare_file("expected/empty.txt", "out2.txt");
-	FAIL("未実装");
+	compare_file("expected/empty.txt", "out2.txt");
 }
 
 // 2> out1.txt 1> out2.txt echo hoge
@@ -785,10 +784,10 @@ t_list *two_fd_write_redirect_with_dog_date()
 	return ft_lstnew(cmd_block);
 }
 TEST(exec_command_line_G, two_fd_write_redirect_with_dog_date) {
-	t_list *cmd_lst;
+	// t_list *cmd_lst;
 
-	cmd_lst = two_fd_write_redirect_with_dog_date();
-	exec_command_without_dup(cmd_lst);
+	// cmd_lst = two_fd_write_redirect_with_dog_date();
+	// exec_command_without_dup(cmd_lst);
 	// 標準出力（1）は何も受け取らないのでout1.txtは空
 	// compare_file("expected/empty.txt", "out1.txt");
 	// dogコマンドのエラー出力が2に書き込まれる。
@@ -832,10 +831,10 @@ t_list *three_fd_write_redirect_with_dog_date()
 	return ft_lstnew(cmd_block);
 }
 TEST(exec_command_line_G, three_fd_write_redirect_with_dog_date) {
-	t_list *cmd_lst;
+	// t_list *cmd_lst;
 
-	cmd_lst = three_fd_write_redirect_with_dog_date();
-	exec_command_without_dup(cmd_lst);
+	// cmd_lst = three_fd_write_redirect_with_dog_date();
+	// exec_command_without_dup(cmd_lst);
 	// 最初の2は処理されないのでout1.txtは空
 	// compare_file("expected/empty.txt", "out1.txt");
 	// 標準出力（1）は何も受け取らないのでout2.txtは空
@@ -872,13 +871,12 @@ t_list *zero_100_input_redirect_with_cat_date()
 	return ft_lstnew(cmd_block);
 }
 TEST(exec_command_line_G, zero_100_input_redirect_with_cat_date) {
-	// t_list *cmd_lst;
+	t_list *cmd_lst;
 
-	// cmd_lst = zero_100_input_redirect_with_cat_date();
-	// exec_command_without_dup(cmd_lst);
-	// // 標準出力（1）にin.txtの内容が出力されるので、result.txtと比較
-	// compare_file("in.txt");
-	FAIL("未実装");
+	cmd_lst = zero_100_input_redirect_with_cat_date();
+	exec_command_and_output_file(cmd_lst);
+	// 標準出力（1）にin.txtの内容が出力されるので、result.txtと比較
+	compare_file("in.txt");
 }
 
 // 0<　in1.txt cat 0<　in2.txt
@@ -918,37 +916,37 @@ TEST(exec_command_line_G, two_fd_input_redirect_with_cat_date) {
 
 //  2> out.txt 1< in.txt echo hoge
 // エラーケースなので正常系実装した後にエラーケースでまとめてコミットする
-// waitpidのstatusでエラー判定するような感じで実装。
-// t_list	*invalid_stdout_redirect_input_data()
-// {
-// 	t_cmd_block *cmd_block_1;
-// 	t_redirects	*write_redirect;
-// 	t_redirects *input_redirect;
+t_list	*invalid_stdout_redirect_input_data()
+{
+	t_cmd_block *cmd_block_1;
+	t_redirects	*write_redirect;
+	t_redirects *input_redirect;
 
-// 	cmd_block_1 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
-// 	cmd_block_1->command = ft_strdup("echo");
-// 	cmd_block_1->args = ft_split("echo hoge", ' ');
-// 	write_redirect = (t_redirects *)malloc(sizeof(t_redirects));
-// 	write_redirect->redirect = WRITE;
-// 	write_redirect->fd = 2;
-// 	write_redirect->target = ft_strdup("./exec_cmdline/out.txt");
-// 	cmd_block_1->redirects = ft_lstnew(write_redirect);
-// 	input_redirect = (t_redirects *)malloc(sizeof(t_redirects));
-// 	input_redirect->redirect = INPUT;
-// 	input_redirect->target = ft_strdup("./exec_cmdline/in.txt");
-// 	input_redirect->fd = 1;
-// 	ft_lstadd_back(&cmd_block_1->redirects, ft_lstnew(input_redirect));
-// 	return ft_lstnew(cmd_block_1);
-// }
-// TEST(exec_command_line_G, invalid_stdout_redirect_input_data) {
-// 	t_list *cmd_lst;
+	cmd_block_1 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block_1->command = ft_strdup("echo");
+	cmd_block_1->args = ft_split("echo hoge", ' ');
+	write_redirect = (t_redirects *)malloc(sizeof(t_redirects));
+	write_redirect->redirect = WRITE;
+	write_redirect->fd = 2;
+	write_redirect->target = ft_strdup("./exec_cmdline/out.txt");
+	cmd_block_1->redirects = ft_lstnew(write_redirect);
+	input_redirect = (t_redirects *)malloc(sizeof(t_redirects));
+	input_redirect->redirect = INPUT;
+	input_redirect->target = ft_strdup("./exec_cmdline/in.txt");
+	input_redirect->fd = 1;
+	ft_lstadd_back(&cmd_block_1->redirects, ft_lstnew(input_redirect));
+	return ft_lstnew(cmd_block_1);
+}
+TEST(exec_command_line_G, invalid_stdout_redirect_input_data) {
+	// t_list *cmd_lst;
 
-// 	cmd_lst = invalid_stdout_redirect_input_data();
-// 	exec_command_without_dup(cmd_lst);
-// 	// echoを実行するが、1< in.txtで標準出力(1)がcloseされるため、エラーになり、
-// 	// out.txtにエラー文が出力される。
-// 	compare_file("expected/invalid_stdout_redirect_input.txt", "out.txt");
-// }
+	// cmd_lst = invalid_stdout_redirect_input_data();
+	// exec_command_without_dup(cmd_lst);
+	// echoを実行するが、1< in.txtで標準出力(1)がcloseされるため、エラーになり、
+	// out.txtにエラー文が出力される。
+	// compare_file("expected/invalid_stdout_redirect_input.txt", "out.txt");
+	FAIL("未実装");
+}
 
 // 手動で！
 // 2< in.txt dog
@@ -993,15 +991,15 @@ t_list *redirect_in_cat_and_redirect_out_grep_data()
 	ft_lstadd_back(&cmd_list, ft_lstnew(cmd_block_2));
 	return cmd_list;
 }
-// TEST(exec_command_line_G, redirect_in_cat_and_redirect_out_grep) {
-// 	t_list *cmd_lst;
+TEST(exec_command_line_G, redirect_in_cat_and_redirect_out_grep) {
+	// t_list *cmd_lst;
 
 // 	printf("\n##### redirect_in_cat_and_redirect_out_grep_data #####\n");
 // 	printf("##### < Makefile cat | grep \"make\" > tmp");
 // 	cmd_lst = redirect_in_cat_and_redirect_out_grep_data();
 // 	print_cmd_lst(cmd_lst);
-// 	FAIL("Fail!");
-// }
+	FAIL("未実装");
+}
 
 int main(int argc, char **argv)
 {
