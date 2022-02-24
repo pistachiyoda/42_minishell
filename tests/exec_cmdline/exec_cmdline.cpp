@@ -44,6 +44,7 @@ void compare_file(
 	std::ifstream expected_stream((prefix + expected_filename).c_str());
 	std::string expected_string = std::string(std::istreambuf_iterator<char>(expected_stream), std::istreambuf_iterator<char>());
 
+	// printf("expected:\n%s\nactual:\n%s\n", expected_string.c_str(), actual_string.c_str());
 	CHECK_EQUAL(expected_string, actual_string);
 }
 
@@ -154,6 +155,7 @@ TEST(exec_command_line_G, cat_with_append_redirect) {
 
 	cmd_lst = cat_with_append_redirect();
 	exec_command_without_dup(cmd_lst);
+	compare_file("in.txt", "out.txt");
 	exec_command_without_dup(cmd_lst); // 2回実行する
 	compare_file("expected/cat_with_append_redirect.txt", "out.txt");
 }
@@ -475,7 +477,7 @@ t_list	*unrelated_fd_redirect_data()
 
 	cmd_block = (t_cmd_block *)malloc(sizeof(t_cmd_block));
 	cmd_block->command = ft_strdup("cat");
-	cmd_block->args = ft_split("cat in.txt", ' ');
+	cmd_block->args = ft_split("cat ./exec_cmdline/in.txt", ' ');
 	input_redirect = (t_redirects *)malloc(sizeof(t_redirects));
 	input_redirect->redirect = INPUT;
 	input_redirect->target = ft_strdup("./exec_cmdline/in.txt");
@@ -501,10 +503,10 @@ t_list	*unrelated_fd_redirect_with_cat_data()
 
 	cmd_block = (t_cmd_block *)malloc(sizeof(t_cmd_block));
 	cmd_block->command = ft_strdup("cat");
-	cmd_block->args = ft_split("cat in.txt", ' ');
+	cmd_block->args = ft_split("cat ./exec_cmdline/in.txt", ' ');
 	write_redirect = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect->redirect = WRITE;
-	write_redirect->target = ft_strdup("./exec_cmdline/in.txt");
+	write_redirect->target = ft_strdup("./exec_cmdline/out.txt");
 	write_redirect->fd = 100;
 	cmd_block->redirects = ft_lstnew(write_redirect);
 	return ft_lstnew(cmd_block);
@@ -515,7 +517,7 @@ TEST(exec_command_line_G, unrelated_fd_redirect_with_cat)
 
 	cmd_list = unrelated_fd_redirect_with_cat_data();
 	exec_command_and_output_file(cmd_list);
-	// 何も書かれていないout.txtが作成され、result.txt(標準出力)にin.txtの内容が出力される
+	// 何も書かれていないout.txtが作成され、result.txt(標準出力先)にin.txtの内容が出力される
 	compare_file("expected/empty.txt", "out.txt");
 	compare_file("in.txt");
 }
@@ -543,7 +545,7 @@ TEST(exec_command_line_G, unrelated_fd_redirect_with_echo)
 
 	cmd_list = unrelated_fd_redirect_with_echo_data();
 	exec_command_and_output_file(cmd_list);
-	// 何も書かれていないout.txtが作成され、result.txt(標準出力)にin3.txt(hoge)の内容が出力される
+	// 何も書かれていないout.txtが作成され、result.txt(標準出力先)にin3.txt(hoge)の内容が出力される
 	compare_file("expected/empty.txt", "out.txt");
 	compare_file("in3.txt");
 }
@@ -583,7 +585,7 @@ TEST(exec_command_line_G, two_unrelated_fd_write_redirect_with_echo)
 	// 何も書かれていないout1.txt, out2.txtが作成される
 	compare_file("expected/empty.txt", "out1.txt");
 	compare_file("expected/empty.txt", "out2.txt");
-	// result.txt(標準出力)にin3.txt(hoge)の内容が出力される
+	// result.txt(標準出力先)にin3.txt(hoge)の内容が出力される
 	compare_file("in3.txt");
 }
 
@@ -625,12 +627,12 @@ TEST(exec_command_line_G, two_unrelated_fd_and_1_write_with_echo)
 	t_list	*cmd_list;
 
 	cmd_list = two_unrelated_fd_and_1_write_with_echo_data();
-	exec_command_and_output_file(cmd_list);
+	exec_command_without_dup(cmd_list);
 	// 何も書かれていないout1.txt, out2.txtが作成される
 	compare_file("expected/empty.txt", "out1.txt");
 	compare_file("expected/empty.txt", "out2.txt");
-	// result.txt(標準出力)にin3.txt(hoge)の内容が出力される
-	compare_file("in3.txt");
+	// 標準出力からリダイレクトされたout3.txtにin3.txt(hoge)の内容が出力される
+	compare_file("in3.txt", "out3.txt");
 }
 
 // 1> out1.txt 2> out2.txt echo hoge
@@ -663,11 +665,12 @@ TEST(exec_command_line_G, two_fd_write_redirect_with_echo_date) {
 	t_list *cmd_lst;
 
 	cmd_lst = two_fd_write_redirect_with_echo_date();
-	exec_command_without_dup(cmd_lst);
+	// exec_command_without_dup(cmd_lst);
 	// echoから1に書き込まれる。
-	compare_file("expected/two_fd_write_redirect_with_echo_out1.txt", "out1.txt");
+	// compare_file("expected/two_fd_write_redirect_with_echo_out1.txt", "out1.txt");
 	// エラー出力（2）は何も受け取らないので空
-	compare_file("expected/empty.txt", "out2.txt");
+	// compare_file("expected/empty.txt", "out2.txt");
+	FAIL("未実装");
 }
 
 // 2> out1.txt 1> out2.txt echo hoge
@@ -787,9 +790,10 @@ TEST(exec_command_line_G, two_fd_write_redirect_with_dog_date) {
 	cmd_lst = two_fd_write_redirect_with_dog_date();
 	exec_command_without_dup(cmd_lst);
 	// 標準出力（1）は何も受け取らないのでout1.txtは空
-	compare_file("expected/empty.txt", "out1.txt");
+	// compare_file("expected/empty.txt", "out1.txt");
 	// dogコマンドのエラー出力が2に書き込まれる。
-	compare_file("expected/two_fd_write_redirect_with_dog_out2.txt", "out2.txt");
+	// compare_file("expected/two_fd_write_redirect_with_dog_out2.txt", "out2.txt");
+	FAIL("未実装");
 }
 
 // 2> out1.txt 1> out2.txt 2> out3.txt dog
@@ -833,11 +837,12 @@ TEST(exec_command_line_G, three_fd_write_redirect_with_dog_date) {
 	cmd_lst = three_fd_write_redirect_with_dog_date();
 	exec_command_without_dup(cmd_lst);
 	// 最初の2は処理されないのでout1.txtは空
-	compare_file("expected/empty.txt", "out1.txt");
+	// compare_file("expected/empty.txt", "out1.txt");
 	// 標準出力（1）は何も受け取らないのでout2.txtは空
-	compare_file("expected/empty.txt", "out2.txt");
+	// compare_file("expected/empty.txt", "out2.txt");
 	// echoから最後の2にのみ書き込まれる。
-	compare_file("expected/three_fd_write_redirect_with_dog_out3.txt", "out3.txt");
+	// compare_file("expected/three_fd_write_redirect_with_dog_out3.txt", "out3.txt");
+	FAIL("未実装");
 }
 
 // 0< in1.txt cat 100< in2.txt
@@ -867,12 +872,13 @@ t_list *zero_100_input_redirect_with_cat_date()
 	return ft_lstnew(cmd_block);
 }
 TEST(exec_command_line_G, zero_100_input_redirect_with_cat_date) {
-	t_list *cmd_lst;
+	// t_list *cmd_lst;
 
-	cmd_lst = zero_100_input_redirect_with_cat_date();
-	exec_command_without_dup(cmd_lst);
-	// 標準出力（1）にin.txtの内容が出力されるので、result.txtと比較
-	compare_file("in.txt");
+	// cmd_lst = zero_100_input_redirect_with_cat_date();
+	// exec_command_without_dup(cmd_lst);
+	// // 標準出力（1）にin.txtの内容が出力されるので、result.txtと比較
+	// compare_file("in.txt");
+	FAIL("未実装");
 }
 
 // 0<　in1.txt cat 0<　in2.txt
@@ -905,7 +911,7 @@ TEST(exec_command_line_G, two_fd_input_redirect_with_cat_date) {
 	t_list *cmd_lst;
 
 	cmd_lst = two_fd_input_redirect_with_cat_date();
-	exec_command_without_dup(cmd_lst);
+	exec_command_and_output_file(cmd_lst);
 	// 後半の0<が実行され、標準出力（1）にin2.txtの内容が出力されるので、result.txtと比較
 	compare_file("in2.txt");
 }
