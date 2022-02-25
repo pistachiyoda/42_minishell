@@ -125,6 +125,32 @@ TEST(lexer_G, heredoc) {
 	compare_words(expected, words);
 }
 
+char	**heredoc2(int num)
+{
+	char	**expected;
+
+	expected = (char **)malloc(sizeof(char *) * num);
+	expected[0] = ft_strdup("echo");
+	expected[1] = ft_strdup("0");
+	expected[2] = ft_strdup("<<");
+	expected[3] = ft_strdup("EOT");
+	expected[4] = ft_strdup("0");
+	expected[5] = ft_strdup("<<");
+	expected[6] = ft_strdup("EOT2");
+	expected[7] = ft_strdup("-n");
+	expected[8] = NULL;
+	return (expected);
+}
+
+TEST(lexer_G, heredoc2) {
+	t_list	*words;
+	char	**expected;
+
+	words = lexer(ft_strdup("echo<< EOT<<EOT2 -n"));
+	expected = heredoc2(9);
+	compare_words(expected, words);
+}
+
 char	**has_write_at_beginning(int num)
 {
 	char	**expected;
@@ -311,6 +337,71 @@ TEST(lexer_G, has_num_as_args_and_fd) {
 
 	words = lexer(ft_strdup("date 1 0< in"));
 	expected = has_num_as_args_and_fd(5);
+	compare_words(expected, words);
+}
+
+char	**fd_under_min(int num)
+{
+	char	**expected;
+
+	expected = (char **)malloc(sizeof(char *) * num);
+	expected[0] = ft_strdup("date");
+	expected[1] = ft_strdup("-1");
+	expected[2] = ft_strdup("0");
+	expected[3] = ft_strdup("<");
+	expected[4] = ft_strdup("in");
+	return (expected);
+}
+
+TEST(lexer_G, fd_under_min) {
+	t_list	*words;
+	char	**expected;
+
+	words = lexer(ft_strdup("date -1< in"));
+	expected = fd_under_min(5);
+	compare_words(expected, words);
+}
+
+char	**fd_over_max(int num)
+{
+	char	**expected;
+
+	expected = (char **)malloc(sizeof(char *) * num);
+	expected[0] = ft_strdup("date");
+	expected[1] = ft_strdup("257");
+	expected[2] = ft_strdup("1");
+	expected[3] = ft_strdup(">");
+	expected[4] = ft_strdup("in");
+	return (expected);
+}
+
+TEST(lexer_G, fd_over_max) {
+	t_list	*words;
+	char	**expected;
+
+	words = lexer(ft_strdup("date 257> in"));
+	expected = fd_over_max(5);
+	compare_words(expected, words);
+}
+
+char	**fd_max(int num)
+{
+	char	**expected;
+
+	expected = (char **)malloc(sizeof(char *) * num);
+	expected[0] = ft_strdup("date");
+	expected[1] = ft_strdup("256");
+	expected[2] = ft_strdup(">");
+	expected[3] = ft_strdup("in");
+	return (expected);
+}
+
+TEST(lexer_G, fd_max) {
+	t_list	*words;
+	char	**expected;
+
+	words = lexer(ft_strdup("date 256> in"));
+	expected = fd_max(4);
 	compare_words(expected, words);
 }
 
