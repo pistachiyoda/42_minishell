@@ -1,6 +1,7 @@
 #include "minishell.h"
 
-bool	is_last_input_redirect(t_list *redirects, t_list *node)
+bool	is_last_input_redirect(
+	t_redirects *redirect, t_list *redirects)
 {
 	t_list		*current_node;
 	t_list		*last_input_node;
@@ -11,27 +12,28 @@ bool	is_last_input_redirect(t_list *redirects, t_list *node)
 	while (1)
 	{
 		current_redirect = current_node->content;
-		if (current_redirect->redirect == INPUT
-			|| current_redirect->redirect == HEREDOC)
+		if ((current_redirect->redirect == INPUT
+				|| current_redirect->redirect == HEREDOC)
+			&& current_redirect->fd == redirect->fd)
 			last_input_node = current_node;
 		if (!current_node->next)
 			break ;
 		current_node = current_node->next;
 	}
-	return (last_input_node == node);
+	return (last_input_node->content == redirect);
 }
 
 // <の処理
 // @todo エラー時のexit処理
-void	handle_input(char *filename, bool is_last)
+void	handle_input(t_redirects *redirect, bool is_last)
 {
 	int	fd;
 
-	if (!(is_readable(filename)))
+	if (!(is_readable(redirect->target)))
 		exit(1);
-	fd = open_file(filename);
+	fd = open_file(redirect->target);
 	if (!is_last)
 		return ;
-	if (dup2(fd, 0) == -1)
+	if (dup2(fd, redirect->fd) == -1)
 		printf("dup2()");
 }
