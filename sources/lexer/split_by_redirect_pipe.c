@@ -24,16 +24,20 @@ void	add_fd_num(char *str, t_list **words, int i, int start)
 {
 	t_list	*new;
 	int		count;
+	char	*fd;
 
 	new = NULL;
+	fd = NULL;
 	count = 0;
 	while (i - start > count)
 	{
-		if (ft_isdigit(str[start + count]) != 1)
+		if (count > 3 || ft_isdigit(str[start + count]) != 1)
 			break ;
 		count++;
 	}
-	if ((count == 0 || i - start != count) && str[i] != '|')
+	fd = xsubstr(str, start, count, "lexer");
+	if ((count == 0 || (ft_atoi(fd) < 0 || ft_atoi(fd) > 256)
+			|| i - start != count) && str[i] != '|')
 	{
 		if (str[i] == '>')
 			new = xlstnew(xstrdup("1", "lexer"), "lexer");
@@ -41,6 +45,7 @@ void	add_fd_num(char *str, t_list **words, int i, int start)
 			new = xlstnew(xstrdup("0", "lexer"), "lexer");
 		ft_lstadd_back(words, new);
 	}
+	free(fd);
 }
 
 int	split_by_redirect_pipe(char *str, t_list *words, int *i, int start)
