@@ -81,7 +81,8 @@ void	handle_heredoc_loop(t_cmd_block *cmd_block, int	pipe_fds[2])
 		if (redirect->redirect == HEREDOC)
 			handle_heredoc(
 				redirect->target,
-				is_last_input_redirect(cmd_block->redirects, redirect_node),
+				is_last_input_redirect(
+					(t_redirects *)cmd_block->redirects, redirect_node),
 				pipe_fds);
 		if (redirect_node->next == NULL)
 			break ;
