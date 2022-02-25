@@ -360,3 +360,10 @@ TEST(lexer_G, pipe_in_a_row3) {
 	words = lexer(ft_strdup("		| |aa"));
 	STRCMP_EQUAL(NULL, (char *)words);
 }
+
+TEST(lexer_G, redirect_without_target) {
+	t_list	*words;
+
+	words = lexer(ft_strdup("cat input <| aa"));
+	STRCMP_EQUAL(NULL, (char *)words);
+}

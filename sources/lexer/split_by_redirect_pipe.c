@@ -1,14 +1,15 @@
 #include "minishell.h"
 
-bool	is_valid_redirect(t_list *words, char *str, int i)
+bool	is_valid_redirect_pipe(t_list *words, char *str, int i)
 {
 	t_list	*last;
 
 	last = ft_lstlast(words);
 	if (last->content == NULL)
 		return (true);
-	if (((char *)last->content)[0] == '|' || ((char *)last->content)[0] == '>'
-		|| ((char *)last->content)[0] == '<')
+	if ((str[i] == '|' && ((char *)last->content)[0] == '|')
+		|| (((char *)last->content)[0] == '>'
+		|| ((char *)last->content)[0] == '<'))
 	{
 		str[i + 1] = '\0';
 		syntax_error(&str[i]);
@@ -51,7 +52,7 @@ int	split_by_redirect_pipe(char *str, t_list *words, int *i, int start)
 		new = xlstnew(xsubstr(str, start, *i - start, "lexer"), "lexer");
 		ft_lstadd_back(&words, new);
 	}
-	if (!is_valid_redirect(words, str, *i))
+	if (!is_valid_redirect_pipe(words, str, *i))
 		return (-1);
 	add_fd_num(str, &words, *i, start);
 	start = *i;
