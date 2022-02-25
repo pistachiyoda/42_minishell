@@ -1,0 +1,1 @@
+bash: dog: command not found
