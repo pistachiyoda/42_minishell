@@ -1,0 +1,1 @@
+minishell: ./exec_cmdline/no_exec_permission.sh: Permission denied

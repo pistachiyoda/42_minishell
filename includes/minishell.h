@@ -30,6 +30,7 @@ char		*get_env_val(char *key, char **envp);
 char		*resolve_path(char	*command, char *path_val);
 
 // exec_command/utils.c
+bool		is_exists(char *path);
 bool		is_executable(char *command_path);
 
 // utils/free.c

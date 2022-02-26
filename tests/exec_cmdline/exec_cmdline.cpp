@@ -1050,7 +1050,7 @@ TEST(exec_command_line_G, no_write_permission)
 
 // 実行しようとしたファイルに実行権限がない
 // ./exec_cmdline/no_exec_permission.sh
-// minishell: ./no_exec_permission.sh: Permission denied
+// minishell: ./exec_cmdline/no_exec_permission.sh: Permission denied
 t_list	*no_exec_permission_data()
 {
 	t_cmd_block	*cmd_block;
@@ -1063,12 +1063,11 @@ t_list	*no_exec_permission_data()
 }
 TEST(exec_command_line_G, no_exec_permission)
 {
-	// t_list	*cmd_lst;
+	t_list	*cmd_lst;
 
-	// cmd_lst = no_exec_permission_data();
-	// exec_command_and_output_file(cmd_lst);
-	// compare_file("expected/no_exec_permission.txt", "stderr_result/result.txt");
-	FAIL("未実装");
+	cmd_lst = no_exec_permission_data();
+	exec_command_and_output_file(cmd_lst);
+	compare_file("expected/no_exec_permission.txt", "stderr_result/result.txt");
 }
 
 // 実行しようとしたのがディレクトリだった
@@ -1167,12 +1166,11 @@ t_list	*no_such_file_exec_data()
 }
 TEST(exec_command_line_G, no_such_file_exec)
 {
-	// t_list	*cmd_lst;
+	t_list	*cmd_lst;
 
-	// cmd_lst = no_such_file_exec_data();
-	// exec_command_and_output_file(cmd_lst);
-	// compare_file("expected/no_such_file_exec.txt", "stderr_result/result.txt");
-	FAIL("未実装");
+	cmd_lst = no_such_file_exec_data();
+	exec_command_and_output_file(cmd_lst);
+	compare_file("expected/no_such_file_exec.txt", "stderr_result/result.txt");
 }
 
 // リダイレクトの入力として存在しないファイルを指定した
