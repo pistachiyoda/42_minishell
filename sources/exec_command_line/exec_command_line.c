@@ -36,11 +36,11 @@ int	exec_command_line(t_list *cmd_list, char **envp)
 		perror("pipe()");
 		exit(1);
 	}
-	if (handle_redirect((t_cmd_block *)cmd_list->content, pipe_fds) != 0)
-		return (1);
 	pid = fork();
 	if (pid == 0)
 	{
+		if (handle_redirect((t_cmd_block *)cmd_list->content, pipe_fds) != 0)
+			exit(1);
 		close(pipe_fds[1]);
 		if (is_last_heredoc(((t_cmd_block *)cmd_list->content)->redirects))
 			dup2(pipe_fds[0], 0);

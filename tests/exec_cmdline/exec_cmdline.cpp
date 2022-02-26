@@ -1094,10 +1094,10 @@ TEST(exec_command_line_G, is_directory)
 	compare_file("expected/is_directory.txt", "stderr_result/result.txt");
 }
 
-// リダイレクトのインプットとしてディレクトリを指定した
-// cat < ./expected
+// catにリダイレクトのインプットとしてディレクトリを指定した
+// cat < ./exec_cmdline
 // cat: stdin: Is a directory
-// @todo catが出すエラーな気がするのでshell側での実装は不要かも
+// catが出すエラーなのでminishell側で実行前にエラーとしてはいけない
 t_list	*input_redirect_directory_data()
 {
 	t_cmd_block	*cmd_block;
@@ -1108,19 +1108,19 @@ t_list	*input_redirect_directory_data()
 	cmd_block->args = ft_split("cat", ' ');
 	input_redirect = (t_redirects *)malloc(sizeof(t_redirects));
 	input_redirect->redirect = INPUT;
-	input_redirect->target = ft_strdup("./expected");
+	input_redirect->target = ft_strdup("./exec_cmdline");
 	input_redirect->fd = 0;
 	cmd_block->redirects = ft_lstnew(input_redirect);
 	return ft_lstnew(cmd_block);
 }
 TEST(exec_command_line_G, input_redirect_directory)
 {
-	// t_list	*cmd_lst;
+	t_list	*cmd_lst;
 
-	// cmd_lst = input_redirect_directory_data();
-	// exec_command_and_output_file(cmd_lst);
-	// compare_file("expected/input_redirect_directory.txt", "stderr_result/result.txt");
-	FAIL("未実装");
+	cmd_lst = input_redirect_directory_data();
+	printf("hoge\n");
+	exec_command_and_output_file(cmd_lst);
+	compare_file("expected/input_redirect_directory.txt", "stderr_result/result.txt");
 }
 
 // リダイレクトのアウトプットとしてディレクトリを指定した
