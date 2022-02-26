@@ -3,6 +3,7 @@
 int	main(int argc, char **argv, char **envp)
 {
 	char		*str;
+	t_list		*words;
 	t_list		*cmd_list;
 	t_environ	*env;
 
@@ -15,12 +16,11 @@ int	main(int argc, char **argv, char **envp)
 		str = readline("minishell$ ");
 		if (ft_strlen(str) == 0)
 			continue ;
-		tmp_parse_data(&cmd_list, str);
+		words = lexer(str);
+		cmd_list = parser(words);
+		print_cmd_lst(cmd_list);
 		if (is_fork_required(cmd_list))
-		{
-			if (exec_command_line(cmd_list, envp) != 0)
-				continue ;
-		}
+			exec_command_line(cmd_list, envp);
 		else
 			run_builtin_command(cmd_list->content, env);
 		free(str);
