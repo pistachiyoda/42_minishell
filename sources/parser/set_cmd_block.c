@@ -90,7 +90,8 @@ void	set_cmd_block(t_list **words, t_cmd_block *cmd)
 	cmd->command = NULL;
 	cmd->args = NULL;
 	cmd->redirects = NULL;
-	if ((*words)->next != NULL && !is_redirect((*words)->next))
+	if (((*words)->next != NULL && !is_redirect((*words)->next))
+		|| (*words)->next == NULL)
 		cmd->command = (*words)->content;
 	if (cmd->command != NULL)
 		set_args(words, cmd);

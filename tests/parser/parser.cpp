@@ -497,3 +497,55 @@ TEST(parser_G, pipe_at_end) {
 	exp_tokens = pipe_at_end();
 	compare_tokens(tokens, exp_tokens);
 }
+
+t_list	*only_1command(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = NULL;
+	exp_cmd->command = ft_strdup("env");
+	exp_args = (char **)malloc(sizeof(char *) * 2);
+	exp_args[0] = ft_strdup("env");
+	exp_args[1] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(parser_G, only_1command) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+
+	tokens = get_tokens_from_parser(ft_strdup("env"));
+	exp_tokens = only_1command();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*only_1command_with_space(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = NULL;
+	exp_cmd->command = ft_strdup("env");
+	exp_args = (char **)malloc(sizeof(char *) * 2);
+	exp_args[0] = ft_strdup("env");
+	exp_args[1] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(parser_G, only_1command_with_space) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+
+	tokens = get_tokens_from_parser(ft_strdup("  env  "));
+	exp_tokens = only_1command_with_space();
+	compare_tokens(tokens, exp_tokens);
+}
