@@ -53,7 +53,10 @@ t_list	*set_dataset(char *str)
 	printf("PARSER-----------\n");
 	tokens = parser(words);
 	if (tokens == NULL)
+	{
+		free(str);
 		return (NULL);
+	}
 	print_tokens_passed_parser(tokens);
 	printf("EXPANSION-----------\n");
 	return (tokens);
