@@ -25,15 +25,16 @@ bool	is_last_input_redirect(
 
 // <の処理
 // @todo エラー時のexit処理
-void	handle_input(t_redirects *redirect, bool is_last)
+int	handle_input(t_redirects *redirect, bool is_last)
 {
 	int	fd;
 
 	if (!(is_readable(redirect->target)))
-		exit(1);
+		return (1);
 	fd = open_file(redirect->target);
 	if (!is_last)
-		return ;
+		return (0);
 	if (dup2(fd, redirect->fd) == -1)
 		printf("dup2()");
+	return (0);
 }

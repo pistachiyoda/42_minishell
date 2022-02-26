@@ -36,7 +36,8 @@ int	exec_command_line(t_list *cmd_list, char **envp)
 		perror("pipe()");
 		exit(1);
 	}
-	handle_redirect((t_cmd_block *)cmd_list->content, pipe_fds);
+	if (handle_redirect((t_cmd_block *)cmd_list->content, pipe_fds) != 0)
+		return (1);
 	pid = fork();
 	if (pid == 0)
 	{

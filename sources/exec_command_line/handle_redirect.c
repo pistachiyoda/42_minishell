@@ -58,8 +58,11 @@ int	handle_redirect(t_cmd_block *cmd_block, int	pipe_fds[2])
 	{
 		redirect = redirect_node->content;
 		if (redirect->redirect == INPUT)
-			handle_input(redirect,
-				is_last_input_redirect(redirect, cmd_block->redirects));
+		{
+			if (handle_input(redirect,
+				is_last_input_redirect(redirect, cmd_block->redirects)) != 0)
+				return (1);
+		}
 		if (redirect->redirect == WRITE || redirect->redirect == APPEND)
 			handle_output(redirect,
 				is_last_fd_output_redirect(redirect, cmd_block->redirects));

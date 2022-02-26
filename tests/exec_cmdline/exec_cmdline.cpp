@@ -994,7 +994,7 @@ TEST(exec_command_line_G, cmd_not_found)
 
 // inputのリダイレクト元ファイルにリード権限がない
 // cat < ./exec_cmdline/no_read_permission.txt
-// minishell: no_read_permission.txt: Permission denied
+// minishell: ./exec_cmdline/no_read_permission.txt: Permission denied
 t_list	*no_read_permission_data()
 {
 	t_cmd_block	*cmd_block;
@@ -1006,20 +1006,19 @@ t_list	*no_read_permission_data()
 	input_redirect = (t_redirects *)malloc(sizeof(t_redirects));
 	input_redirect->redirect = INPUT;
 	input_redirect->target = ft_strdup("./exec_cmdline/no_read_permission.txt");
-	input_redirect->fd = 1;
+	input_redirect->fd = 0;
 	cmd_block->redirects = ft_lstnew(input_redirect);
 	return ft_lstnew(cmd_block);
 }
 TEST(exec_command_line_G, no_read_permission)
 {
-	// t_list	*cmd_lst;
+	t_list	*cmd_lst;
 
-	// cmd_lst = no_read_permission_data();
-	// system("chmod -r ./exec_cmdline/no_read_permission.txt");
-	// exec_command_and_output_file(cmd_lst);
-	// system("chmod +r ./exec_cmdline/no_read_permission.txt");
-	// compare_file("expected/no_read_permission.txt", "stderr_result/result.txt");
-	FAIL("未実装");
+	cmd_lst = no_read_permission_data();
+	system("chmod -r ./exec_cmdline/no_read_permission.txt");
+	exec_command_and_output_file(cmd_lst);
+	system("chmod +r ./exec_cmdline/no_read_permission.txt");
+	compare_file("expected/no_read_permission.txt", "stderr_result/result.txt");
 }
 
 // リダイレクト先として指定したファイルに書き込み権限がない

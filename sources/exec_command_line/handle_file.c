@@ -3,6 +3,7 @@
 // fileが存在しているか、読み取り権限があるかを確認する
 bool	is_readable(char *file)
 {
+	
 	if (access(file, F_OK) == -1)
 	{
 		printf("no such file or directory");
@@ -10,7 +11,7 @@ bool	is_readable(char *file)
 	}
 	if (access(file, R_OK) == -1)
 	{
-		printf("permission denied");
+		print_error(file, EMESS_NO_PERM);
 		return (false);
 	}
 	return (true);

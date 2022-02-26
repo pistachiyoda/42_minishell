@@ -17,7 +17,10 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		tmp_parse_data(&cmd_list, str);
 		if (is_fork_required(cmd_list))
-			exec_command_line(cmd_list, envp);
+		{
+			if (exec_command_line(cmd_list, envp) != 0)
+				continue ;
+		}
 		else
 			run_builtin_command(cmd_list->content, env);
 		free(str);
