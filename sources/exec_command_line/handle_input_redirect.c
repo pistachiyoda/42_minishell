@@ -30,7 +30,10 @@ int	handle_input(t_redirects *redirect, bool is_last)
 	int	fd;
 
 	if (!(is_readable(redirect->target)))
+	{
+		print_error(redirect->target, EMESS_NO_PERM);
 		return (1);
+	}
 	fd = open_file(redirect->target);
 	if (!is_last)
 		return (0);

@@ -1022,18 +1022,18 @@ TEST(exec_command_line_G, no_read_permission)
 }
 
 // リダイレクト先として指定したファイルに書き込み権限がない
-// echo hoge > ./exec_cmdline/no_write_permission.txt
-// minishell: no_write_permission.txt: Permission denied
+// cat in.txt > ./exec_cmdline/no_write_permission.txt
+// minishell: ./exec_cmdline/no_write_permission.txt: Permission denied
 t_list	*no_write_permission_data()
 {
 	t_cmd_block	*cmd_block;
 	t_redirects *write_redirect;
 
 	cmd_block = (t_cmd_block *)malloc(sizeof(t_cmd_block));
-	cmd_block->command = ft_strdup("echo");
-	cmd_block->args = ft_split("echo hoge", ' ');
+	cmd_block->command = ft_strdup("cat");
+	cmd_block->args = ft_split("cat in.txt", ' ');
 	write_redirect = (t_redirects *)malloc(sizeof(t_redirects));
-	write_redirect->redirect = INPUT;
+	write_redirect->redirect = WRITE;
 	write_redirect->target = ft_strdup("./exec_cmdline/no_write_permission.txt");
 	write_redirect->fd = 1;
 	cmd_block->redirects = ft_lstnew(write_redirect);
@@ -1041,12 +1041,11 @@ t_list	*no_write_permission_data()
 }
 TEST(exec_command_line_G, no_write_permission)
 {
-	// t_list	*cmd_lst;
+	t_list	*cmd_lst;
 
-	// cmd_lst = no_write_permission_data();
-	// exec_command_and_output_file(cmd_lst);
-	// compare_file("expected/no_write_permission.txt", "stderr_result/result.txt");
-	FAIL("未実装");
+	cmd_lst = no_write_permission_data();
+	exec_command_and_output_file(cmd_lst);
+	compare_file("expected/no_write_permission.txt", "stderr_result/result.txt");
 }
 
 // 実行しようとしたファイルに実行権限がない

@@ -10,10 +10,7 @@ bool	is_readable(char *file)
 		return (false);
 	}
 	if (access(file, R_OK) == -1)
-	{
-		print_error(file, EMESS_NO_PERM);
 		return (false);
-	}
 	return (true);
 }
 
