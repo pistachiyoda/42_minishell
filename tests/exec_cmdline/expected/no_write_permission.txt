@@ -1,0 +1,1 @@
+minishell: no_write_permission.txt: Permission denied

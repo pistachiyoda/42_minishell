@@ -1,0 +1,1 @@
+minishell: no_read_permission.txt: Permission denied

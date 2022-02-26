@@ -1,0 +1,1 @@
+minishell: ./expected: is a directory
