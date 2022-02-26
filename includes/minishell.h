@@ -14,6 +14,7 @@
 
 # define EMESS_NO_FILE_DIR "No such file or directory\n"
 # define EMESS_IS_DIR "is a directory\n"
+# define EMESS_IS_DIR2 "Is a directory\n"
 # define EMESS_NO_CMD "command not found\n"
 # define EMESS_NO_PERM "Permission denied\n"
 # define EMESS_REQUIRE_ARGS "Require argument\n"

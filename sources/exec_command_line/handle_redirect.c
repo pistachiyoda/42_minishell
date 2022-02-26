@@ -28,6 +28,11 @@ int	handle_output(t_redirects *redirect, bool is_last)
 {
 	int	fd;
 
+	if (is_directory(redirect->target))
+	{
+		print_error(redirect->target, EMESS_IS_DIR2);
+		return (1);
+	}
 	if (!(is_writable(redirect->target)))
 	{
 		print_error(redirect->target, EMESS_NO_PERM);

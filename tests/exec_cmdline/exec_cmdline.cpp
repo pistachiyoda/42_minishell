@@ -989,7 +989,6 @@ TEST(exec_command_line_G, cmd_not_found)
 	cmd_lst = cmd_not_found_data();
 	exec_command_and_output_file(cmd_lst);
 	compare_file("expected/cmd_not_found.txt", "stderr_result/result.txt");
-	FAIL("未実装");
 }
 
 // inputのリダイレクト元ファイルにリード権限がない
@@ -1118,14 +1117,13 @@ TEST(exec_command_line_G, input_redirect_directory)
 	t_list	*cmd_lst;
 
 	cmd_lst = input_redirect_directory_data();
-	printf("hoge\n");
 	exec_command_and_output_file(cmd_lst);
 	compare_file("expected/input_redirect_directory.txt", "stderr_result/result.txt");
 }
 
 // リダイレクトのアウトプットとしてディレクトリを指定した
-// echo fuga > ./expected
-// minishell: hoge: Is a directory
+// echo fuga > ./exec_cmdline
+// minishell: ./exec_cmdline: Is a directory
 t_list	*write_redirect_directory_data()
 {
 	t_cmd_block	*cmd_block;
@@ -1136,19 +1134,18 @@ t_list	*write_redirect_directory_data()
 	cmd_block->args = ft_split("echo fuga", ' ');
 	write_redirect = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect->redirect = WRITE;
-	write_redirect->target = ft_strdup("./expected");
+	write_redirect->target = ft_strdup("./exec_cmdline");
 	write_redirect->fd = 1;
 	cmd_block->redirects = ft_lstnew(write_redirect);
 	return ft_lstnew(cmd_block);
 }
 TEST(exec_command_line_G, write_redirect_directory)
 {
-	// t_list	*cmd_lst;
+	t_list	*cmd_lst;
 
-	// cmd_lst = write_redirect_directory_data();
-	// exec_command_and_output_file(cmd_lst);
-	// compare_file("expected/write_redirect_directory.txt", "stderr_result/result.txt");
-	FAIL("未実装");
+	cmd_lst = write_redirect_directory_data();
+	exec_command_and_output_file(cmd_lst);
+	compare_file("expected/write_redirect_directory.txt", "stderr_result/result.txt");
 }
 
 
