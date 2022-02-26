@@ -1044,6 +1044,7 @@ TEST(exec_command_line_G, no_write_permission)
 	t_list	*cmd_lst;
 
 	cmd_lst = no_write_permission_data();
+	system("chmod -w ./exec_cmdline/no_write_permission.txt");
 	exec_command_and_output_file(cmd_lst);
 	compare_file("expected/no_write_permission.txt", "stderr_result/result.txt");
 }
@@ -1066,6 +1067,7 @@ TEST(exec_command_line_G, no_exec_permission)
 	t_list	*cmd_lst;
 
 	cmd_lst = no_exec_permission_data();
+	system("chmod -x ./exec_cmdline/no_exec_permission.sh");
 	exec_command_and_output_file(cmd_lst);
 	compare_file("expected/no_exec_permission.txt", "stderr_result/result.txt");
 }
