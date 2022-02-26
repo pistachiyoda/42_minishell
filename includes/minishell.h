@@ -19,6 +19,7 @@
 # define EMESS_UNCLOSED_QUOAT "Unclosed quoat detected\n"
 # define EMESS_INVALID_ID "not a valid identifier\n"
 # define EMESS_SYNTAX "syntax error near unexpected token"
+# define EMESS_LARGE_FD "Bad file descriptor\n"
 
 // exec_command/exec_command.c
 int			exec_command(char *command_path, char **args, char **envp);

@@ -369,9 +369,8 @@ char	**fd_over_max(int num)
 	expected = (char **)malloc(sizeof(char *) * num);
 	expected[0] = ft_strdup("date");
 	expected[1] = ft_strdup("257");
-	expected[2] = ft_strdup("1");
-	expected[3] = ft_strdup(">");
-	expected[4] = ft_strdup("in");
+	expected[2] = ft_strdup(">");
+	expected[3] = ft_strdup("in");
 	return (expected);
 }
 
@@ -402,6 +401,31 @@ TEST(lexer_G, fd_max) {
 
 	words = lexer(ft_strdup("date 256> in"));
 	expected = fd_max(4);
+	compare_words(expected, words);
+}
+
+char	**has_digit_target(int num)
+{
+	char	**expected;
+
+	expected = (char **)malloc(sizeof(char *) * num);
+	expected[0] = ft_strdup("cat");
+	expected[1] = ft_strdup("input");
+	expected[2] = ft_strdup("0");
+	expected[3] = ft_strdup("<");
+	expected[4] = ft_strdup("0");
+	expected[5] = ft_strdup("1");
+	expected[6] = ft_strdup(">");
+	expected[7] = ft_strdup("aa");
+	return (expected);
+}
+
+TEST(lexer_G, has_digit_target) {
+	t_list	*words;
+	char	**expected;
+
+	words = lexer(ft_strdup("cat input <0 > aa"));
+	expected = has_digit_target(8);
 	compare_words(expected, words);
 }
 
@@ -456,5 +480,35 @@ TEST(lexer_G, redirect_without_target) {
 	t_list	*words;
 
 	words = lexer(ft_strdup("cat input <| aa"));
+	STRCMP_EQUAL(NULL, (char *)words);
+}
+
+TEST(lexer_G, redirect_without_target2) {
+	t_list	*words;
+
+	words = lexer(ft_strdup("cat input <0> aa"));
+	STRCMP_EQUAL(NULL, (char *)words);
+}
+
+TEST(lexer_G, redirect_without_target3) {
+	t_list	*words;
+
+	words = lexer(ft_strdup("cat input < 0> aa"));
+	STRCMP_EQUAL(NULL, (char *)words);
+}
+
+// bash: syntax error near unexpected token `-1'
+TEST(lexer_G, redirect_without_target4_fd_over_intmax) {
+	t_list	*words;
+
+	words = lexer(ft_strdup("cat input >2147483648> aa"));
+	STRCMP_EQUAL(NULL, (char *)words);
+}
+
+// bash: file descriptor out of range: Bad file descriptor
+TEST(lexer_G, fd_over_intmax) {
+	t_list	*words;
+
+	words = lexer(ft_strdup("cat input 2147483648> aa"));
 	STRCMP_EQUAL(NULL, (char *)words);
 }
