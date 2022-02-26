@@ -46,7 +46,7 @@ bool	add_last_str(char *str, t_list *words, int i, int start)
 	last = ft_lstlast(words);
 	if (start < i)
 	{
-		new_ele = xlstnew(ft_substr(str, start, i - start), "lexer");
+		new_ele = xlstnew(xsubstr(str, start, i - start, "lexer"), "lexer");
 		ft_lstadd_back(&words, new_ele);
 		return (true);
 	}

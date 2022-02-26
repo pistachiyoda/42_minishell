@@ -55,8 +55,7 @@ void	ft_export(t_cmd_block *cmd_block, t_environ *env)
 	if (cmd_block->args[1] == NULL)
 	{
 		env_num = count_environ_ele(env);
-		flags = malloc(sizeof(char) * (env_num + 1));
-		malloc_check(flags, "export");
+		flags = xmalloc(sizeof(char) * (env_num + 1), "export");
 		flags = ft_memset(flags, '0', env_num);
 		flags[env_num + 1] = '\0';
 		display_sorted_env(env->next, 0, flags, env_num);
