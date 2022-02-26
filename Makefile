@@ -31,7 +31,7 @@ CFILES =\
 	sources/lexer/lexer.c\
 	sources/lexer/split_by_redirect_pipe.c\
 	sources/parser/parser.c\
-	sources/parser/is_valid_words.c
+	sources/parser/set_cmd_block.c
 OBJ = $(CFILES:.c=.o)
 
 all: $(NAME)

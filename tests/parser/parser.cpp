@@ -48,10 +48,8 @@ void	compare_tokens(t_list *tokens, t_list *exp_tokens)
 		else
 		{
 			STRCMP_EQUAL(exp_cmd->command, cmd->command);
-			printf("cmd: %s\n", cmd->command);
 			while (exp_cmd->args[i] != NULL)
 			{
-				printf("args[%d]: %s\n", i, cmd->args[i]);
 				STRCMP_EQUAL(exp_cmd->args[i], cmd->args[i]);
 				i++;
 			}
@@ -61,18 +59,14 @@ void	compare_tokens(t_list *tokens, t_list *exp_tokens)
 			redirects = (t_redirects *)cmd->redirects->content;
 			exp_redirects = (t_redirects *)exp_cmd->redirects->content;
 			CHECK_EQUAL(exp_redirects->redirect, redirects->redirect);
-			printf("type: %d\n", redirects->redirect);
 			STRCMP_EQUAL(exp_redirects->target, redirects->target);
-			printf("target: %s\n", redirects->target);
 			CHECK_EQUAL(exp_redirects->fd, redirects->fd);
-			printf("fd: %d\n", redirects->fd);
 			cmd->redirects = cmd->redirects->next;
 			exp_cmd->redirects = exp_cmd->redirects->next;
 		}
 		tokens = tokens->next;
 		exp_tokens = exp_tokens->next;
 	}
-	printf("----------\n");
 }
 
 t_list	*args2(void)

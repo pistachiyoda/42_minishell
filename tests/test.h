@@ -97,6 +97,7 @@ extern "C" {
 
 	// utils/free.c
 	void	free_2d_array(char **two_d_array);
+	void	free_tokens(t_list *tokens);
 
 	// utils/print_error.c
 	void	print_error(char *target, char *message);
@@ -167,17 +168,27 @@ extern "C" {
 	};
 
 	// lexer/split_by_redirect_pipe.c
-	bool	get_valid_fd_num(char *str, t_list **words, int i, int start);
-	bool	is_valid_redirect_pipe(char *str, t_list *words, int *i, int start);
-	int		split_by_redirect_pipe(char *str, t_list *words, int *i, int start);
+	bool		get_valid_fd_num(char *str, t_list **words, int i, int start);
+	bool		is_valid_redirect_pipe(char *str, t_list *words, int *i, int start);
+	int			split_by_redirect_pipe(char *str, t_list *words, int *i, int start);
 
 	// lexer/lexer.c
-	bool	is_space_tab_newline(char c);
-	int		is_in_quote_dquote(char *str, int i, int status);
-	int		split_by_space(char *str, t_list *words, int *i, int start);
-	bool	add_last_str(char *str, t_list *words, int i, int start);
-	t_list	*lexer(char *str);
+	bool		is_space_tab_newline(char c);
+	int			is_in_quote_dquote(char *str, int i, int status);
+	int			split_by_space(char *str, t_list *words, int *i, int start);
+	bool		add_last_str(char *str, t_list *words, int i, int start);
+	t_list		*lexer(char *str);
+
+	// parser/set_cmd_block.c
+	t_redirects	*set_redirect_member(t_list **words);
+	void		set_first_args(t_list **words, t_cmd_block *cmd, int arg_num);
+	void		add_args(t_list **words, t_cmd_block *cmd, int arg_num);
+	void		set_args(t_list **words, t_cmd_block *cmd);
+	void		set_cmd_block(t_list **words, t_cmd_block *cmd);
 
 	// parser/parser.c
-	t_list	*parser(t_list *words);
+	bool		is_valid_words(t_list *words);
+	bool		is_redirect(t_list *words);
+	void		set_tokens(t_list **tokens, t_cmd_block *cmd);
+	t_list		*parser(t_list *words);
 }
