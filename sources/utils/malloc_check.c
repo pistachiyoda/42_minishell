@@ -42,6 +42,7 @@ char	*xsubstr(char const *s, unsigned int start, size_t len, char *target)
 void	*xmalloc(size_t len, char *target)
 {
 	void	*ret;
+
 	ret = malloc(len);
 	if (ret == NULL)
 	{
