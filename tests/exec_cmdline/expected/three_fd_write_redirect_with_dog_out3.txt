@@ -1,1 +1,1 @@
-bash: dog: command not found
+minishell: dog: command not found

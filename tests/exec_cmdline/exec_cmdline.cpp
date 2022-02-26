@@ -800,15 +800,14 @@ t_list *two_fd_write_redirect_with_dog_date()
 	return ft_lstnew(cmd_block);
 }
 TEST(exec_command_line_G, two_fd_write_redirect_with_dog_date) {
-	// t_list *cmd_lst;
+	t_list *cmd_lst;
 
-	// cmd_lst = two_fd_write_redirect_with_dog_date();
-	// exec_command_without_dup(cmd_lst);
+	cmd_lst = two_fd_write_redirect_with_dog_date();
+	exec_command_without_dup(cmd_lst);
 	// 標準出力（1）は何も受け取らないのでout1.txtは空
-	// compare_file("expected/empty.txt", "out1.txt");
+	compare_file("expected/empty.txt", "out1.txt");
 	// dogコマンドのエラー出力が2に書き込まれる。
-	// compare_file("expected/two_fd_write_redirect_with_dog_out2.txt", "out2.txt");
-	FAIL("未実装");
+	compare_file("expected/two_fd_write_redirect_with_dog_out2.txt", "out2.txt");
 }
 
 // 2> out1.txt 1> out2.txt 2> out3.txt dog
@@ -847,17 +846,16 @@ t_list *three_fd_write_redirect_with_dog_date()
 	return ft_lstnew(cmd_block);
 }
 TEST(exec_command_line_G, three_fd_write_redirect_with_dog_date) {
-	// t_list *cmd_lst;
+	t_list *cmd_lst;
 
-	// cmd_lst = three_fd_write_redirect_with_dog_date();
-	// exec_command_without_dup(cmd_lst);
+	cmd_lst = three_fd_write_redirect_with_dog_date();
+	exec_command_without_dup(cmd_lst);
 	// 最初の2は処理されないのでout1.txtは空
-	// compare_file("expected/empty.txt", "out1.txt");
+	compare_file("expected/empty.txt", "out1.txt");
 	// 標準出力（1）は何も受け取らないのでout2.txtは空
-	// compare_file("expected/empty.txt", "out2.txt");
+	compare_file("expected/empty.txt", "out2.txt");
 	// echoから最後の2にのみ書き込まれる。
-	// compare_file("expected/three_fd_write_redirect_with_dog_out3.txt", "out3.txt");
-	FAIL("未実装");
+	compare_file("expected/three_fd_write_redirect_with_dog_out3.txt", "out3.txt");
 }
 
 // 0< in1.txt cat 100< in2.txt
@@ -930,7 +928,7 @@ TEST(exec_command_line_G, two_fd_input_redirect_with_cat_date) {
 	compare_file("in2.txt");
 }
 
-//  2> out.txt 1< in.txt echo hoge
+//  2> out.txt 1< in.txt cat in2.txt
 // エラーケースなので正常系実装した後にエラーケースでまとめてコミットする
 t_list	*invalid_stdout_redirect_input_data()
 {
@@ -939,8 +937,8 @@ t_list	*invalid_stdout_redirect_input_data()
 	t_redirects *input_redirect;
 
 	cmd_block_1 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
-	cmd_block_1->command = ft_strdup("echo");
-	cmd_block_1->args = ft_split("echo hoge", ' ');
+	cmd_block_1->command = ft_strdup("cat");
+	cmd_block_1->args = ft_split("cat ./exec_cmdline/in2.txt", ' ');
 	write_redirect = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect->redirect = WRITE;
 	write_redirect->fd = 2;
@@ -954,14 +952,13 @@ t_list	*invalid_stdout_redirect_input_data()
 	return ft_lstnew(cmd_block_1);
 }
 TEST(exec_command_line_G, invalid_stdout_redirect_input_data) {
-	// t_list *cmd_lst;
+	t_list *cmd_lst;
 
-	// cmd_lst = invalid_stdout_redirect_input_data();
-	// exec_command_without_dup(cmd_lst);
-	// echoを実行するが、1< in.txtで標準出力(1)がcloseされるため、エラーになり、
+	cmd_lst = invalid_stdout_redirect_input_data();
+	exec_command_without_dup(cmd_lst);
+	// catを実行するが、1< in.txtで標準出力(1)がcloseされるため、エラーになり、
 	// out.txtにエラー文が出力される。
-	// compare_file("expected/invalid_stdout_redirect_input.txt", "out.txt");
-	FAIL("未実装");
+	compare_file("expected/invalid_stdout_redirect_input.txt", "out.txt");
 }
 
 // 手動で！
