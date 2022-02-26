@@ -11,6 +11,11 @@ bool	is_relative_or_absolute(char *command_path)
 
 int	exec_relative_or_absolute(char *command_path, char **args, char **envp)
 {
+	if (is_directory(command_path))
+	{
+		print_error(command_path, EMESS_IS_DIR);
+		return (1);
+	}
 	if (!is_exists(command_path))
 	{
 		print_error(command_path, EMESS_NO_FILE_DIR);

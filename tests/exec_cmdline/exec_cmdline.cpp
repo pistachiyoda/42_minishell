@@ -1071,26 +1071,25 @@ TEST(exec_command_line_G, no_exec_permission)
 }
 
 // 実行しようとしたのがディレクトリだった
-// ./expected
-// minishell: ./expected: is a directory
+// ./exec_cmdline
+// minishell: ./exec_cmdline: is a directory
 t_list	*is_directory_data()
 {
 	t_cmd_block	*cmd_block;
 
 	cmd_block = (t_cmd_block *)malloc(sizeof(t_cmd_block));
-	cmd_block->command = ft_strdup("./expected");
-	cmd_block->args = ft_split("./expected", ' ');
+	cmd_block->command = ft_strdup("./exec_cmdline");
+	cmd_block->args = ft_split("./exec_cmdline", ' ');
 	cmd_block->redirects = NULL;
 	return ft_lstnew(cmd_block);
 }
 TEST(exec_command_line_G, is_directory)
 {
-	// t_list	*cmd_lst;
+	t_list	*cmd_lst;
 
-	// cmd_lst = is_directory_data();
-	// exec_command_and_output_file(cmd_lst);
-	// compare_file("expected/is_directory.txt", "stderr_result/result.txt");
-	FAIL("未実装");
+	cmd_lst = is_directory_data();
+	exec_command_and_output_file(cmd_lst);
+	compare_file("expected/is_directory.txt", "stderr_result/result.txt");
 }
 
 // リダイレクトのインプットとしてディレクトリを指定した

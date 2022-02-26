@@ -13,6 +13,7 @@
 # include "parser.h"
 
 # define EMESS_NO_FILE_DIR "No such file or directory\n"
+# define EMESS_IS_DIR "is a directory\n"
 # define EMESS_NO_CMD "command not found\n"
 # define EMESS_NO_PERM "Permission denied\n"
 # define EMESS_REQUIRE_ARGS "Require argument\n"
@@ -30,6 +31,7 @@ char		*get_env_val(char *key, char **envp);
 char		*resolve_path(char	*command, char *path_val);
 
 // exec_command/utils.c
+bool		is_directory(char *path);
 bool		is_exists(char *path);
 bool		is_executable(char *command_path);
 
