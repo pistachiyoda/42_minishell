@@ -984,11 +984,11 @@ t_list	*cmd_not_found_data()
 }
 TEST(exec_command_line_G, cmd_not_found)
 {
-	// t_list	*cmd_lst;
+	t_list	*cmd_lst;
 
-	// cmd_lst = cmd_not_found_data();
-	// exec_command_and_output_file(cmd_lst);
-	// compare_file("expected/cmd_not_found.txt", "stderr_result/result.txt");
+	cmd_lst = cmd_not_found_data();
+	exec_command_and_output_file(cmd_lst);
+	compare_file("expected/cmd_not_found.txt", "stderr_result/result.txt");
 	FAIL("未実装");
 }
 

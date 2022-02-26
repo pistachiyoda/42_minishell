@@ -13,6 +13,7 @@
 # include "parser.h"
 
 # define EMESS_NO_FILE_DIR "No such file or directory\n"
+# define EMESS_NO_CMD "command not found\n"
 # define EMESS_REQUIRE_ARGS "Require argument\n"
 # define EMESS_INVALID_ARGS "Invalid argument\n"
 # define EMESS_MALLOC_FAIL "Memory allocation failure\n"

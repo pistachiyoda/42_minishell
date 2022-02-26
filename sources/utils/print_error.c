@@ -11,6 +11,7 @@ void	syntax_error(char *str)
 
 void	print_error(char *target, char *message)
 {
+	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(target, 2);
 	ft_putstr_fd(": ", 2);
 	ft_putstr_fd(message, 2);
