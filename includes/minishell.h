@@ -33,6 +33,7 @@ bool		is_executable(char *command_path);
 
 // utils/free.c
 void		free_2d_array(char **two_d_array);
+void		free_tokens(t_list *tokens);
 
 // utils/print_error.c
 void		syntax_error(char *str);
