@@ -29,6 +29,11 @@ int	handle_input(t_redirects *redirect, bool is_last)
 {
 	int	fd;
 
+	if (!(is_exists(redirect->target)))
+	{
+		print_error(redirect->target, EMESS_NO_FILE_DIR);
+		return (1);
+	}
 	if (!(is_readable(redirect->target)))
 	{
 		print_error(redirect->target, EMESS_NO_PERM);

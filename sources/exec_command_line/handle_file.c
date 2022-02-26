@@ -3,12 +3,6 @@
 // fileが存在しているか、読み取り権限があるかを確認する
 bool	is_readable(char *file)
 {
-	
-	if (access(file, F_OK) == -1)
-	{
-		printf("no such file or directory");
-		return (false);
-	}
 	if (access(file, R_OK) == -1)
 		return (false);
 	return (true);

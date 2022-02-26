@@ -1184,19 +1184,18 @@ t_list	*no_such_file_redirect_data()
 	cmd_block->args = ft_split("echo", ' ');
 	input_redirect = (t_redirects *)malloc(sizeof(t_redirects));
 	input_redirect->redirect = INPUT;
-	input_redirect->target = ft_strdup("./exec_cmdline/no_such_file_redirect");
+	input_redirect->target = ft_strdup("hoge");
 	input_redirect->fd = 1;
 	cmd_block->redirects = ft_lstnew(input_redirect);
 	return ft_lstnew(cmd_block);
 }
 TEST(exec_command_line_G, no_such_file_redirect)
 {
-	// t_list	*cmd_lst;
+	t_list	*cmd_lst;
 
-	// cmd_lst = no_such_file_redirect_data();
-	// exec_command_and_output_file(cmd_lst);
-	// compare_file("expected/no_such_file_redirect.txt", "stderr_result/result.txt");
-	FAIL("未実装");
+	cmd_lst = no_such_file_redirect_data();
+	exec_command_and_output_file(cmd_lst);
+	compare_file("expected/no_such_file_redirect.txt", "stderr_result/result.txt");
 }
 
 // cmd | cmd | cmd
