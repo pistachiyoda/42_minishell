@@ -43,6 +43,7 @@ t_list		*xlstnew(void *content, char *target);
 char		*xstrdup(const char *src, char *target);
 char		*xsubstr(char const *s, unsigned int start,
 				size_t len, char *target);
+void		*xmalloc(size_t len, char *target);
 void		malloc_check(void *words, char *target);
 
 // exec_command_line/exec_command_line.c

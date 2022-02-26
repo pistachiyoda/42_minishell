@@ -39,6 +39,18 @@ char	*xsubstr(char const *s, unsigned int start, size_t len, char *target)
 	return (ret);
 }
 
+void	*xmalloc(size_t len, char *target)
+{
+	void	*ret;
+	ret = malloc(len);
+	if (ret == NULL)
+	{
+		print_error(target, EMESS_MALLOC_FAIL);
+		exit(EXIT_FAILURE);
+	}
+	return (ret);
+}
+
 void	malloc_check(void *words, char *target)
 {
 	if (words == NULL)
