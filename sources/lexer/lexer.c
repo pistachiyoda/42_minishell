@@ -28,43 +28,39 @@ int	is_in_quote_dquote(char *str, int i, int status)
 
 int	split_by_space(char *str, t_list *words, int *i, int start)
 {
-	t_list	*new_ele;
+	t_list	*new;
 
-	new_ele = ft_lstnew(xsubstr(str, start, *i - start, "lexer"));
-	malloc_check(new_ele, "lexer");
-	ft_lstadd_back(&words, new_ele);
+	new = xlstnew(xsubstr(str, start, *i - start, "lexer"), "lexer");
+	ft_lstadd_back(&words, new);
 	while (str[*i + 1] != '\0' && is_space_tab_newline(str[*i + 1]))
 		(*i)++;
 	start = *i + 1;
 	return (start);
 }
 
-int	split_by_redirect_pipe(char *str, t_list *words, int *i, int start)
+bool	add_last_str(char *str, t_list *words, int i, int start)
 {
 	t_list	*new_ele;
+	t_list	*last;
 
-	if (is_space_tab_newline(str[*i - 1]) == false && str[*i - 1] != '|'
-		&& str[*i - 1] != '>' && str[*i - 1] != '<')
+	last = ft_lstlast(words);
+	if (start < i)
 	{
-		new_ele = ft_lstnew(xsubstr(str, start, *i - start, "lexer"));
-		malloc_check(new_ele, "lexer");
+		new_ele = xlstnew(xsubstr(str, start, i - start, "lexer"), "lexer");
 		ft_lstadd_back(&words, new_ele);
-		start = *i;
+		return (true);
 	}
-	if (ft_strncmp(&str[*i], ">>", 2) == 0
-		|| ft_strncmp(&str[*i], "<<", 2) == 0)
+	if (start == i && (ft_strncmp(last->content, ">", 1) == 0
+			|| ft_strncmp(last->content, "<", 1) == 0
+			|| ft_strncmp(last->content, ">>", 2) == 0
+			|| ft_strncmp(last->content, "<<", 2) == 0))
 	{
-		(*i)++;
-		new_ele = ft_lstnew(xsubstr(str, start, 2, "lexer"));
+		syntax_error("newline");
+		ft_lstclear(&words, free);
+		free(str);
+		return (false);
 	}
-	else
-		new_ele = ft_lstnew(xsubstr(str, start, 1, "lexer"));
-	malloc_check(new_ele, "lexer");
-	ft_lstadd_back(&words, new_ele);
-	while (str[*i + 1] != '\0' && is_space_tab_newline(str[*i + 1]))
-		(*i)++;
-	start = *i + 1;
-	return (start);
+	return (true);
 }
 
 t_list	*lexer(char *str)
@@ -75,23 +71,23 @@ t_list	*lexer(char *str)
 	int		status;
 
 	i = 0;
-	start = 0;
 	status = NONE;
-	words = ft_lstnew(NULL);
-	malloc_check(words, "lexer");
-	while (str[i] != '\0')
+	words = xlstnew(NULL, "lexer");
+	while (str[i] != '\0' && is_space_tab_newline(str[i]))
+		i++;
+	start = i;
+	while (str[i] != '\0' && start != -1)
 	{
 		if (str[i] == '\'' || str[i] == '"')
 			status = is_in_quote_dquote(str, i, status);
-		else if (status == NONE && is_space_tab_newline(str[i]))
+		if (status == NONE && is_space_tab_newline(str[i]))
 			start = split_by_space(str, words, &i, start);
 		else if (status == NONE
 			&& (str[i] == '>' || str[i] == '<' || str[i] == '|'))
 			start = split_by_redirect_pipe(str, words, &i, start);
 		i++;
 	}
-	if (add_last_str(str, words, i, start))
+	if (start != -1 && add_last_str(str, words, i, start))
 		return (words);
-	else
-		return (NULL);
+	return (NULL);
 }
