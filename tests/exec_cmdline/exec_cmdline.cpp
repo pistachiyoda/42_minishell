@@ -1195,6 +1195,53 @@ TEST(exec_command_line_G, no_such_file_redirect)
 	compare_file("expected/no_such_file_redirect.txt", "stderr_result/result.txt");
 }
 
+// cat in > out.txt > ./exec_cmdline/no_write_permission.txt >out2.txt
+// outは作成されるが空。out2は作成されない。
+// minishell: ./exec_cmdline/no_write_permission.txt: Permission denied
+t_list	*no_permission_file_in_middle()
+{
+	t_cmd_block *cmd_block;
+	t_redirects	*write_redirect1;
+	t_redirects *write_redirect2;
+	t_redirects *write_redirect3;
+
+	cmd_block = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block->command = ft_strdup("cat");
+	cmd_block->args = ft_split("cat ./exec_cmdline/in.txt", ' ');
+
+	write_redirect1 = (t_redirects *)malloc(sizeof(t_redirects));
+	write_redirect1->redirect = WRITE;
+	write_redirect1->fd = 1;
+	write_redirect1->target = ft_strdup("./exec_cmdline/out.txt");
+	cmd_block->redirects = ft_lstnew(write_redirect1);
+
+	write_redirect2 = (t_redirects *)malloc(sizeof(t_redirects));
+	write_redirect2->redirect = WRITE;
+	write_redirect2->target = ft_strdup("./exec_cmdline/no_write_permission.txt");
+	write_redirect2->fd = 1;
+	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect2));
+
+	write_redirect3 = (t_redirects *)malloc(sizeof(t_redirects));
+	write_redirect3->redirect = WRITE;
+	write_redirect3->target = ft_strdup("./exec_cmdline/out2.txt");
+	write_redirect3->fd = 1;
+	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect3));
+	return ft_lstnew(cmd_block);
+}
+TEST(exec_command_line_G, no_permission_file_in_middle) {
+	t_list *cmd_lst;
+
+	cmd_lst = no_permission_file_in_middle();
+	system("chmod -w ./exec_cmdline/no_write_permission.txt");
+	exec_command_and_output_file(cmd_lst);
+	// outは空
+	compare_file("expected/empty.txt", "out.txt");
+	// permission deniedの出力
+	compare_file("expected/no_write_permission.txt", "stderr_result/result.txt");
+	// out2ができてない
+	CHECK_EQUAL(-1, access("./exec_cmdline/out2.txt", F_OK));
+}
+
 // cmd | cmd | cmd
 
 // < Makefile cat | grep "make" > tmp
