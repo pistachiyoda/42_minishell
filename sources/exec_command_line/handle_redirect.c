@@ -24,12 +24,21 @@ bool	is_last_fd_output_redirect(
 }
 
 // >, >>の処理
-void	handle_output(t_redirects *redirect, bool is_last)
+// @todo:exitはreturnに変更
+int	handle_output(t_redirects *redirect, bool is_last)
 {
 	int	fd;
 
+	if (is_directory(redirect->target))
+	{
+		print_error(redirect->target, EMESS_IS_DIR2);
+		return (1);
+	}
 	if (!(is_writable(redirect->target)))
-		exit(0);
+	{
+		print_error(redirect->target, EMESS_NO_PERM);
+		return (1);
+	}
 	if (redirect->redirect == WRITE)
 		fd = open_or_create_file(
 				redirect->target, O_WRONLY | O_CREAT | O_TRUNC);
@@ -39,15 +48,36 @@ void	handle_output(t_redirects *redirect, bool is_last)
 	if (fd == -1)
 		exit(1);
 	if (!is_last)
-		return ;
+		return (0);
 	if (dup2(fd, redirect->fd) == -1)
 		exit(1);
+	return (0);
+}
+
+int	handle_last_redirect(t_redirects	*redirect, t_cmd_block *cmd_block)
+{
+	if (redirect->redirect == INPUT)
+	{
+		if (handle_input(redirect,
+				is_last_input_redirect(
+					redirect, cmd_block->redirects)) != 0)
+			return (1);
+	}
+	if (redirect->redirect == WRITE || redirect->redirect == APPEND)
+	{
+		if (handle_output(redirect,
+				is_last_fd_output_redirect(
+					redirect, cmd_block->redirects)) != 0)
+			return (1);
+	}
+	return (0);
 }
 
 int	handle_redirect(t_cmd_block *cmd_block, int	pipe_fds[2])
 {
 	t_list		*redirect_node;
 	t_redirects	*redirect;
+	int			ret;
 
 	redirect_node = cmd_block->redirects;
 	if (!redirect_node)
@@ -57,12 +87,9 @@ int	handle_redirect(t_cmd_block *cmd_block, int	pipe_fds[2])
 	while (1)
 	{
 		redirect = redirect_node->content;
-		if (redirect->redirect == INPUT)
-			handle_input(redirect,
-				is_last_input_redirect(redirect, cmd_block->redirects));
-		if (redirect->redirect == WRITE || redirect->redirect == APPEND)
-			handle_output(redirect,
-				is_last_fd_output_redirect(redirect, cmd_block->redirects));
+		ret = handle_last_redirect(redirect, cmd_block);
+		if (ret != 0)
+			return (ret);
 		if (redirect_node->next == NULL)
 			break ;
 		redirect_node = redirect_node->next;

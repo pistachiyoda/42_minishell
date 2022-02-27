@@ -13,6 +13,10 @@
 # include "parser.h"
 
 # define EMESS_NO_FILE_DIR "No such file or directory\n"
+# define EMESS_IS_DIR "is a directory\n"
+# define EMESS_IS_DIR2 "Is a directory\n"
+# define EMESS_NO_CMD "command not found\n"
+# define EMESS_NO_PERM "Permission denied\n"
 # define EMESS_REQUIRE_ARGS "Require argument\n"
 # define EMESS_INVALID_ARGS "Invalid argument\n"
 # define EMESS_MALLOC_FAIL "Memory allocation failure\n"
@@ -29,6 +33,8 @@ char		*get_env_val(char *key, char **envp);
 char		*resolve_path(char	*command, char *path_val);
 
 // exec_command/utils.c
+bool		is_directory(char *path);
+bool		is_exists(char *path);
 bool		is_executable(char *command_path);
 
 // utils/free.c
@@ -65,7 +71,7 @@ int			handle_redirect(t_cmd_block *cmd_block, int	pipe_fds[2]);
 
 // exec_command_line/handle_input_redirect.c
 bool		is_last_input_redirect(t_redirects *redirect, t_list *redirects);
-void		handle_input(t_redirects *redirect, bool is_last);
+int			handle_input(t_redirects *redirect, bool is_last);
 
 // runner/run_builtin_command.c
 bool		is_fork_required(t_list *cmd_list);
