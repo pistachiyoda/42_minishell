@@ -18,6 +18,8 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		words = lexer(str);
 		cmd_list = parser(words);
+		if (cmd_list == NULL)
+			continue ;
 		print_cmd_lst(cmd_list);
 		if (is_fork_required(cmd_list))
 			exec_command_line(cmd_list, envp);

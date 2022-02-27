@@ -4,6 +4,8 @@ bool	is_valid_words(t_list *head)
 {
 	t_list	*words;
 
+	if (head == NULL)
+		return (false);
 	words = head->next;
 	if (ft_strncmp(words->content, "|", 1) == 0)
 	{
