@@ -1,4 +1,4 @@
 #ifndef EXPANSION_H
-# define EXPANSINO_H
+# define EXPANSION_H
 
 #endif
