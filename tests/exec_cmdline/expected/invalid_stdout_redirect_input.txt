@@ -1,1 +1,1 @@
-minishell: echo: write error: Bad file descriptor
+cat: stdout: Bad file descriptor

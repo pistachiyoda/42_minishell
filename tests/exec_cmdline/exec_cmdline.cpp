@@ -11,16 +11,22 @@
 
 void exec_command_and_output_file(t_list *cmd_list)
 {
-	int bak_fd = dup(1);
-    int file_fd = open("./exec_cmdline/stdout_result/result.txt", O_RDWR | O_CREAT | O_TRUNC, S_IRWXU | S_IRWXG | S_IRWXO);
-    dup2(file_fd, 1);
+	int bak_fd1 = dup(1);
+	int bak_fd2 = dup(2);
+    int file_fd1 = open("./exec_cmdline/stdout_result/result.txt", O_RDWR | O_CREAT | O_TRUNC, S_IRWXU | S_IRWXG | S_IRWXO);
+	int file_fd2 = open("./exec_cmdline/stderr_result/result.txt", O_RDWR | O_CREAT | O_TRUNC, S_IRWXU | S_IRWXG | S_IRWXO);
+    dup2(file_fd1, 1);
+	dup2(file_fd2, 2);
 	char **envp = (char **)malloc(sizeof(char *) * 2);
 	envp[0] = ft_strjoin("PATH=", getenv("PATH")); // ["PATH=xxx"]
 	envp[1] = NULL;
 	exec_command_line(cmd_list, envp);
-	close(file_fd);
-	dup2(bak_fd, 1);
-	close(bak_fd);
+	close(file_fd1);
+	close(file_fd2);
+	dup2(bak_fd1, 1);
+	dup2(bak_fd2, 2);
+	close(bak_fd1);
+	close(bak_fd2);
 }
 
 void exec_command_without_dup(t_list *cmd_list)
@@ -65,6 +71,10 @@ TEST_GROUP(exec_command_line_G)
 		remove("./exec_cmdline/stdout_result/result.txt");
 	}
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 正常系テストケース
 
 // cat ./exec_cmdline/in.txt
 t_list *cat_and_arg_data()
@@ -757,6 +767,12 @@ TEST(exec_command_line_G, three_fd_write_redirect_with_echo_date) {
 	compare_file("expected/three_fd_write_redirect_with_echo_out3.txt", "out3.txt");
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 異常系テストケース
+
+
+
 // 1> out1.txt 2> out2.txt dog
 // 1> ./exec_cmdline/expected/two_fd_write_redirect_with_dog_out1.txt 2> ./exec_cmdline/expected/two_fd_write_redirect_with_dog_out2.txt dog
 t_list *two_fd_write_redirect_with_dog_date()
@@ -784,15 +800,14 @@ t_list *two_fd_write_redirect_with_dog_date()
 	return ft_lstnew(cmd_block);
 }
 TEST(exec_command_line_G, two_fd_write_redirect_with_dog_date) {
-	// t_list *cmd_lst;
+	t_list *cmd_lst;
 
-	// cmd_lst = two_fd_write_redirect_with_dog_date();
-	// exec_command_without_dup(cmd_lst);
+	cmd_lst = two_fd_write_redirect_with_dog_date();
+	exec_command_without_dup(cmd_lst);
 	// 標準出力（1）は何も受け取らないのでout1.txtは空
-	// compare_file("expected/empty.txt", "out1.txt");
+	compare_file("expected/empty.txt", "out1.txt");
 	// dogコマンドのエラー出力が2に書き込まれる。
-	// compare_file("expected/two_fd_write_redirect_with_dog_out2.txt", "out2.txt");
-	FAIL("未実装");
+	compare_file("expected/two_fd_write_redirect_with_dog_out2.txt", "out2.txt");
 }
 
 // 2> out1.txt 1> out2.txt 2> out3.txt dog
@@ -831,17 +846,16 @@ t_list *three_fd_write_redirect_with_dog_date()
 	return ft_lstnew(cmd_block);
 }
 TEST(exec_command_line_G, three_fd_write_redirect_with_dog_date) {
-	// t_list *cmd_lst;
+	t_list *cmd_lst;
 
-	// cmd_lst = three_fd_write_redirect_with_dog_date();
-	// exec_command_without_dup(cmd_lst);
+	cmd_lst = three_fd_write_redirect_with_dog_date();
+	exec_command_without_dup(cmd_lst);
 	// 最初の2は処理されないのでout1.txtは空
-	// compare_file("expected/empty.txt", "out1.txt");
+	compare_file("expected/empty.txt", "out1.txt");
 	// 標準出力（1）は何も受け取らないのでout2.txtは空
-	// compare_file("expected/empty.txt", "out2.txt");
+	compare_file("expected/empty.txt", "out2.txt");
 	// echoから最後の2にのみ書き込まれる。
-	// compare_file("expected/three_fd_write_redirect_with_dog_out3.txt", "out3.txt");
-	FAIL("未実装");
+	compare_file("expected/three_fd_write_redirect_with_dog_out3.txt", "out3.txt");
 }
 
 // 0< in1.txt cat 100< in2.txt
@@ -914,7 +928,7 @@ TEST(exec_command_line_G, two_fd_input_redirect_with_cat_date) {
 	compare_file("in2.txt");
 }
 
-//  2> out.txt 1< in.txt echo hoge
+//  2> out.txt 1< in.txt cat in2.txt
 // エラーケースなので正常系実装した後にエラーケースでまとめてコミットする
 t_list	*invalid_stdout_redirect_input_data()
 {
@@ -923,8 +937,8 @@ t_list	*invalid_stdout_redirect_input_data()
 	t_redirects *input_redirect;
 
 	cmd_block_1 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
-	cmd_block_1->command = ft_strdup("echo");
-	cmd_block_1->args = ft_split("echo hoge", ' ');
+	cmd_block_1->command = ft_strdup("cat");
+	cmd_block_1->args = ft_split("cat ./exec_cmdline/in2.txt", ' ');
 	write_redirect = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect->redirect = WRITE;
 	write_redirect->fd = 2;
@@ -938,24 +952,295 @@ t_list	*invalid_stdout_redirect_input_data()
 	return ft_lstnew(cmd_block_1);
 }
 TEST(exec_command_line_G, invalid_stdout_redirect_input_data) {
-	// t_list *cmd_lst;
+	t_list *cmd_lst;
 
-	// cmd_lst = invalid_stdout_redirect_input_data();
-	// exec_command_without_dup(cmd_lst);
-	// echoを実行するが、1< in.txtで標準出力(1)がcloseされるため、エラーになり、
+	cmd_lst = invalid_stdout_redirect_input_data();
+	exec_command_without_dup(cmd_lst);
+	// catを実行するが、1< in.txtで標準出力(1)がcloseされるため、エラーになり、
 	// out.txtにエラー文が出力される。
-	// compare_file("expected/invalid_stdout_redirect_input.txt", "out.txt");
-	FAIL("未実装");
+	compare_file("expected/invalid_stdout_redirect_input.txt", "out.txt");
 }
 
 // 手動で！
 // 2< in.txt dog
 
 // エラーケース
-	// <元ファイルがない時
-	// <元ファイルが読めない時
-	// >, >>先ファイルが開けない時
-	// コマンドが存在しない時
+
+// 存在しないコマンド
+// dog
+// minishell: dog: command not found
+t_list	*cmd_not_found_data()
+{
+	t_cmd_block	*cmd_block;
+
+	cmd_block = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block->command = ft_strdup("dog");
+	cmd_block->args = ft_split("dog", ' ');
+	cmd_block->redirects = NULL;
+	return ft_lstnew(cmd_block);
+}
+TEST(exec_command_line_G, cmd_not_found)
+{
+	t_list	*cmd_lst;
+
+	cmd_lst = cmd_not_found_data();
+	exec_command_and_output_file(cmd_lst);
+	compare_file("expected/cmd_not_found.txt", "stderr_result/result.txt");
+}
+
+// inputのリダイレクト元ファイルにリード権限がない
+// cat < ./exec_cmdline/no_read_permission.txt
+// minishell: ./exec_cmdline/no_read_permission.txt: Permission denied
+t_list	*no_read_permission_data()
+{
+	t_cmd_block	*cmd_block;
+	t_redirects *input_redirect;
+
+	cmd_block = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block->command = ft_strdup("cat");
+	cmd_block->args = ft_split("cat", ' ');
+	input_redirect = (t_redirects *)malloc(sizeof(t_redirects));
+	input_redirect->redirect = INPUT;
+	input_redirect->target = ft_strdup("./exec_cmdline/no_read_permission.txt");
+	input_redirect->fd = 0;
+	cmd_block->redirects = ft_lstnew(input_redirect);
+	return ft_lstnew(cmd_block);
+}
+TEST(exec_command_line_G, no_read_permission)
+{
+	t_list	*cmd_lst;
+
+	cmd_lst = no_read_permission_data();
+	system("chmod -r ./exec_cmdline/no_read_permission.txt");
+	exec_command_and_output_file(cmd_lst);
+	system("chmod +r ./exec_cmdline/no_read_permission.txt");
+	compare_file("expected/no_read_permission.txt", "stderr_result/result.txt");
+}
+
+// リダイレクト先として指定したファイルに書き込み権限がない
+// cat in.txt > ./exec_cmdline/no_write_permission.txt
+// minishell: ./exec_cmdline/no_write_permission.txt: Permission denied
+t_list	*no_write_permission_data()
+{
+	t_cmd_block	*cmd_block;
+	t_redirects *write_redirect;
+
+	cmd_block = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block->command = ft_strdup("cat");
+	cmd_block->args = ft_split("cat in.txt", ' ');
+	write_redirect = (t_redirects *)malloc(sizeof(t_redirects));
+	write_redirect->redirect = WRITE;
+	write_redirect->target = ft_strdup("./exec_cmdline/no_write_permission.txt");
+	write_redirect->fd = 1;
+	cmd_block->redirects = ft_lstnew(write_redirect);
+	return ft_lstnew(cmd_block);
+}
+TEST(exec_command_line_G, no_write_permission)
+{
+	t_list	*cmd_lst;
+
+	cmd_lst = no_write_permission_data();
+	system("chmod -w ./exec_cmdline/no_write_permission.txt");
+	exec_command_and_output_file(cmd_lst);
+	compare_file("expected/no_write_permission.txt", "stderr_result/result.txt");
+}
+
+// 実行しようとしたファイルに実行権限がない
+// ./exec_cmdline/no_exec_permission.sh
+// minishell: ./exec_cmdline/no_exec_permission.sh: Permission denied
+t_list	*no_exec_permission_data()
+{
+	t_cmd_block	*cmd_block;
+
+	cmd_block = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block->command = ft_strdup("./exec_cmdline/no_exec_permission.sh");
+	cmd_block->args = ft_split("./exec_cmdline/no_exec_permission.sh", ' ');
+	cmd_block->redirects = NULL;
+	return ft_lstnew(cmd_block);
+}
+TEST(exec_command_line_G, no_exec_permission)
+{
+	t_list	*cmd_lst;
+
+	cmd_lst = no_exec_permission_data();
+	system("chmod -x ./exec_cmdline/no_exec_permission.sh");
+	exec_command_and_output_file(cmd_lst);
+	compare_file("expected/no_exec_permission.txt", "stderr_result/result.txt");
+}
+
+// 実行しようとしたのがディレクトリだった
+// ./exec_cmdline
+// minishell: ./exec_cmdline: is a directory
+t_list	*is_directory_data()
+{
+	t_cmd_block	*cmd_block;
+
+	cmd_block = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block->command = ft_strdup("./exec_cmdline");
+	cmd_block->args = ft_split("./exec_cmdline", ' ');
+	cmd_block->redirects = NULL;
+	return ft_lstnew(cmd_block);
+}
+TEST(exec_command_line_G, is_directory)
+{
+	t_list	*cmd_lst;
+
+	cmd_lst = is_directory_data();
+	exec_command_and_output_file(cmd_lst);
+	compare_file("expected/is_directory.txt", "stderr_result/result.txt");
+}
+
+// catにリダイレクトのインプットとしてディレクトリを指定した
+// cat < ./exec_cmdline
+// cat: stdin: Is a directory
+// catが出すエラーなのでminishell側で実行前にエラーとしてはいけない
+t_list	*input_redirect_directory_data()
+{
+	t_cmd_block	*cmd_block;
+	t_redirects *input_redirect;
+
+	cmd_block = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block->command = ft_strdup("cat");
+	cmd_block->args = ft_split("cat", ' ');
+	input_redirect = (t_redirects *)malloc(sizeof(t_redirects));
+	input_redirect->redirect = INPUT;
+	input_redirect->target = ft_strdup("./exec_cmdline");
+	input_redirect->fd = 0;
+	cmd_block->redirects = ft_lstnew(input_redirect);
+	return ft_lstnew(cmd_block);
+}
+TEST(exec_command_line_G, input_redirect_directory)
+{
+	t_list	*cmd_lst;
+
+	cmd_lst = input_redirect_directory_data();
+	exec_command_and_output_file(cmd_lst);
+	compare_file("expected/input_redirect_directory.txt", "stderr_result/result.txt");
+}
+
+// リダイレクトのアウトプットとしてディレクトリを指定した
+// echo fuga > ./exec_cmdline
+// minishell: ./exec_cmdline: Is a directory
+t_list	*write_redirect_directory_data()
+{
+	t_cmd_block	*cmd_block;
+	t_redirects *write_redirect;
+
+	cmd_block = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block->command = ft_strdup("echo");
+	cmd_block->args = ft_split("echo fuga", ' ');
+	write_redirect = (t_redirects *)malloc(sizeof(t_redirects));
+	write_redirect->redirect = WRITE;
+	write_redirect->target = ft_strdup("./exec_cmdline");
+	write_redirect->fd = 1;
+	cmd_block->redirects = ft_lstnew(write_redirect);
+	return ft_lstnew(cmd_block);
+}
+TEST(exec_command_line_G, write_redirect_directory)
+{
+	t_list	*cmd_lst;
+
+	cmd_lst = write_redirect_directory_data();
+	exec_command_and_output_file(cmd_lst);
+	compare_file("expected/write_redirect_directory.txt", "stderr_result/result.txt");
+}
+
+
+// 実行したファイルが存在しなかった
+// ./hoge
+// minishell: ./hoge: No such file or directory
+t_list	*no_such_file_exec_data()
+{
+	t_cmd_block	*cmd_block;
+
+	cmd_block = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block->command = ft_strdup("./hoge");
+	cmd_block->args = ft_split("./hoge", ' ');
+	cmd_block->redirects = NULL;
+	return ft_lstnew(cmd_block);
+}
+TEST(exec_command_line_G, no_such_file_exec)
+{
+	t_list	*cmd_lst;
+
+	cmd_lst = no_such_file_exec_data();
+	exec_command_and_output_file(cmd_lst);
+	compare_file("expected/no_such_file_exec.txt", "stderr_result/result.txt");
+}
+
+// リダイレクトの入力として存在しないファイルを指定した
+// echo < hoge
+// minishell: hoge: No such file or directory
+t_list	*no_such_file_redirect_data()
+{
+	t_cmd_block	*cmd_block;
+	t_redirects *input_redirect;
+
+	cmd_block = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block->command = ft_strdup("echo");
+	cmd_block->args = ft_split("echo", ' ');
+	input_redirect = (t_redirects *)malloc(sizeof(t_redirects));
+	input_redirect->redirect = INPUT;
+	input_redirect->target = ft_strdup("hoge");
+	input_redirect->fd = 1;
+	cmd_block->redirects = ft_lstnew(input_redirect);
+	return ft_lstnew(cmd_block);
+}
+TEST(exec_command_line_G, no_such_file_redirect)
+{
+	t_list	*cmd_lst;
+
+	cmd_lst = no_such_file_redirect_data();
+	exec_command_and_output_file(cmd_lst);
+	compare_file("expected/no_such_file_redirect.txt", "stderr_result/result.txt");
+}
+
+// cat in > out.txt > ./exec_cmdline/no_write_permission.txt >out2.txt
+// outは作成されるが空。out2は作成されない。
+// minishell: ./exec_cmdline/no_write_permission.txt: Permission denied
+t_list	*no_permission_file_in_middle()
+{
+	t_cmd_block *cmd_block;
+	t_redirects	*write_redirect1;
+	t_redirects *write_redirect2;
+	t_redirects *write_redirect3;
+
+	cmd_block = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block->command = ft_strdup("cat");
+	cmd_block->args = ft_split("cat ./exec_cmdline/in.txt", ' ');
+
+	write_redirect1 = (t_redirects *)malloc(sizeof(t_redirects));
+	write_redirect1->redirect = WRITE;
+	write_redirect1->fd = 1;
+	write_redirect1->target = ft_strdup("./exec_cmdline/out.txt");
+	cmd_block->redirects = ft_lstnew(write_redirect1);
+
+	write_redirect2 = (t_redirects *)malloc(sizeof(t_redirects));
+	write_redirect2->redirect = WRITE;
+	write_redirect2->target = ft_strdup("./exec_cmdline/no_write_permission.txt");
+	write_redirect2->fd = 1;
+	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect2));
+
+	write_redirect3 = (t_redirects *)malloc(sizeof(t_redirects));
+	write_redirect3->redirect = WRITE;
+	write_redirect3->target = ft_strdup("./exec_cmdline/out2.txt");
+	write_redirect3->fd = 1;
+	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect3));
+	return ft_lstnew(cmd_block);
+}
+TEST(exec_command_line_G, no_permission_file_in_middle) {
+	t_list *cmd_lst;
+
+	cmd_lst = no_permission_file_in_middle();
+	system("chmod -w ./exec_cmdline/no_write_permission.txt");
+	exec_command_and_output_file(cmd_lst);
+	// outは空
+	compare_file("expected/empty.txt", "out.txt");
+	// permission deniedの出力
+	compare_file("expected/no_write_permission.txt", "stderr_result/result.txt");
+	// out2ができてない
+	CHECK_EQUAL(-1, access("./exec_cmdline/out2.txt", F_OK));
+}
 
 // cmd | cmd | cmd
 

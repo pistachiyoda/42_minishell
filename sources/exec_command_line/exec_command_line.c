@@ -25,6 +25,19 @@ bool	is_last_heredoc(t_list *redirects)
 	return (((t_redirects *)last_input_node->content)->redirect == HEREDOC);
 }
 
+void	handle_command_line(t_list *cmd_list, char **envp, int	pipe_fds[2])
+{
+	if (handle_redirect((t_cmd_block *)cmd_list->content, pipe_fds) != 0)
+		exit(1);
+	close(pipe_fds[1]);
+	if (is_last_heredoc(((t_cmd_block *)cmd_list->content)->redirects))
+		dup2(pipe_fds[0], 0);
+	close(pipe_fds[0]);
+	exec_command(((t_cmd_block *)cmd_list->content)->command,
+		((t_cmd_block *)cmd_list->content)->args, envp);
+	exit(1);
+}
+
 int	exec_command_line(t_list *cmd_list, char **envp)
 {
 	int	pid;
@@ -38,16 +51,7 @@ int	exec_command_line(t_list *cmd_list, char **envp)
 	}
 	pid = fork();
 	if (pid == 0)
-	{
-		handle_redirect((t_cmd_block *)cmd_list->content, pipe_fds);
-		close(pipe_fds[1]);
-		if (is_last_heredoc(((t_cmd_block *)cmd_list->content)->redirects))
-			dup2(pipe_fds[0], 0);
-		close(pipe_fds[0]);
-		exec_command(((t_cmd_block *)cmd_list->content)->command,
-			((t_cmd_block *)cmd_list->content)->args, envp);
-		exit(1);
-	}
+		handle_command_line(cmd_list, envp, pipe_fds);
 	close(pipe_fds[0]);
 	close(pipe_fds[1]);
 	waitpid(pid, &status, 0);

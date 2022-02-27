@@ -3,26 +3,18 @@
 // fileが存在しているか、読み取り権限があるかを確認する
 bool	is_readable(char *file)
 {
-	if (access(file, F_OK) == -1)
-	{
-		printf("no such file or directory");
-		return (false);
-	}
 	if (access(file, R_OK) == -1)
-	{
-		printf("permission denied");
 		return (false);
-	}
 	return (true);
 }
 
-// ファイルを読み込み、書き込みができる状態で開く
+// ファイルを読み込みできる状態で開く
 // @todo エラー時のexit処理
 int	open_file(char *file)
 {
 	int	file_fd;
 
-	file_fd = open(file, O_RDWR);
+	file_fd = open(file, O_RDONLY);
 	if (file_fd == -1)
 		return (-1);
 	return (file_fd);
