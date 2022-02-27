@@ -2,7 +2,7 @@
 
 bool	is_directory(char *path)
 {
-	struct stat st;
+	struct stat	st;
 
 	stat(path, &st);
 	return (S_ISDIR(st.st_mode));
