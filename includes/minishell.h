@@ -65,7 +65,11 @@ bool		is_writable(char *file);
 int			open_or_create_file(char *file, int open_flag);
 
 // exec_command_line/handle_heredoc.c
-void		handle_heredoc_loop(t_cmd_block *cmd_block, int	pipe_fds[FD_MAX][2]);
+void		handle_heredoc_loop(
+				t_cmd_block *cmd_block, int	pipe_fds[FD_MAX][2]);
+
+// exec_command_line/handle_heredoc2.c
+char		*ft_strjoin2(char const *s1, char const *s2);
 
 // exec_command_line/handle_redirect.c
 int			handle_redirect(t_cmd_block *cmd_block, int	pipe_fds[FD_MAX][2]);
