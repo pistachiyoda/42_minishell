@@ -11,6 +11,7 @@
 # include "cmdline_data.h"
 # include "lexer.h"
 # include "parser.h"
+# include "expansion.h"
 
 # define EMESS_NO_FILE_DIR "No such file or directory\n"
 # define EMESS_IS_DIR "is a directory\n"
@@ -92,7 +93,7 @@ char		**t_environ_to_vector(t_environ *env);
 void		ft_env(t_environ *env);
 
 // builtin/export.c
-bool		is_registered(t_environ *env, char **split_ele, bool key_only);
+char		*is_registered(t_environ *env, char **split_ele, bool key_only);
 int			update_environ(t_cmd_block *cmd_block, t_environ *env, int i);
 void		ft_export(t_cmd_block *cmd_block, t_environ *env);
 

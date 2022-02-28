@@ -138,7 +138,7 @@ extern "C" {
 	void		ft_env(t_environ *env);
 
 	// builtin/export.c
-	bool		is_registered(t_environ *env, char **split_ele, bool key_only);
+	char		*is_registered(t_environ *env, char **split_ele, bool key_only);
 	int			update_environ(t_cmd_block *cmd_block, t_environ *env, int i);
 	void		ft_export(t_cmd_block *cmd_block, t_environ *env);
 
@@ -191,4 +191,7 @@ extern "C" {
 	bool		is_redirect(t_list *words);
 	void		set_tokens(t_list **tokens, t_cmd_block *cmd);
 	t_list		*parser(t_list *words);
+
+	// expansion/expansion.c
+	t_list		*expansion(t_list *tokens, t_environ *env);
 }
