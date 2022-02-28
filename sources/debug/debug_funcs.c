@@ -37,6 +37,7 @@ void	print_list(t_list *lst)
 		printf("redirect: %s\n",
 			print_redirect(((t_redirects *)lst->content)->redirect));
 		printf("target: %s\n", ((t_redirects *)lst->content)->target);
+		printf("fd: %d\n", ((t_redirects *)lst->content)->fd);
 		if (lst->next == NULL)
 			return ;
 		lst = lst->next;
@@ -53,7 +54,8 @@ void	print_cmd_lst(t_list *cmd_lst)
 	{
 		printf("\n====== block %d ======\n", i);
 		printf("cmd: %s\n", ((t_cmd_block *)cmd_lst->content)->command);
-		print_string_array(((t_cmd_block *)cmd_lst->content)->args, "args");
+		if (((t_cmd_block *)cmd_lst->content)->args)
+			print_string_array(((t_cmd_block *)cmd_lst->content)->args, "args");
 		if (((t_cmd_block *)cmd_lst->content)->redirects)
 			print_list(((t_cmd_block *)cmd_lst->content)->redirects);
 		printf("=====================\n");

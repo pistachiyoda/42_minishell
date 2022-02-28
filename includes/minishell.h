@@ -25,6 +25,8 @@
 # define EMESS_SYNTAX "syntax error near unexpected token"
 # define EMESS_LARGE_FD "Bad file descriptor\n"
 
+# define FD_MAX 256
+
 // exec_command/exec_command.c
 int			exec_command(char *command_path, char **args, char **envp);
 
@@ -63,11 +65,14 @@ bool		is_writable(char *file);
 int			open_or_create_file(char *file, int open_flag);
 
 // exec_command_line/handle_heredoc.c
-void		handle_heredoc(char *limiter, bool is_last, int	pipe_fds[2]);
-void		handle_heredoc_loop(t_cmd_block *cmd_block, int	pipe_fds[2]);
+void		handle_heredoc_loop(
+				t_cmd_block *cmd_block, int	pipe_fds[FD_MAX][2]);
+
+// exec_command_line/handle_heredoc2.c
+char		*ft_strjoin2(char const *s1, char const *s2);
 
 // exec_command_line/handle_redirect.c
-int			handle_redirect(t_cmd_block *cmd_block, int	pipe_fds[2]);
+int			handle_redirect(t_cmd_block *cmd_block, int	pipe_fds[FD_MAX][2]);
 
 // exec_command_line/handle_input_redirect.c
 bool		is_last_input_redirect(t_redirects *redirect, t_list *redirects);
