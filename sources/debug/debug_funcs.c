@@ -37,6 +37,7 @@ void	print_list(t_list *lst)
 		printf("redirect: %s\n",
 			print_redirect(((t_redirects *)lst->content)->redirect));
 		printf("target: %s\n", ((t_redirects *)lst->content)->target);
+		printf("fd: %d\n", ((t_redirects *)lst->content)->fd);
 		if (lst->next == NULL)
 			return ;
 		lst = lst->next;

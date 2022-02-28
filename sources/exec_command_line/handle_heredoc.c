@@ -20,11 +20,9 @@ char	*ft_strjoin2(char const *s1, char const *s2)
 	return (ret);
 }
 
-void	handle_unused_heredoc(char *str, int pipe_fds[2])
+void	handle_unused_heredoc(char *str)
 {
 	free(str);
-	close(pipe_fds[0]);
-	close(pipe_fds[1]);
 	exit(0);
 }
 
@@ -47,10 +45,18 @@ void	handle_heredoc(char *limiter, bool is_last, int	pipe_fds[2])
 	char	*tmp;
 	int		pid;
 
+	if (is_last)
+	{
+		if (pipe(pipe_fds) == -1)
+		{
+			perror("pipe()");
+			exit(1);
+		}
+	}
 	pid = fork();
-	str = ft_strdup("");
 	if (pid == 0)
 	{
+		str = ft_strdup("");
 		while (1)
 		{
 			buf = readline("> ");
@@ -63,13 +69,13 @@ void	handle_heredoc(char *limiter, bool is_last, int	pipe_fds[2])
 			free(tmp);
 		}
 		if (!is_last)
-			handle_unused_heredoc(str, pipe_fds);
+			handle_unused_heredoc(str);
 		flush_heredoc(str, pipe_fds);
 	}
 	waitpid(pid, NULL, 0);
 }
 
-void	handle_heredoc_loop(t_cmd_block *cmd_block, int	pipe_fds[2])
+void	handle_heredoc_loop(t_cmd_block *cmd_block, int	pipe_fds[FD_MAX][2])
 {
 	t_list		*redirect_node;
 	t_redirects	*redirect;
@@ -81,9 +87,8 @@ void	handle_heredoc_loop(t_cmd_block *cmd_block, int	pipe_fds[2])
 		if (redirect->redirect == HEREDOC)
 			handle_heredoc(
 				redirect->target,
-				is_last_input_redirect(
-					(t_redirects *)cmd_block->redirects, redirect_node),
-				pipe_fds);
+				is_last_input_redirect(redirect, cmd_block->redirects),
+				pipe_fds[redirect->fd]);
 		if (redirect_node->next == NULL)
 			break ;
 		redirect_node = redirect_node->next;
