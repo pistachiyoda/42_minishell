@@ -6,6 +6,7 @@ bool	is_fork_required(t_list *cmd_list)
 
 	cmd_block = (t_cmd_block *)cmd_list->content;
 	if (ft_lstsize(cmd_list) == 1
+		&& cmd_block->command
 		&& (ft_strncmp(cmd_block->command, "echo", 4) == 0
 			|| ft_strncmp(cmd_block->command, "cd", 2) == 0
 			|| ft_strncmp(cmd_block->command, "pwd", 3) == 0
