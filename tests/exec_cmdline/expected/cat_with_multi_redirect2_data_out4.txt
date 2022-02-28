@@ -1,6 +1,7 @@
 Makefile
 exec_cmdline
 exec_cmdline.o
+expansion
 lexer
 lexer.o
 minishell_test
