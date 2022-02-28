@@ -5,12 +5,14 @@
 //   APPEND : >>
 //    INPUT : <
 //  HEREDOC : <<
+//  QUOTED_HEREDOC : << 'EOL' or << "EOL"
 enum e_REDIRECTS
 {
 	WRITE,
 	APPEND,
 	INPUT,
-	HEREDOC
+	HEREDOC,
+	QUOTED_HEREDOC
 };
 
 typedef struct s_environ
