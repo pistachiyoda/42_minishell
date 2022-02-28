@@ -87,7 +87,7 @@ t_list	*lexer(char *str)
 			start = split_by_redirect_pipe(str, words, &i, start);
 		i++;
 	}
-	if (start != -1 && add_last_str(str, words, i, start))
-		return (words);
+	if (start != -1 && status == NONE && add_last_str(str, words, i, start))
+		return (words);//add_last_strとかでstatus != NONEのエラー処理できるように修正したい
 	return (NULL);
 }
