@@ -55,15 +55,15 @@ int	handle_output(t_redirects *redirect, bool is_last)
 }
 
 int	handle_last_redirect(t_redirects	*redirect, t_cmd_block *cmd_block,
-	int	pipe_fds[FD_MAX][2])
+	int	pipe_a[FD_MAX][2])
 {
 	if (redirect->redirect == HEREDOC)
 	{
 		if (is_last_input_redirect(redirect, cmd_block->redirects))
 		{
-			dup2(pipe_fds[redirect->fd][0], redirect->fd);
-			close(pipe_fds[redirect->fd][0]);
-			close(pipe_fds[redirect->fd][1]);
+			dup2(pipe_a[redirect->fd][0], redirect->fd);
+			close(pipe_a[redirect->fd][0]);
+			close(pipe_a[redirect->fd][1]);
 		}
 	}
 	if (redirect->redirect == INPUT)
@@ -83,7 +83,7 @@ int	handle_last_redirect(t_redirects	*redirect, t_cmd_block *cmd_block,
 	return (0);
 }
 
-int	handle_redirect(t_cmd_block *cmd_block, int	pipe_fds[FD_MAX][2])
+int	handle_redirect(t_cmd_block *cmd_block, int	pipe_a[FD_MAX][2])
 {
 	t_list		*redirect_node;
 	t_redirects	*redirect;
@@ -92,12 +92,12 @@ int	handle_redirect(t_cmd_block *cmd_block, int	pipe_fds[FD_MAX][2])
 	redirect_node = cmd_block->redirects;
 	if (!redirect_node)
 		return (0);
-	handle_heredoc_loop(cmd_block, pipe_fds);
+	handle_heredoc_loop(cmd_block, pipe_a);
 	redirect_node = cmd_block->redirects;
 	while (1)
 	{
 		redirect = redirect_node->content;
-		ret = handle_last_redirect(redirect, cmd_block, pipe_fds);
+		ret = handle_last_redirect(redirect, cmd_block, pipe_a);
 		if (ret != 0)
 			return (ret);
 		if (redirect_node->next == NULL)

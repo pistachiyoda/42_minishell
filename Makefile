@@ -16,6 +16,7 @@ CFILES =\
 	sources/exec_command_line/handle_heredoc2.c\
 	sources/exec_command_line/handle_redirect.c\
 	sources/exec_command_line/handle_input_redirect.c\
+	sources/exec_command_line/handle_pipe.c\
 	sources/tmp_parser/tmp_parse_data.c\
 	sources/runner/run_builtin_command.c\
 	sources/utils/free.c\

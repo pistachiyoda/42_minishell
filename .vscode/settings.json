@@ -3,6 +3,7 @@
 		"iosfwd": "cpp",
 		"iterator": "cpp",
 		"filesystem": "cpp",
-		"string": "cpp"
+		"string": "cpp",
+		"minishell.h": "c"
 	}
 }
