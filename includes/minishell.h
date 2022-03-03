@@ -28,7 +28,7 @@
 # define FD_MAX 256
 
 // exec_command/exec_command.c
-int			exec_command(char *command_path, char **args, char **envp);
+void		exec_command(char *command_path, char **args, char **envp);
 
 // exec_command/resolve_env.c
 char		*get_env_val(char *key, char **envp);
@@ -66,17 +66,22 @@ bool		is_writable(char *file);
 int			open_or_create_file(char *file, int open_flag);
 
 // exec_command_line/handle_heredoc.c
-void		handle_heredoc_loop(
+int			handle_heredoc_input(
 				t_cmd_block *cmd_block, int	pipe_fds[FD_MAX][2]);
 
 // exec_command_line/handle_heredoc2.c
 char		*ft_strjoin2(char const *s1, char const *s2);
 
+// exec_command_line/close_doc_pipe_fds.c
+int			close_doc_pipe_fds(int doc_pipe_fds[FD_MAX][2], t_cmd_block *cmd_block);
+
 // exec_command_line/handle_redirect.c
-int			handle_redirect(t_cmd_block *cmd_block, int	pipe_fds[FD_MAX][2]);
+// int			handle_heredoc_input(t_cmd_block *cmd_block, int	pipe_fds[FD_MAX][2]);
+int	handle_redirect(t_redirects	*redirect, t_cmd_block *cmd_block,
+	int	doc_pipe_fds_arr[FD_MAX][2]);
 
 // exec_command_line/handle_input_redirect.c
-bool		is_last_input_redirect(t_redirects *redirect, t_list *redirects);
+bool		is_last_fd_input_redirect(t_redirects *redirect, t_list *redirects);
 int			handle_input(t_redirects *redirect, bool is_last);
 
 // /exec_command_line/handle_pipe.c

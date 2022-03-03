@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-bool	is_last_input_redirect(
+bool	is_last_fd_input_redirect(
 	t_redirects *redirect, t_list *redirects)
 {
 	t_list		*current_node;

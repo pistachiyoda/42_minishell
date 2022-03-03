@@ -1,26 +1,37 @@
 #include "minishell.h"
 
-void	handle_command_line(t_cmd_block *cmd_block, char **envp)
+int	handle_single_block(t_cmd_block *cmd_block, char **envp)
 {
-	int	pipe_a[FD_MAX][2];
-
-	if (handle_redirect(cmd_block, pipe_a) != 0)
-		exit(1);
-	exec_command(cmd_block->command, cmd_block->args, envp);
-	exit(1);
-}
-
-void	handle_single_block(t_cmd_block *cmd_block, char ** envp)
-{
-	int pid;
+	int	pid;
 	int	status;
+	int doc_pipe_fds_arr[FD_MAX][2];
+	t_list	*redirect_node;
+	t_redirects	*redirect;
+	int	ret;
 
+	if (handle_heredoc_input(cmd_block, doc_pipe_fds_arr) != 0)
+		exit(1);
 	pid = fork();
-
 	if (pid == 0)
-		handle_command_line(cmd_block, envp);
-
+	{
+		redirect_node = cmd_block->redirects;
+		while (1)
+		{
+			if (!redirect_node)
+				break ;
+			redirect = redirect_node->content;
+			ret = handle_redirect(redirect, cmd_block, doc_pipe_fds_arr);
+			if (ret != 0)
+				exit(ret);
+			if (redirect_node->next == NULL)
+				break ;
+			redirect_node = redirect_node->next;
+		}
+		exec_command(cmd_block->command, cmd_block->args, envp);
+	}
+	close_doc_pipe_fds(doc_pipe_fds_arr, cmd_block);
 	waitpid(pid, &status, 0);
+	return (0);
 }
 
 // cmd_list->nextがnullになるまでループ
@@ -30,7 +41,7 @@ void	handle_single_block(t_cmd_block *cmd_block, char ** envp)
 int	exec_command_line(t_list *cmd_list, char **envp)
 {
 	int			pids[1000];
-	t_cmd_block *cmd_block;
+	t_cmd_block	*cmd_block;
 	int			pipe_a[2];
 	int			pipe_b[2];
 	int			cmd_cnt;
@@ -40,10 +51,7 @@ int	exec_command_line(t_list *cmd_list, char **envp)
 	cmd_block = (t_cmd_block *)cmd_list->content;
 	cmd_cnt = ft_lstsize(cmd_list);
 	if (cmd_cnt == 1)
-	{
-		handle_single_block(cmd_block, envp);
-		return (0);
-	}
+		return handle_single_block(cmd_block, envp);
 	pipe(pipe_a);
 	pids[0] = handle_first_block(cmd_block, envp, pipe_a);
 	if (cmd_list->next)
@@ -51,7 +59,7 @@ int	exec_command_line(t_list *cmd_list, char **envp)
 	i = 1;
 	while (1)
 	{
-		if (!cmd_list->next) // middle処理をせずlast処理をする
+		if (!cmd_list->next)
 			break ;
 		cmd_block = (t_cmd_block *)cmd_list->content;
 		if (i % 2 != 0)
@@ -77,5 +85,5 @@ int	exec_command_line(t_list *cmd_list, char **envp)
 		waitpid(pids[i], &status, 0);
 		i ++;
 	}
-	return (1);
+	return (0);
 }

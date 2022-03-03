@@ -31,13 +31,10 @@ void exec_command_and_output_file(t_list *cmd_list)
 
 void exec_command_without_dup(t_list *cmd_list)
 {
-	int bak_fd = dup(1);
 	char **envp = (char **)malloc(sizeof(char *) * 2);
 	envp[0] = ft_strjoin("PATH=", getenv("PATH")); // ["PATH=xxx"]
 	envp[1] = NULL;
 	exec_command_line(cmd_list, envp);
-	dup2(bak_fd, 1);
-	close(bak_fd);
 }
 
 void compare_file(
@@ -479,6 +476,7 @@ TEST(exec_command_line_G, fd_redirect_and_file_only_data)
 	// コマンドが実行されなくてもファイルは作成される
 	compare_file("expected/empty.txt", "out.txt");
 }
+
 // 100<in.txt cat in.txt
 t_list	*unrelated_fd_redirect_data()
 {
@@ -1242,9 +1240,44 @@ TEST(exec_command_line_G, no_permission_file_in_middle) {
 	CHECK_EQUAL(-1, access("./exec_cmdline/out2.txt", F_OK));
 }
 
-// cmd | cmd | cmd
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// パイプ正常系テストケース
 
-// < Makefile cat | grep "make" > tmp
+// cat in.txt | grep f
+t_list *two_cmd_block_pipe()
+{
+	t_list		*cmd_list;
+	t_cmd_block *cmd_block_1;
+	t_cmd_block *cmd_block_2;
+
+	cmd_block_1 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block_2 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+
+	// cat in
+	cmd_block_1->command = ft_strdup("cat");
+	cmd_block_1->args = ft_split("cat ./exec_cmdline/in.txt", ' ');
+	cmd_block_1->redirects = NULL;
+
+	// grep f
+	cmd_block_2->command = ft_strdup("grep");
+	cmd_block_2->args = ft_split("grep f", ' ');
+	cmd_block_2->redirects = NULL;
+
+	cmd_list = ft_lstnew(cmd_block_1);
+	ft_lstadd_back(&cmd_list, ft_lstnew(cmd_block_2));
+	return cmd_list;
+}
+TEST(exec_command_line_G, two_cmd_block_pipe) {
+	t_list *cmd_lst;
+
+	cmd_lst = two_cmd_block_pipe();
+	// 標準出力にfugaが出力される
+	exec_command_and_output_file(cmd_lst);
+	compare_file("./expected/two_cmd_block_pipe.txt");
+}
+
+// < ./exec_cmdline/in.txt cat | grep hoge > ./exec_cmdline/out.txt
 t_list *redirect_in_cat_and_redirect_out_grep_data()
 {
 	t_list		*cmd_list;
@@ -1256,20 +1289,22 @@ t_list *redirect_in_cat_and_redirect_out_grep_data()
 	cmd_block_1 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
 	cmd_block_2 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
 
-	// < Makefile cat
+	// < ./exec_cmdline/in.txt cat
 	cmd_block_1->command = ft_strdup("cat");
 	cmd_block_1->args = ft_split("cat", ' ');
 	input_redirect = (t_redirects *)malloc(sizeof(t_redirects));
 	input_redirect->redirect = INPUT;
-	input_redirect->target = ft_strdup("test.txt");
+	input_redirect->target = ft_strdup("./exec_cmdline/in.txt");
+	input_redirect->fd = 0;
 	cmd_block_1->redirects = ft_lstnew(input_redirect);
 
-	// grep "make" > tmp
+	// grep hoge > ./exec_cmdline/out.txt
 	cmd_block_2->command = ft_strdup("grep");
 	cmd_block_2->args = ft_split("grep hoge", ' ');
 	write_redirect = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect->redirect = WRITE;
-	write_redirect->target = ft_strdup("tmp");
+	write_redirect->target = ft_strdup("./exec_cmdline/out.txt");
+	write_redirect->fd = 1;
 	cmd_block_2->redirects = ft_lstnew(write_redirect);
 
 	cmd_list = ft_lstnew(cmd_block_1);
@@ -1277,13 +1312,43 @@ t_list *redirect_in_cat_and_redirect_out_grep_data()
 	return cmd_list;
 }
 TEST(exec_command_line_G, redirect_in_cat_and_redirect_out_grep) {
-	// t_list *cmd_lst;
+	t_list *cmd_lst;
 
-// 	printf("\n##### redirect_in_cat_and_redirect_out_grep_data #####\n");
-// 	printf("##### < Makefile cat | grep \"make\" > tmp");
-// 	cmd_lst = redirect_in_cat_and_redirect_out_grep_data();
-// 	print_cmd_lst(cmd_lst);
-	FAIL("未実装");
+	cmd_lst = redirect_in_cat_and_redirect_out_grep_data();
+	exec_command_without_dup(cmd_lst);
+	compare_file("expected/redirect_in_cat_and_redirect_out_grep.txt", "out.txt");
+}
+
+// cmd | cmd | cmd
+t_list *three_command_pipe_data()
+{
+	t_list *cmd_list;
+	t_cmd_block *cmd_block_1;
+	t_cmd_block *cmd_block_2;
+	t_cmd_block *cmd_block_3;
+
+	cmd_block_1 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block_2 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block_3 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block_1->command = ft_strdup("cat");
+	cmd_block_1->args = ft_split("cat ./exec_cmdline/in.txt", ' ');
+	cmd_block_1->redirects = NULL;
+	cmd_block_2->command = ft_strdup("cat");
+	cmd_block_2->args = ft_split("cat", ' ');
+	cmd_block_2->redirects = NULL;
+	cmd_block_3->command = ft_strdup("cat");
+	cmd_block_3->args = ft_split("cat", ' ');
+	cmd_block_3->redirects = NULL;
+	cmd_list = ft_lstnew(cmd_block_1);
+	ft_lstadd_back(&cmd_list, ft_lstnew(cmd_block_2));
+	ft_lstadd_back(&cmd_list, ft_lstnew(cmd_block_3));
+	return cmd_list;
+}
+TEST(exec_command_line_G, three_command_pipe)
+{
+	t_list *cmd_list = three_command_pipe_data();
+	exec_command_and_output_file(cmd_list);
+	compare_file("in.txt");
 }
 
 int main(int argc, char **argv)
