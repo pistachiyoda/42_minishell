@@ -20,7 +20,7 @@ void exec_command_and_output_file(t_list *cmd_list)
 	char **envp = (char **)malloc(sizeof(char *) * 2);
 	envp[0] = ft_strjoin("PATH=", getenv("PATH")); // ["PATH=xxx"]
 	envp[1] = NULL;
-	exec_command_line(cmd_list, envp);
+	exec_command_line(cmd_list, envp, ft_lstsize(cmd_list));
 	close(file_fd1);
 	close(file_fd2);
 	dup2(bak_fd1, 1);
@@ -34,7 +34,7 @@ void exec_command_without_dup(t_list *cmd_list)
 	char **envp = (char **)malloc(sizeof(char *) * 2);
 	envp[0] = ft_strjoin("PATH=", getenv("PATH")); // ["PATH=xxx"]
 	envp[1] = NULL;
-	exec_command_line(cmd_list, envp);
+	exec_command_line(cmd_list, envp, ft_lstsize(cmd_list));
 }
 
 void compare_file(
