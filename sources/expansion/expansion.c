@@ -1,93 +1,176 @@
 #include "minishell.h"
 
-int	is_in_quote_dquote(char *str, int i, int status)
+int	split_by_space2(char *str, t_list **words, int *i, int start)
 {
-	if (str[i] == '\'' && status != DQUOTE)
-	{
-		if (status == NONE)
-			status = QUOTE;
-		else if (status == QUOTE)
-			status = NONE;
-	}
-	else if (str[i] == '"' && status != QUOTE)
-	{
-		if (status == NONE)
-			status = DQUOTE;
-		else if (status == DQUOTE)
-			status = NONE;
-	}
-	return (status);
-}
-char	*is_registered(t_environ *env, char **split_ele, bool key_only)
-{
-	size_t	len;
+	t_list	*new;
 
-	len = ft_strlen(split_ele[0]);
-	env = env->next;
-	while (env->key != NULL)
+	if (*words == NULL)
+		*words = xlstnew(xsubstr(str, start, *i - start, "lexer"), "lexer");
+	else
 	{
-		if (ft_strlen(env->key) > len)
-			len = ft_strlen(env->key);
-		if (ft_strncmp(env->key, split_ele[0], len) == 0)
+		new = xlstnew(xsubstr(str, start, *i - start, "lexer"), "lexer");
+		ft_lstadd_back(words, new);
+	}
+	while (str[*i + 1] != '\0' && is_space_tab_newline(str[*i + 1]))
+		(*i)++;
+	start = *i + 1;
+	return (start);
+}
+
+size_t	get_left(char *str, int i, char **left)
+{
+	while (str[i + 1] != '\0')
+	{
+		if (str[i + 1] == '"' || str[i + 1] == '\'' || str[i + 1] == '$')
 		{
-			if (!key_only)
-				env->value = split_ele[1];
-			return (env->value);
-		}
-		env = env->next;
-	}
-	return (NULL);
-}
-
-char	*param_expansion(t_environ *env, char *str, int *i)
-{
-	char	*expanded;
-
-	// $OKみたいにvalueがない変数か未登録の変数の場合は、NULLが返ってくる
-	expanded = is_registered(env, &str, true);
-	if (expanded == NULL)
-		return (NULL);
-	free(str);
-	return (expanded);
-}
-
-// dquoteは一つだけじゃなく、複数でも許容される必要あり
-// echo """'$TEST'""" ->echo "'le\"mon\"'" -> 'le"mon"'
-// ($の前に”が奇数個存在する&&奇数個の最後の一つが'より前方に存在する) || ()
-// (status==dquote||status==NONE) && 文字=='$' ->展開する
-char	*find_param(t_cmd_block *cmd, t_environ *env, char *str)
-{
-	int	i;
-	int	status;
-	char	*save;
-	char	*tmp;
-	char	*left;
-
-	i = 0;
-	status = NONE;
-	while (str[i] != '\0')
-	{
-		status = is_in_quote_dquote(str, i, status);
-		if (status != QUOTE && str[i + 1] == '$')
-		{
-			tmp = xstrdup(save, "expansion");
-			tmp[i + 1] = '\0';
-			i += 2;
-			// left = str[];変数名以降を代入する
-			save = ft_strjoin(tmp, param_expansion(env, str, &i));
-			free(tmp);
+			*left = &str[i + 1];
+			break ;
 		}
 		i++;
 	}
-	return (str);
+	if (*left != NULL)
+		return (ft_strlen(*left));
+	return (0);
 }
 
+char	*split_expanded_by_space(t_list **words, int status, char *head, int *splitted)
+{
+	int		j;
+	int		start;
+	char	*tmp;
+
+	j = 0;
+	start = 0;
+	if (status == NONE)
+	{
+		while (ft_strlen(head) - j > 0)
+		{
+			if (is_space_tab_newline(head[j]))
+			{
+				start = split_by_space2(head, words, &j, start);
+				*splitted = 1;
+			}
+			j++;
+		}
+		if (start != j)
+		{
+			tmp = xsubstr(head, start, j - start, "expansion");
+			free(head);
+			head = tmp;
+		}
+	}
+	return (head);
+}
+
+char	*left_to_next_head(char *left, char *head, int status)
+{
+	int		j;
+	char	*tmp;
+
+	j = 0;
+	if (left)
+	{
+		while (left[j] != '\0')
+		{
+			if (left[j] == '$' && is_in_quote_dquote(left, j, status) != QUOTE)
+				break ;
+			j++;
+		}
+		tmp = ft_strjoin(head, xsubstr(left, 0, j, "expansion"));
+		free(head);
+		head = tmp;
+	}
+	return (head);
+}
+
+void	add_to_words(t_list **words, char *head, char *str)
+{
+	if (*words == NULL)
+	{
+		if (head != NULL)
+			*words = xlstnew(head, "expansion");
+		else
+			*words = xlstnew(str, "expansion");
+	}
+	else
+	{
+		if (head != NULL)
+			ft_lstadd_back(words, xlstnew(head, "expansion"));
+		else
+			ft_lstadd_back(words, xlstnew(str, "expansion"));
+	}
+}
+
+char	*expand_redirect_target(t_cmd_block *cmd, t_list **words, int status)
+{
+	t_redirects	*redirects;
+
+	redirects = cmd->redirects->content;
+	printf("word: %s, words_last: %s\n", (char *)(*words)->content, (char *)ft_lstlast(*words)->content);
+	if (status == 1)
+	{
+		print_error("expansion", EMESS_REDIRECT);
+		exit(EXIT_FAILURE);
+	}
+	// free(redirects->target); //wordsの中身になりうる場合、free NG
+	return ((char *)ft_lstlast(*words)->content);
+	// free(*words);
+}
+
+// echo """'$TEST'""" ->echo "'le\"mon\"'" -> 'le"mon"'
+// ($の前に”が奇数個存在する&&奇数個の最後の一つが'より前方に存在する) || ()
+		// "$TEST"$TEST'$TEST'
+int	find_param(t_environ *env, char *str, t_list **words)
+{
+	int		status;
+	int		i;
+	char	*head;
+	char	*left;
+	char	*param;
+	char	*tmp; //除外する
+	int		splitted;
+
+	i = 0;
+	status = NONE;
+	head = NULL;
+	splitted = 0;
+	while (str[i] != '\0')
+	{
+		left = NULL;
+		status = is_in_quote_dquote(str, i, status);
+		if (status != QUOTE && str[i] == '$')
+		{
+			if (head == NULL && i != 0)
+				head = xsubstr(str, 0, i, "expansion"); //aa
+			param = xsubstr(str, i + 1, ft_strlen(str) - (i + 1) - get_left(str, i, &left), "expansion"); //PATH
+			i += ft_strlen(param);
+			// free(param); //以降必要ない場合は要フリー
+			tmp = ft_strjoin(head, is_registered(env, &param, true));
+			free(head);
+			head = tmp;
+			// printf("str: %s, i: %d, param: %s, param_len: %zu, head: %s, left: %s\n", str, i, param,ft_strlen(param), head, left);
+			head = split_expanded_by_space(words, status, head, &splitted);
+			head = left_to_next_head(left, head, status);
+		}
+		i++;
+	}
+	add_to_words(words, head, str);
+	return (splitted);
+}
+
+// a$TE$TE'b'$TE | $USER$TE
 t_list	*expansion(t_list *tokens, t_environ *env)
 {
 	t_cmd_block	*cmd;
 	t_redirects	*redirects;
+	t_list		*redirects_head;
+	t_list		*words;
+	t_list		*token_head;
 	int			i;
+	int			status;
 
+	token_head = tokens;
+	words = NULL;
 	while (tokens != NULL)
 	{
 		cmd = tokens->content;
@@ -95,21 +178,40 @@ t_list	*expansion(t_list *tokens, t_environ *env)
 		{
 			if (cmd->command != NULL)
 			{
-				find_param(cmd, env, cmd->command);
-				i = 0;
+				status = find_param(env, cmd->command, &words);
+				i = 1;
 				while (cmd->args[i] != NULL)
 				{
-					find_param(cmd, env, cmd->args[i]);
+					status = find_param(env, cmd->args[i], &words);
 					i++;
 				}
+				i = 0;
+				if (words != NULL)
+				{
+					cmd->command = words->content; //呼び出された関数内で設定してもいいかも
+					// 必要であればcmd->argsフリー
+					cmd->args = malloc(sizeof(char *) * (ft_lstsize(words) + 1));
+					while (words != NULL)
+					{
+						cmd->args[i] = words->content;
+						words = words->next;
+						i++;
+					}
+					cmd->args[i] = NULL;
+					// ft_lstclear(&words_head, NULL);
+				}
 			}
+			redirects_head = cmd->redirects;
 			while (cmd->redirects != NULL)
 			{
 				redirects = cmd->redirects->content;
-				find_param(cmd, env, redirects->target);
+				status = find_param(env, redirects->target, &words);
+				redirects->target = expand_redirect_target(cmd, &words, status);
 				cmd->redirects = cmd->redirects->next;
 			}
+			cmd->redirects = redirects_head;
 		}
 		tokens = tokens->next;
 	}
+	return (token_head);
 }
