@@ -17,7 +17,7 @@ int	close_doc_pipe_fd(t_cmd_block *cmd_block)
 			close(redirect->doc_fd);
 		}
 		if (!redirect_node->next)
-			break;
+			break ;
 		redirect_node = redirect_node->next;
 	}
 	return (0);

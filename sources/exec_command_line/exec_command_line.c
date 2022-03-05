@@ -2,28 +2,13 @@
 
 int	handle_single_block(t_cmd_block *cmd_block, char **envp)
 {
-	int	pid;
-	int	status;
-	t_list	*redirect_node;
-	t_redirects	*redirect;
-	int	ret;
+	int			pid;
+	int			status;
 
 	pid = fork();
 	if (pid == 0)
 	{
-		redirect_node = cmd_block->redirects;
-		while (1)
-		{
-			if (!redirect_node)
-				break ;
-			redirect = redirect_node->content;
-			ret = handle_redirect(redirect, cmd_block);
-			if (ret != 0)
-				exit(ret);
-			if (redirect_node->next == NULL)
-				break ;
-			redirect_node = redirect_node->next;
-		}
+		handle_redirects(cmd_block);
 		exec_command(cmd_block->command, cmd_block->args, envp);
 	}
 	close_doc_pipe_fd(cmd_block);
@@ -31,52 +16,27 @@ int	handle_single_block(t_cmd_block *cmd_block, char **envp)
 	return (0);
 }
 
-// cmd_list->nextがnullになるまでループ
-// 最初の一つ目はhandle_first_blockに
-// 真ん中はhandle_middle_blockに
-// 最後の一つはhandle_last_blockに
-int	exec_command_line(t_list *cmd_list, char **envp)
+// choice read pipe
+int	*crp(int i, int pipe_a[2], int pipe_b[2])
 {
-	int			pids[1000];
-	t_cmd_block	*cmd_block;
-	int			pipe_a[2];
-	int			pipe_b[2];
-	int			cmd_cnt;
-	int			i;
-	int			status;
-
-	handle_heredoc_input(cmd_list);
-	cmd_block = (t_cmd_block *)cmd_list->content;
-	cmd_cnt = ft_lstsize(cmd_list);
-	if (cmd_cnt == 1)
-		return handle_single_block(cmd_block, envp);
-	pipe(pipe_a);
-	pids[0] = handle_first_block(cmd_block, envp, pipe_a);
-	if (cmd_list->next)
-		cmd_list = cmd_list->next;
-	i = 1;
-	while (1)
-	{
-		if (!cmd_list->next)
-			break ;
-		cmd_block = (t_cmd_block *)cmd_list->content;
-		if (i % 2 != 0)
-		{
-			pipe(pipe_b);
-			pids[i] = handle_middle_block(cmd_block, envp, pipe_a, pipe_b);
-		}
-		if (i % 2 == 0)
-		{
-			pipe(pipe_a);
-			pids[i] = handle_middle_block(cmd_block, envp, pipe_b, pipe_a);
-		}
-		cmd_list = cmd_list->next;
-		i++ ;
-	}
-	if (i % 2 != 0)
-		pids[i] = handle_last_block(cmd_list->content, envp, pipe_a);
 	if (i % 2 == 0)
-		pids[i] = handle_last_block(cmd_list->content, envp, pipe_b);
+		return (pipe_b);
+	return (pipe_a);
+}
+
+// choice write pipe
+int	*cwp(int i, int pipe_a[2], int pipe_b[2])
+{
+	if (i % 2 == 0)
+		return (pipe_a);
+	return (pipe_b);
+}
+
+int	wait_pids(int cmd_cnt, int pids[1000])
+{
+	int	i;
+	int	status;
+
 	i = 0;
 	while (i < cmd_cnt)
 	{
@@ -84,5 +44,37 @@ int	exec_command_line(t_list *cmd_list, char **envp)
 		i ++;
 	}
 	return (0);
+}
 
+// cmd_list->nextがnullになるまでループ
+// 最初の一つ目はhandle_first_blockに
+// 真ん中はhandle_middle_blockに
+// 最後の一つはhandle_last_blockに
+int	exec_command_line(t_list *cmd_list, char **envp, int cmd_cnt)
+{
+	int			pids[1000];
+	t_cmd_block	*cmd_block;
+	int			pipe_a[2];
+	int			pipe_b[2];
+	int			i;
+
+	handle_heredoc_input(cmd_list);
+	cmd_block = (t_cmd_block *)cmd_list->content;
+	if (cmd_cnt == 1)
+		return (handle_single_block(cmd_block, envp));
+	pids[0] = handle_first_block(cmd_block, envp, pipe_a);
+	if (cmd_list->next)
+		cmd_list = cmd_list->next;
+	i = 1;
+	while (cmd_list->next)
+	{
+		cmd_block = (t_cmd_block *)cmd_list->content;
+		pids[i] = handle_middle_block(cmd_block, envp,
+				crp(i, pipe_a, pipe_b), cwp(i, pipe_a, pipe_b));
+		cmd_list = cmd_list->next;
+		i++ ;
+	}
+	pids[i] = handle_last_block(cmd_list->content, envp,
+			crp(i, pipe_a, pipe_b));
+	return (wait_pids(cmd_cnt, pids));
 }

@@ -64,29 +64,23 @@ int	handle_heredoc_input(t_list *cmd_list)
 	t_redirects	*redirect;
 	int			doc_pipe_fds[2];
 
-	while (1)
+	while (cmd_list)
 	{
 		cmd_block = (t_cmd_block *)cmd_list->content;
 		redirect_node = cmd_block->redirects;
-		if (!redirect_node)
-			return (0);
-		while (1)
+		while (redirect_node)
 		{
 			redirect = redirect_node->content;
 			if (redirect->redirect == HEREDOC)
 			{
-				handle_heredoc(
-					redirect->target,
-					is_last_fd_input_redirect(redirect, cmd_block->redirects),
+				handle_heredoc(redirect->target,
+					is_last_fd_input_redirect(
+						redirect, cmd_block->redirects),
 					doc_pipe_fds);
 				redirect->doc_fd = doc_pipe_fds[0];
 			}
-			if (redirect_node->next == NULL)
-				break ;
 			redirect_node = redirect_node->next;
 		}
-		if (cmd_list->next == NULL)
-			break ;
 		cmd_list = cmd_list->next;
 	}
 	return (0);

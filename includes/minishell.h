@@ -56,7 +56,7 @@ void		*xmalloc(size_t len, char *target);
 void		malloc_check(void *words, char *target);
 
 // exec_command_line/exec_command_line.c
-int			exec_command_line(t_list *cmd_list, char **envp);
+int			exec_command_line(t_list *cmd_list, char **envp, int cmd_cnt);
 void		handle_command_line(t_cmd_block *cmd_block, char **envp);
 
 // exec_command_line/handle_file.c
@@ -75,17 +75,21 @@ char		*ft_strjoin2(char const *s1, char const *s2);
 int			close_doc_pipe_fd(t_cmd_block *cmd_block);
 
 // exec_command_line/handle_redirect.c
-// int			handle_heredoc_input(t_cmd_block *cmd_block, int	pipe_fds[FD_MAX][2]);
-int	handle_redirect(t_redirects	*redirect, t_cmd_block *cmd_block);
+int			handle_redirect(t_redirects	*redirect, t_cmd_block *cmd_block);
+void		handle_redirects(t_cmd_block *cmd_block);
 
 // exec_command_line/handle_input_redirect.c
 bool		is_last_fd_input_redirect(t_redirects *redirect, t_list *redirects);
 int			handle_input(t_redirects *redirect, bool is_last);
 
 // /exec_command_line/handle_pipe.c
-int			handle_first_block(t_cmd_block *cmd_block, char	**envp, int pipe_write[2]);
-int			handle_middle_block(t_cmd_block *cmd_block, char	**envp, int pipe_read[2], int pipe_write[2]);
-int			handle_last_block(t_cmd_block *cmd_block, char	**envp, int pipe_read[2]);
+int			handle_first_block(
+				t_cmd_block *cmd_block, char **envp, int pipe_write[2]);
+int			handle_middle_block(
+				t_cmd_block *cmd_block, char **envp,
+				int pipe_read[2], int pipe_write[2]);
+int			handle_last_block(
+				t_cmd_block *cmd_block, char **envp, int pipe_read[2]);
 
 // runner/run_builtin_command.c
 bool		is_fork_required(t_list *cmd_list);
