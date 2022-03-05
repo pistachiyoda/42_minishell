@@ -4,13 +4,10 @@ int	handle_single_block(t_cmd_block *cmd_block, char **envp)
 {
 	int	pid;
 	int	status;
-	int doc_pipe_fds_arr[FD_MAX][2];
 	t_list	*redirect_node;
 	t_redirects	*redirect;
 	int	ret;
 
-	if (handle_heredoc_input(cmd_block, doc_pipe_fds_arr) != 0)
-		exit(1);
 	pid = fork();
 	if (pid == 0)
 	{
@@ -20,7 +17,7 @@ int	handle_single_block(t_cmd_block *cmd_block, char **envp)
 			if (!redirect_node)
 				break ;
 			redirect = redirect_node->content;
-			ret = handle_redirect(redirect, cmd_block, doc_pipe_fds_arr);
+			ret = handle_redirect(redirect, cmd_block);
 			if (ret != 0)
 				exit(ret);
 			if (redirect_node->next == NULL)
@@ -29,7 +26,7 @@ int	handle_single_block(t_cmd_block *cmd_block, char **envp)
 		}
 		exec_command(cmd_block->command, cmd_block->args, envp);
 	}
-	close_doc_pipe_fds(doc_pipe_fds_arr, cmd_block);
+	close_doc_pipe_fd(cmd_block);
 	waitpid(pid, &status, 0);
 	return (0);
 }
@@ -48,6 +45,7 @@ int	exec_command_line(t_list *cmd_list, char **envp)
 	int			i;
 	int			status;
 
+	handle_heredoc_input(cmd_list);
 	cmd_block = (t_cmd_block *)cmd_list->content;
 	cmd_cnt = ft_lstsize(cmd_list);
 	if (cmd_cnt == 1)
@@ -86,4 +84,5 @@ int	exec_command_line(t_list *cmd_list, char **envp)
 		i ++;
 	}
 	return (0);
+
 }

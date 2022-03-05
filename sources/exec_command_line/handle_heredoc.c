@@ -45,39 +45,49 @@ void	handle_heredoc(char *limiter, bool is_last, int doc_pipe_fds[2])
 {
 	int		pid;
 
-	if (is_last)
+	if (pipe(doc_pipe_fds) == -1)
 	{
-		if (pipe(doc_pipe_fds) == -1)
-		{
-			perror("pipe()");
-			exit(1);
-		}
+		perror("pipe()");
+		exit(1);
 	}
 	pid = fork();
 	if (pid == 0)
 		handle_each_input(limiter, is_last, doc_pipe_fds);
+	close(doc_pipe_fds[1]);
 	waitpid(pid, NULL, 0);
 }
 
-int	handle_heredoc_input(t_cmd_block *cmd_block, int	doc_pipe_fds_arr[FD_MAX][2])
+int	handle_heredoc_input(t_list *cmd_list)
 {
+	t_cmd_block	*cmd_block;
 	t_list		*redirect_node;
 	t_redirects	*redirect;
+	int			doc_pipe_fds[2];
 
-	redirect_node = cmd_block->redirects;
-	if (!redirect_node)
-		return (0);
 	while (1)
 	{
-		redirect = redirect_node->content;
-		if (redirect->redirect == HEREDOC)
-			handle_heredoc(
-				redirect->target,
-				is_last_fd_input_redirect(redirect, cmd_block->redirects),
-				doc_pipe_fds_arr[redirect->fd]);
-		if (redirect_node->next == NULL)
+		cmd_block = (t_cmd_block *)cmd_list->content;
+		redirect_node = cmd_block->redirects;
+		if (!redirect_node)
+			return (0);
+		while (1)
+		{
+			redirect = redirect_node->content;
+			if (redirect->redirect == HEREDOC)
+			{
+				handle_heredoc(
+					redirect->target,
+					is_last_fd_input_redirect(redirect, cmd_block->redirects),
+					doc_pipe_fds);
+				redirect->doc_fd = doc_pipe_fds[0];
+			}
+			if (redirect_node->next == NULL)
+				break ;
+			redirect_node = redirect_node->next;
+		}
+		if (cmd_list->next == NULL)
 			break ;
-		redirect_node = redirect_node->next;
+		cmd_list = cmd_list->next;
 	}
 	return (0);
 }

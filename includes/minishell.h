@@ -66,19 +66,17 @@ bool		is_writable(char *file);
 int			open_or_create_file(char *file, int open_flag);
 
 // exec_command_line/handle_heredoc.c
-int			handle_heredoc_input(
-				t_cmd_block *cmd_block, int	pipe_fds[FD_MAX][2]);
+int			handle_heredoc_input(t_list *cmd_list);
 
 // exec_command_line/handle_heredoc2.c
 char		*ft_strjoin2(char const *s1, char const *s2);
 
 // exec_command_line/close_doc_pipe_fds.c
-int			close_doc_pipe_fds(int doc_pipe_fds[FD_MAX][2], t_cmd_block *cmd_block);
+int			close_doc_pipe_fd(t_cmd_block *cmd_block);
 
 // exec_command_line/handle_redirect.c
 // int			handle_heredoc_input(t_cmd_block *cmd_block, int	pipe_fds[FD_MAX][2]);
-int	handle_redirect(t_redirects	*redirect, t_cmd_block *cmd_block,
-	int	doc_pipe_fds_arr[FD_MAX][2]);
+int	handle_redirect(t_redirects	*redirect, t_cmd_block *cmd_block);
 
 // exec_command_line/handle_input_redirect.c
 bool		is_last_fd_input_redirect(t_redirects *redirect, t_list *redirects);

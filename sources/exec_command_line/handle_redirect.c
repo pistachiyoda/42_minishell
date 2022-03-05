@@ -57,17 +57,13 @@ int	handle_output(t_redirects *redirect, bool is_last)
 // HEREDOCの場合は、inputのラストだったらパイプに書き込まれた内容をdup
 // INPUTの場合はファイル処理＋inputのラストだったらredirect->fdでdup
 // WRITEの場合はファイル処理＋outpuのラストだったらredirect->fdでdup
-int	handle_redirect(t_redirects	*redirect, t_cmd_block *cmd_block,
-	int	doc_pipe_fds_arr[FD_MAX][2])
+int	handle_redirect(t_redirects	*redirect, t_cmd_block *cmd_block)
 {
 	if (redirect->redirect == HEREDOC)
 	{
 		if (is_last_fd_input_redirect(redirect, cmd_block->redirects))
-		{
-			close(doc_pipe_fds_arr[redirect->fd][1]);
-			dup2(doc_pipe_fds_arr[redirect->fd][0], redirect->fd);
-			close(doc_pipe_fds_arr[redirect->fd][0]);
-		}
+			dup2(redirect->doc_fd, redirect->fd);
+		close(redirect->doc_fd);
 	}
 	if (redirect->redirect == INPUT)
 	{
@@ -86,23 +82,3 @@ int	handle_redirect(t_redirects	*redirect, t_cmd_block *cmd_block,
 	return (0);
 }
 
-// 
-// int	handle_heredoc_input(t_cmd_block *cmd_block, int	doc_pipe_fds_arr[FD_MAX][2])
-// {
-// 	t_list		*redirect_node;
-
-	// redirect_node = cmd_block->redirects;
-	// handle_heredoc_loop(cmd_block, doc_pipe_fds_arr);
-	// redirect_node = cmd_block->redirects;
-	// while (1)
-	// {
-	// 	redirect = redirect_node->content;
-	// 	ret = handle_redirect(redirect, cmd_block, doc_pipe_fds_arr);
-	// 	if (ret != 0)
-	// 		return (ret);
-	// 	if (redirect_node->next == NULL)
-	// 		break ;
-	// 	redirect_node = redirect_node->next;
-	// }
-	// return (0);
-// }
