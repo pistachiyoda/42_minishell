@@ -22,7 +22,7 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		print_cmd_lst(cmd_list);
 		if (is_fork_required(cmd_list))
-			exec_command_line(cmd_list, envp);
+			exec_command_line(cmd_list, envp, ft_lstsize(cmd_list));
 		else
 			run_builtin_command(cmd_list->content, env);
 		free(str);

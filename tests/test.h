@@ -111,7 +111,7 @@ extern "C" {
 	void		malloc_check(void *words, char *target);
 
 	// exec_command_line/exec_command_line.c
-	int		exec_command_line(t_list *cmd_list, char **envp);
+	int		exec_command_line(t_list *cmd_list, char **envp, int cmd_cnt);
 
 	// exec_command_line/handle_file.c
 	bool		is_readable(char *file);
