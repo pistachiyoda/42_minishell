@@ -45,6 +45,9 @@ bool		is_executable(char *command_path);
 void		free_2d_array(char **two_d_array);
 void		free_tokens(t_list *tokens);
 
+// utils/is_env_registered.c
+char		*is_env_registerd(t_environ *env, char **split_ele, bool key_only);
+
 // utils/print_error.c
 void		syntax_error(char *str);
 void		print_error(char *target, char *message);
@@ -58,7 +61,7 @@ void		*xmalloc(size_t len, char *target);
 void		malloc_check(void *words, char *target);
 
 // utils/malloc_check2.c
-char	*xstrjoin(char const *s1, char const *s2, char *target);
+char		*xstrjoin(char const *s1, char const *s2, char *target);
 
 // exec_command_line/exec_command_line.c
 int			exec_command_line(t_list *cmd_list, char **envp, int cmd_cnt);
@@ -115,7 +118,7 @@ char		**t_environ_to_vector(t_environ *env);
 void		ft_env(t_environ *env);
 
 // builtin/export.c
-char		*is_registered(t_environ *env, char **split_ele, bool key_only);
+char		*is_env_registerd(t_environ *env, char **split_ele, bool key_only);
 int			update_environ(t_cmd_block *cmd_block, t_environ *env, int i);
 void		ft_export(t_cmd_block *cmd_block, t_environ *env);
 

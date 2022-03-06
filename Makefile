@@ -21,6 +21,7 @@ CFILES =\
 	sources/tmp_parser/tmp_parse_data.c\
 	sources/runner/run_builtin_command.c\
 	sources/utils/free.c\
+	sources/utils/is_env_registered.c\
 	sources/utils/print_error.c\
 	sources/utils/malloc_check.c\
 	sources/utils/malloc_check2.c\
