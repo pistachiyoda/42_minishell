@@ -14,7 +14,7 @@ char	*left_to_next_head(char *left, char *head, int status)
 				break ;
 			j++;
 		}
-		tmp = ft_strjoin(head, xsubstr(left, 0, j, "expansion"));
+		tmp = xstrjoin(head, xsubstr(left, 0, j, "expansion"), "expansion");
 		free(head);
 		head = tmp;
 	}
@@ -23,39 +23,26 @@ char	*left_to_next_head(char *left, char *head, int status)
 
 void	add_to_words(t_list **words, char *head, char *str)
 {
+	if (head == NULL)
+		head = xstrdup(str, "expansion");
 	if (*words == NULL)
-	{
-		if (head != NULL)
-			*words = xlstnew(head, "expansion");
-		else
-			*words = xlstnew(str, "expansion");
-	}
+		*words = xlstnew(head, "expansion");
 	else
-	{
-		if (head != NULL)
-			ft_lstadd_back(words, xlstnew(head, "expansion"));
-		else
-			ft_lstadd_back(words, xlstnew(str, "expansion"));
-	}
+		ft_lstadd_back(words, xlstnew(head, "expansion"));
 }
 
-// echo """'$TEST'""" ->echo "'le\"mon\"'" -> 'le"mon"'
-// ($の前に”が奇数個存在する&&奇数個の最後の一つが'より前方に存在する) || ()
-		// "$TEST"$TEST'$TEST'
-// printf("str: %s, i: %d, param: %s, param_len: %zu, head: %s, left: %s\n",
-// str, i, param,ft_strlen(param), head, left);
 int	set_expanded_to_words(t_environ *env, char *str, t_list **words)
 {
 	int		status;
 	int		i;
-	int		splitted;
+	bool	splitted;
 	char	*head;
 	char	*left;
 
 	i = 0;
 	status = NONE;
 	head = NULL;
-	splitted = 0;
+	splitted = false;
 	while (str[i] != '\0')
 	{
 		status = is_in_quote_dquote(str, i, status);

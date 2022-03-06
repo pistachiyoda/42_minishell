@@ -7,9 +7,10 @@ void	assign_expanded_cmd_args(t_cmd_block *cmd, t_list *words)
 	i = 0;
 	if (words != NULL)
 	{
+		free_2d_array(cmd->args);
 		cmd->command = words->content;
-		// 必要であればcmd->argsフリー
-		cmd->args = malloc(sizeof(char *) * (ft_lstsize(words) + 1));
+		cmd->args = xmalloc(sizeof(char *) * (ft_lstsize(words) + 1),
+				"expansion");
 		while (words != NULL)
 		{
 			cmd->args[i] = words->content;
@@ -17,6 +18,7 @@ void	assign_expanded_cmd_args(t_cmd_block *cmd, t_list *words)
 			i++;
 		}
 		cmd->args[i] = NULL;
+		ft_lstclear(&words, NULL);
 	}
 }
 
@@ -37,42 +39,40 @@ void	expand_cmd_args(t_cmd_block *cmd, t_environ *env, t_list *words)
 	}
 }
 
-void	assign_expanded_target(t_cmd_block *cmd, t_list **words, int status)
+void	assign_expanded_target(t_cmd_block *cmd, t_list *words, bool error)
 {
 	t_redirects	*redirects;
 
 	redirects = cmd->redirects->content;
-	if (status == 1)
+	if (error)
 	{
 		print_error("expansion", EMESS_REDIRECT);
 		exit(EXIT_FAILURE);
 	}
-	// free(redirects->target); //wordsの中身になりうる場合、free NG
-	redirects->target = ft_lstlast(*words)->content;
+	free(redirects->target);
+	redirects->target = ft_lstlast(words)->content;
+	ft_lstclear(&words, NULL);
 }
 
-void	expand_redirects(t_environ *env, t_cmd_block *cmd, t_list *words)
+void	expand_redirects(t_cmd_block *cmd, t_environ *env, t_list *words)
 {
 	t_list		*head;
 	t_redirects	*redirect;
-	int			status;
+	bool		error;
 
 	head = cmd->redirects;
 	while (cmd->redirects != NULL)
 	{
 		redirect = cmd->redirects->content;
-		status = set_expanded_to_words(env, redirect->target, &words);
-		assign_expanded_target(cmd, &words, status);
+		error = set_expanded_to_words(env, redirect->target, &words);
+		assign_expanded_target(cmd, words, error);
 		cmd->redirects = cmd->redirects->next;
 	}
 	cmd->redirects = head;
 }
 
-// a$TE$TE'b'$TE | $USER$TE
-// echo $USER > $FF
 t_list	*expansion(t_list *tokens, t_environ *env)
 {
-	t_cmd_block	*cmd;
 	t_list		*words;
 	t_list		*head;
 
@@ -80,11 +80,10 @@ t_list	*expansion(t_list *tokens, t_environ *env)
 	head = tokens;
 	while (tokens != NULL)
 	{
-		cmd = tokens->content;
-		if (cmd != NULL)
+		if (tokens->content != NULL)
 		{
-			expand_cmd_args(cmd, env, words);
-			expand_redirects(env, cmd, words);
+			expand_cmd_args((t_cmd_block *)tokens->content, env, words);
+			expand_redirects((t_cmd_block *)tokens->content, env, words);
 		}
 		tokens = tokens->next;
 	}
