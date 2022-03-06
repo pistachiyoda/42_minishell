@@ -38,27 +38,29 @@ int	split_by_space_lex(char *str, t_list *words, int *i, int start)
 	return (start);
 }
 
-bool	add_last_str(char *str, t_list *words, int i, int start)
+bool	add_last_str(char *str, t_list *words, int start, int status)
 {
 	t_list	*new_ele;
 	t_list	*last;
+	int		i;
 
 	last = ft_lstlast(words);
-	if (start < i)
-	{
-		new_ele = xlstnew(xsubstr(str, start, i - start, "lexer"), "lexer");
-		ft_lstadd_back(&words, new_ele);
-		return (true);
-	}
-	if (start == i && (ft_strncmp(last->content, ">", 1) == 0
-			|| ft_strncmp(last->content, "<", 1) == 0
-			|| ft_strncmp(last->content, ">>", 2) == 0
-			|| ft_strncmp(last->content, "<<", 2) == 0))
+	i = ft_strlen(str);
+	if ((start == i && (ft_strncmp(last->content, ">", 1) == 0
+				|| ft_strncmp(last->content, "<", 1) == 0
+				|| ft_strncmp(last->content, ">>", 2) == 0
+				|| ft_strncmp(last->content, "<<", 2) == 0)) || status != NONE)
 	{
 		syntax_error("newline");
 		ft_lstclear(&words, free);
 		free(str);
 		return (false);
+	}
+	if (start < i)
+	{
+		new_ele = xlstnew(xsubstr(str, start, i - start, "lexer"), "lexer");
+		ft_lstadd_back(&words, new_ele);
+		return (true);
 	}
 	return (true);
 }
@@ -86,7 +88,7 @@ t_list	*lexer(char *str)
 			start = split_by_redirect_pipe(str, words, &i, start);
 		i++;
 	}
-	if (start != -1 && status == NONE && add_last_str(str, words, i, start))
-		return (words);//add_last_strとかでstatus != NONEのエラー処理できるように修正したい
+	if (start != -1 && add_last_str(str, words, start, status))
+		return (words);
 	return (NULL);
 }
