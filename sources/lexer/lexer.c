@@ -26,7 +26,7 @@ int	is_in_quote_dquote(char *str, int i, int status)
 	return (status);
 }
 
-int	split_by_space(char *str, t_list *words, int *i, int start)
+int	split_by_space_lex(char *str, t_list *words, int *i, int start)
 {
 	t_list	*new;
 
@@ -78,10 +78,9 @@ t_list	*lexer(char *str)
 	start = i;
 	while (str[i] != '\0' && start != -1)
 	{
-		if (str[i] == '\'' || str[i] == '"')
-			status = is_in_quote_dquote(str, i, status);
+		status = is_in_quote_dquote(str, i, status);
 		if (status == NONE && is_space_tab_newline(str[i]))
-			start = split_by_space(str, words, &i, start);
+			start = split_by_space_lex(str, words, &i, start);
 		else if (status == NONE
 			&& (str[i] == '>' || str[i] == '<' || str[i] == '|'))
 			start = split_by_redirect_pipe(str, words, &i, start);
