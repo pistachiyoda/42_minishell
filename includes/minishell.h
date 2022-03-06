@@ -57,6 +57,9 @@ char		*xsubstr(char const *s, unsigned int start,
 void		*xmalloc(size_t len, char *target);
 void		malloc_check(void *words, char *target);
 
+// utils/malloc_check2.c
+char	*xstrjoin(char const *s1, char const *s2, char *target);
+
 // exec_command_line/exec_command_line.c
 int			exec_command_line(t_list *cmd_list, char **envp, int cmd_cnt);
 void		handle_command_line(t_cmd_block *cmd_block, char **envp);
