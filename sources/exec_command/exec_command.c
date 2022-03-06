@@ -14,17 +14,17 @@ void	exec_relative_or_absolute(char *command_path, char **args, char **envp)
 	if (is_directory(command_path))
 	{
 		print_error(command_path, EMESS_IS_DIR);
-		exit(1);
+		exit(126);
 	}
 	if (!is_exists(command_path))
 	{
 		print_error(command_path, EMESS_NO_FILE_DIR);
-		exit(1);
+		exit(127);
 	}
 	if (!is_executable(command_path))
 	{
 		print_error(command_path, EMESS_NO_PERM);
-		exit(1);
+		exit(126);
 	}
 	execve(command_path, args, envp);
 	exit(1);

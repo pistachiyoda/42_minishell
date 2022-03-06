@@ -13,7 +13,7 @@ int	handle_single_block(t_cmd_block *cmd_block, char **envp)
 	}
 	close_doc_pipe_fd(cmd_block);
 	waitpid(pid, &status, 0);
-	return (0);
+	return (WEXITSTATUS(status));
 }
 
 // choice read pipe
@@ -43,7 +43,7 @@ int	wait_pids(int cmd_cnt, int pids[1000])
 		waitpid(pids[i], &status, 0);
 		i ++;
 	}
-	return (0);
+	return (WEXITSTATUS(status));
 }
 
 // cmd_list->nextがnullになるまでループ

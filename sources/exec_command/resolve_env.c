@@ -42,5 +42,5 @@ char	*resolve_path(char	*command, char *path_val)
 	}
 	free_2d_array(paths);
 	print_error(command, EMESS_NO_CMD);
-	return (NULL);
+	exit(127);
 }

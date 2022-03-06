@@ -27,6 +27,8 @@
 
 # define FD_MAX 256
 
+extern unsigned char	g_status;
+
 // exec_command/exec_command.c
 void		exec_command(char *command_path, char **args, char **envp);
 
