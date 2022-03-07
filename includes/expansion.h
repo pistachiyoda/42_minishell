@@ -2,6 +2,12 @@
 # define EXPANSION_H
 # include "libft.h"
 
+typedef struct s_quote
+{
+	int	prev_q;
+	int	status;
+}	t_quote;
+
 // sources/expansion/expansion.c
 void	assign_expanded_cmd_args(t_cmd_block *cmd, t_list *words);
 void	expand_cmd_args(t_cmd_block *cmd, t_environ *env, t_list *words);
@@ -23,7 +29,7 @@ int		split_by_space_expand(char *str, t_list **words, int *i, int start);
 void	word_splitting(t_list **words, int status, char **head, bool *splitted);
 
 // sources/expansion/quote_removal.c
-void	quote_removal(char *str, char **head, int i, int *prev_q);
+void	quote_removal(char *str, char **head, int i, t_quote *quote);
 void	set_head_before_dollar(char *str, char **head, int i, int prev_q);
 
 #endif

@@ -202,6 +202,12 @@ extern "C" {
 	void		set_tokens(t_list **tokens, t_cmd_block *cmd);
 	t_list		*parser(t_list *words);
 
+	typedef struct s_quote
+	{
+		int	prev_q;
+		int	status;
+	}	t_quote;
+
 	// expansion/expansion.c
 	void		assign_expanded_cmd_args(t_cmd_block *cmd, t_list *words);
 	void		expand_cmd_args(t_cmd_block *cmd, t_environ *env, t_list *words);
@@ -223,7 +229,7 @@ extern "C" {
 	void		word_splitting(t_list **words, int status, char **head, bool *splitted);
 
 	// expansion/quote_removal.c
-	void		quote_removal(char *str, char **head, int i, int *prev_q);
+	void		quote_removal(char *str, char **head, int i, t_quote *quote);
 	void		set_head_before_dollar(char *str, char **head, int i, int prev_q);
 
 	// test/parser/parser.cpp
