@@ -48,6 +48,9 @@ void		free_tokens(t_list *tokens);
 // utils/is_env_registered.c
 char		*is_env_registerd(t_environ *env, char **split_ele, bool key_only);
 
+// utils/is_quote_type_switched.c
+bool		is_quote_type_switched(char *str, int i, int *status);
+
 // utils/print_error.c
 void		syntax_error(char *str);
 void		print_error(char *target, char *message);

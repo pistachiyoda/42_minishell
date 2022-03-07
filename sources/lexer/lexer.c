@@ -7,25 +7,6 @@ bool	is_space_tab_newline(char c)
 	return (false);
 }
 
-int	is_in_quote_dquote(char *str, int i, int status)
-{
-	if (str[i] == '\'' && status != DQUOTE)
-	{
-		if (status == NONE)
-			status = QUOTE;
-		else if (status == QUOTE)
-			status = NONE;
-	}
-	else if (str[i] == '"' && status != QUOTE)
-	{
-		if (status == NONE)
-			status = DQUOTE;
-		else if (status == DQUOTE)
-			status = NONE;
-	}
-	return (status);
-}
-
 int	split_by_space_lex(char *str, t_list *words, int *i, int start)
 {
 	t_list	*new;
@@ -80,7 +61,7 @@ t_list	*lexer(char *str)
 	start = i;
 	while (str[i] != '\0' && start != -1)
 	{
-		status = is_in_quote_dquote(str, i, status);
+		is_quote_type_switched(str, i, &status);
 		if (status == NONE && is_space_tab_newline(str[i]))
 			start = split_by_space_lex(str, words, &i, start);
 		else if (status == NONE
