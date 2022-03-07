@@ -4,7 +4,11 @@ bool	is_directory(char *path)
 {
 	struct stat	st;
 
-	stat(path, &st);
+	if (stat(path, &st) == -1)
+	{
+		perror("stat()");
+		exit(1);
+	}
 	return (S_ISDIR(st.st_mode));
 }
 

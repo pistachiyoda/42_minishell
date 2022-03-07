@@ -24,6 +24,8 @@ SOURCES =\
 	../sources/utils/free.c\
 	../sources/utils/print_error.c\
 	../sources/utils/malloc_check.c\
+	../sources/utils/wrapper.c\
+	../sources/utils/wrapper2.c\
 	../sources/debug/debug_funcs.c\
 	../sources/debug/set_dataset.c\
 	../sources/env/create_environ.c\

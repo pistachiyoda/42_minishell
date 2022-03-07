@@ -5,15 +5,15 @@ int	handle_single_block(t_cmd_block *cmd_block, char **envp)
 	int			pid;
 	int			status;
 
-	pid = fork();
+	pid = fork_wrapper();
 	if (pid == 0)
 	{
 		handle_redirects(cmd_block);
 		exec_command(cmd_block->command, cmd_block->args, envp);
 	}
 	close_doc_pipe_fd(cmd_block);
-	waitpid(pid, &status, 0);
-	return (0);
+	waitpid_wrapper(pid, &status, 0);
+	return (WEXITSTATUS(status));
 }
 
 // choice read pipe
@@ -40,10 +40,10 @@ int	wait_pids(int cmd_cnt, int pids[1000])
 	i = 0;
 	while (i < cmd_cnt)
 	{
-		waitpid(pids[i], &status, 0);
+		waitpid_wrapper(pids[i], &status, 0);
 		i ++;
 	}
-	return (0);
+	return (WEXITSTATUS(status));
 }
 
 // cmd_list->nextがnullになるまでループ
