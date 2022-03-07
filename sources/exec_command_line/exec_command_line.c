@@ -9,7 +9,7 @@ int	handle_single_block(t_cmd_block *cmd_block, char **envp)
 	if (pid == 0)
 	{
 		handle_redirects(cmd_block);
-		exec_command(cmd_block->command, cmd_block->args, envp);
+		exec_command(cmd_block, envp);
 	}
 	close_doc_pipe_fd(cmd_block);
 	waitpid_wrapper(pid, &status, 0);

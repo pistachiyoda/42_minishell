@@ -30,18 +30,20 @@ void	exec_relative_or_absolute(char *command_path, char **args, char **envp)
 	exit(1);
 }
 
-void	exec_command(char *command_path, char **args, char **envp)
+void	exec_command(t_cmd_block *cmd_block, char **envp)
 {
 	char	*path_val;
 	char	*real_command_path;
 
-	if (is_relative_or_absolute(command_path))
-		exec_relative_or_absolute(command_path, args, envp);
+	if (is_relative_or_absolute(cmd_block->command))
+		exec_relative_or_absolute(cmd_block->command, cmd_block->args, envp);
+	if (is_builtin_command(cmd_block))
+		exit(run_builtin_command(cmd_block, create_environ(envp)));
 	path_val = get_env_val("PATH", envp);
-	real_command_path = resolve_path(command_path, path_val);
+	real_command_path = resolve_path(cmd_block->command, path_val);
 	if (!real_command_path)
 		exit(1);
 	free(path_val);
-	execve_wrapper(real_command_path, args, envp);
+	execve_wrapper(real_command_path, cmd_block->args, envp);
 	exit(1);
 }

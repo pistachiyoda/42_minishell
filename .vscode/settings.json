@@ -4,6 +4,7 @@
 		"iterator": "cpp",
 		"filesystem": "cpp",
 		"string": "cpp",
-		"minishell.h": "c"
+		"minishell.h": "c",
+		"syslimits.h": "c"
 	}
 }

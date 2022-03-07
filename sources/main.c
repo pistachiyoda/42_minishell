@@ -29,7 +29,9 @@ int	main(int argc, char **argv, char **envp)
 			printf("g_status = %d\n", g_status);
 		}
 		else
-			run_builtin_command(cmd_list->content, env);
+		{
+			g_status = run_builtin_command(cmd_list->content, env);
+		}
 		free(str);
 	}
 }

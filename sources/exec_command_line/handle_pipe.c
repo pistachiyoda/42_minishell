@@ -15,7 +15,7 @@ int	handle_first_block(t_cmd_block *cmd_block, char	**envp, int pipe_write[2])
 		dup2_wrapper(pipe_write[1], 1);
 		close_wrapper(pipe_write[1]);
 		handle_redirects(cmd_block);
-		exec_command(cmd_block->command, cmd_block->args, envp);
+		exec_command(cmd_block, envp);
 	}
 	close_doc_pipe_fd(cmd_block);
 	return (pid);
@@ -42,7 +42,7 @@ int	handle_middle_block(
 		close_wrapper(pipe_read[0]);
 		close_wrapper(pipe_write[1]);
 		handle_redirects(cmd_block);
-		exec_command(cmd_block->command, cmd_block->args, envp);
+		exec_command(cmd_block, envp);
 	}
 	close_wrapper(pipe_read[0]);
 	close_wrapper(pipe_read[1]);
@@ -66,7 +66,7 @@ int	handle_last_block(t_cmd_block *cmd_block, char	**envp, int pipe_read[2])
 		dup2_wrapper(pipe_read[0], 0);
 		close_wrapper(pipe_read[0]);
 		handle_redirects(cmd_block);
-		exec_command(cmd_block->command, cmd_block->args, envp);
+		exec_command(cmd_block, envp);
 	}
 	close_wrapper(pipe_read[0]);
 	close_wrapper(pipe_read[1]);
