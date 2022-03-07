@@ -19,7 +19,7 @@ int	split_by_space_expand(char *str, t_list **words, int *i, int start)
 	return (start);
 }
 
-char	*word_split(t_list **words, int status, char *head, bool *splitted)
+void	word_splitting(t_list **words, int status, char **head, bool *splitted)
 {
 	int		j;
 	int		start;
@@ -29,21 +29,20 @@ char	*word_split(t_list **words, int status, char *head, bool *splitted)
 	start = 0;
 	if (status == NONE)
 	{
-		while (ft_strlen(head) - j > 0)
+		while (ft_strlen(*head) - j > 0)
 		{
-			if (is_space_tab_newline(head[j]))
+			if (is_space_tab_newline((*head)[j]))
 			{
-				start = split_by_space_expand(head, words, &j, start);
+				start = split_by_space_expand(*head, words, &j, start);
 				*splitted = true;
 			}
 			j++;
 		}
 		if (start != j)
 		{
-			tmp = xsubstr(head, start, j - start, "expansion");
-			free(head);
-			head = tmp;
+			tmp = xsubstr(*head, start, j - start, "expansion");
+			free(*head);
+			*head = tmp;
 		}
 	}
-	return (head);
 }
