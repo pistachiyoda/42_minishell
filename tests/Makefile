@@ -23,6 +23,7 @@ SOURCES =\
 	../sources/runner/run_builtin_command.c\
 	../sources/utils/free.c\
 	../sources/utils/is_env_registered.c\
+	../sources/utils/is_quote_type_switched.c\
 	../sources/utils/print_error.c\
 	../sources/utils/malloc_check.c\
 	../sources/utils/malloc_check2.c\
@@ -41,7 +42,8 @@ SOURCES =\
 	../sources/expansion/expansion.c\
 	../sources/expansion/set_expanded_to_words.c\
 	../sources/expansion/param_expansion.c\
-	../sources/expansion/word_split.c
+	../sources/expansion/word_splitting.c\
+	../sources/expansion/quote_removal.c
 OBJ = $(SOURCES:.c=.o)
 
 all: $(NAME)

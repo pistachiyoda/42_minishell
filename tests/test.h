@@ -102,8 +102,12 @@ extern "C" {
 
 	// utils/is_env_registered.c
 	char	*is_env_registerd(t_environ *env, char **split_ele, bool key_only);
+
+	// utils/is_quote_type_switched.c
+	bool		is_quote_type_switched(char *str, int i, int *status);
+
 	// utils/print_error.c
-	void	print_error(char *target, char *message);
+	void		print_error(char *target, char *message);
 
 	// utils/malloc_check.c
 	t_list		*xlstnew(void *content, char *target);
@@ -114,7 +118,7 @@ extern "C" {
 	void		malloc_check(void *words, char *target);
 
 	// utils/malloc_check2.c
-	char	*xstrjoin(char const *s1, char const *s2, char *target);
+	char		*xstrjoin(char const *s1, char const *s2, char *target);
 
 	// exec_command_line/exec_command_line.c
 	int		exec_command_line(t_list *cmd_list, char **envp, int cmd_cnt);
@@ -180,7 +184,6 @@ extern "C" {
 
 	// lexer/lexer.c
 	bool		is_space_tab_newline(char c);
-	int			is_in_quote_dquote(char *str, int i, int status);
 	int			split_by_space_lex(char *str, t_list *words, int *i, int start);
 	bool		add_last_str(char *str, t_list *words, int start, int status);
 	t_list		*lexer(char *str);
@@ -208,15 +211,19 @@ extern "C" {
 	// expansion/set_expanded_to_words.c
 	char		*left_to_next_head(char *left, char *head, int status);
 	void		add_to_words(t_list **words, char *head, char *str);
-	int			set_expanded_to_words(t_environ *env, char *str, t_list **words);
+	bool		set_expanded_to_words(t_environ *env, char *str, t_list **words);
 
 	// expansion/param_expansion.c
-	size_t		get_left(char *str, int i, char **left);
-	char		*param_expansion(t_environ *env, char *str, char **head, int *i);
+	size_t		get_left_len(char *str, int i);
+	void		param_expansion(t_environ *env, char *str, char **head, int *i);
 
-	// expansion/word_split.c
+	// expansion/word_splitting.c
 	int			split_by_space_expand(char *str, t_list **words, int *i, int start);
-	char		*word_split(t_list **words, int status, char *head, bool *splitted);
+	void		word_splitting(t_list **words, int status, char **head, bool *splitted);
+
+	// expansion/quote_removal.c
+	void		quote_removal(char *str, char **head, int i, int *prev_q);
+	void		set_head_before_dollar(char *str, char **head, int i, int prev_q);
 
 	// test/parser/parser.cpp
 	void		compare_tokens(t_list *tokens, t_list *exp_tokens);
