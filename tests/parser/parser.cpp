@@ -549,3 +549,131 @@ TEST(parser_G, only_1command_with_space) {
 	exp_tokens = only_1command_with_space();
 	compare_tokens(tokens, exp_tokens);
 }
+
+t_list	*quoted_heredoc(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redirects;
+
+	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redirects->redirect = QUOTED_HEREDOC;
+	exp_redirects->target = ft_strdup("'bb'");
+	exp_redirects->fd = 0;
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = ft_lstnew(exp_redirects);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("a");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(parser_G, quoted_heredoc) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+
+	tokens = get_tokens_from_parser(ft_strdup("echo a << 'bb'"));
+	exp_tokens = quoted_heredoc();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*quoted_heredoc2(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redirects;
+
+	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redirects->redirect = QUOTED_HEREDOC;
+	exp_redirects->target = ft_strdup("b'b'");
+	exp_redirects->fd = 0;
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = ft_lstnew(exp_redirects);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("a");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(parser_G, quoted_heredoc2) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+
+	tokens = get_tokens_from_parser(ft_strdup("echo a <<b'b'"));
+	exp_tokens = quoted_heredoc2();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*quoted_heredoc3(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redirects;
+
+	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redirects->redirect = QUOTED_HEREDOC;
+	exp_redirects->target = ft_strdup("bb\"\"");
+	exp_redirects->fd = 0;
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = ft_lstnew(exp_redirects);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("a");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(parser_G, quoted_heredoc3) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+
+	tokens = get_tokens_from_parser(ft_strdup("echo a <<  bb\"\""));
+	exp_tokens = quoted_heredoc3();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*quoted_heredoc4(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redirects;
+
+	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redirects->redirect = QUOTED_HEREDOC;
+	exp_redirects->target = ft_strdup("''bb");
+	exp_redirects->fd = 0;
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = ft_lstnew(exp_redirects);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("a");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(parser_G, quoted_heredoc4) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+
+	tokens = get_tokens_from_parser(ft_strdup("echo a <<  ''bb   "));
+	exp_tokens = quoted_heredoc4();
+	compare_tokens(tokens, exp_tokens);
+}
