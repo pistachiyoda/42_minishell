@@ -10,7 +10,13 @@ t_redirects	*set_redirect_member(t_list **words)
 	if (ft_strncmp((*words)->content, ">>", 2) == 0)
 		redir->redirect = APPEND;
 	else if (ft_strncmp((*words)->content, "<<", 2) == 0)
-		redir->redirect = HEREDOC;
+	{
+		if (ft_strchr((char *)(*words)->next->content, '\'')
+			|| ft_strchr((char *)(*words)->next->content, '"'))
+			redir->redirect = QUOTED_HEREDOC;
+		else
+			redir->redirect = HEREDOC;
+	}
 	else if (ft_strncmp((*words)->content, ">", 1) == 0)
 		redir->redirect = WRITE;
 	else if (ft_strncmp((*words)->content, "<", 1) == 0)
