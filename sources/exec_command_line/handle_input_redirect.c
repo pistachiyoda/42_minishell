@@ -42,7 +42,6 @@ int	handle_input(t_redirects *redirect, bool is_last)
 	fd = open_file(redirect->target);
 	if (!is_last)
 		return (0);
-	if (dup2(fd, redirect->fd) == -1)
-		printf("dup2()");
+	dup2_wrapper(fd, redirect->fd);
 	return (0);
 }

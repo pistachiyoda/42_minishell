@@ -10,7 +10,7 @@ char	*get_env_val(char *key, char **envp)
 	{
 		if (ft_strncmp(envp[i], key, ft_strlen(key)) == 0)
 		{
-			value = ft_split(envp[i], '=');
+			value = ft_split_wrapper(envp[i], '=');
 			return (value[1]);
 		}
 		i++;
@@ -25,12 +25,12 @@ char	*resolve_path(char	*command, char *path_val)
 	char	*full_path;
 	int		i;
 
-	paths = ft_split(path_val, ':');
+	paths = ft_split_wrapper(path_val, ':');
 	i = 0;
 	while (paths[i] != NULL)
 	{
-		path = ft_strjoin(paths[i], "/");
-		full_path = ft_strjoin(path, command);
+		path = ft_strjoin_wrapper(paths[i], "/");
+		full_path = ft_strjoin_wrapper(path, command);
 		free(path);
 		if (is_executable(full_path))
 		{

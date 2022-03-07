@@ -57,6 +57,18 @@ char		*xsubstr(char const *s, unsigned int start,
 void		*xmalloc(size_t len, char *target);
 void		malloc_check(void *words, char *target);
 
+// utils/wrapper.c
+void		pipe_wrapper(int pipe_fds[2]);
+int			fork_wrapper();
+void		close_wrapper(int fd);
+void		waitpid_wrapper(pid_t pid, int *wstatus, int options);
+char		**ft_split_wrapper(char const *s, char c);
+
+// utils/wrapper2.c
+char		*ft_strjoin_wrapper(char const *s1, char const *s2);
+void		execve_wrapper(const char *pathname, char *const argv[], char *const envp[]);
+void		dup2_wrapper(int oldfd, int newfd);
+
 // exec_command_line/exec_command_line.c
 int			exec_command_line(t_list *cmd_list, char **envp, int cmd_cnt);
 void		handle_command_line(t_cmd_block *cmd_block, char **envp);

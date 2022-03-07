@@ -29,7 +29,7 @@ int	handle_output(t_redirects *redirect, bool is_last)
 {
 	int	fd;
 
-	if (is_directory(redirect->target))
+	if (is_exists(redirect->target) && is_directory(redirect->target))
 	{
 		print_error(redirect->target, EMESS_IS_DIR2);
 		return (1);
@@ -49,8 +49,7 @@ int	handle_output(t_redirects *redirect, bool is_last)
 		exit(1);
 	if (!is_last)
 		return (0);
-	if (dup2(fd, redirect->fd) == -1)
-		exit(1);
+	dup2_wrapper(fd, redirect->fd);
 	return (0);
 }
 
@@ -62,8 +61,8 @@ int	handle_redirect(t_redirects	*redirect, t_cmd_block *cmd_block)
 	if (redirect->redirect == HEREDOC)
 	{
 		if (is_last_fd_input_redirect(redirect, cmd_block->redirects))
-			dup2(redirect->doc_fd, redirect->fd);
-		close(redirect->doc_fd);
+			dup2_wrapper(redirect->doc_fd, redirect->fd);
+		close_wrapper(redirect->doc_fd);
 	}
 	if (redirect->redirect == INPUT)
 	{

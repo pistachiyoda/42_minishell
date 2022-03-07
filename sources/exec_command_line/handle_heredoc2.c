@@ -9,7 +9,7 @@ char	*ft_strjoin2(char const *s1, char const *s2)
 	len = ft_strlen((char *)s1) + ft_strlen((char *)s2);
 	str = (char *)malloc(sizeof(char) * (len + 2));
 	if (str == NULL)
-		return (NULL);
+		exit(1);
 	ret = str;
 	while (*s1 != '\0')
 		*str++ = *s1++;

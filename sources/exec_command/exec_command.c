@@ -11,11 +11,6 @@ bool	is_relative_or_absolute(char *command_path)
 
 void	exec_relative_or_absolute(char *command_path, char **args, char **envp)
 {
-	if (is_directory(command_path))
-	{
-		print_error(command_path, EMESS_IS_DIR);
-		exit(126);
-	}
 	if (!is_exists(command_path))
 	{
 		print_error(command_path, EMESS_NO_FILE_DIR);
@@ -26,7 +21,12 @@ void	exec_relative_or_absolute(char *command_path, char **args, char **envp)
 		print_error(command_path, EMESS_NO_PERM);
 		exit(126);
 	}
-	execve(command_path, args, envp);
+	if (is_directory(command_path))
+	{
+		print_error(command_path, EMESS_IS_DIR);
+		exit(126);
+	}
+	execve_wrapper(command_path, args, envp);
 	exit(1);
 }
 
@@ -42,6 +42,6 @@ void	exec_command(char *command_path, char **args, char **envp)
 	if (!real_command_path)
 		exit(1);
 	free(path_val);
-	execve(real_command_path, args, envp);
+	execve_wrapper(real_command_path, args, envp);
 	exit(1);
 }
