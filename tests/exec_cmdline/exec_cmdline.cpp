@@ -1278,6 +1278,57 @@ TEST(exec_command_line_G, no_permission_file_in_middle) {
 	CHECK_EQUAL(1, g_status);
 }
 
+// < exist_dir
+// コマンドなしでディレクトリのインプットする場合はエラーではない。
+t_list *input_redirect_with_exist_dir()
+{
+	t_cmd_block *cmd_block;
+	t_redirects *input_redirect;
+
+	cmd_block = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block->command = NULL;
+	cmd_block->args = NULL;
+	input_redirect = (t_redirects *)malloc(sizeof(t_redirects));
+	input_redirect->redirect = INPUT;
+	input_redirect->target = ft_strdup("./exec_cmdline");
+	input_redirect->fd = 0;
+	cmd_block->redirects = ft_lstnew(input_redirect);
+	return ft_lstnew(cmd_block);
+}
+TEST(exec_command_line_G, input_redirect_with_exist_dir) {
+	t_list *cmd_lst;
+
+	cmd_lst = input_redirect_with_exist_dir();
+	exec_command_and_output_file(cmd_lst);
+	compare_file("expected/empty.txt");
+	CHECK_EQUAL(0, g_status);
+}
+
+// > exist_dir
+t_list *write_redirect_with_exist_dir()
+{
+	t_cmd_block *cmd_block;
+	t_redirects *write_redirect;
+
+	cmd_block = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block->command = NULL;
+	cmd_block->args = NULL;
+	write_redirect = (t_redirects *)malloc(sizeof(t_redirects));
+	write_redirect->redirect = WRITE;
+	write_redirect->target = ft_strdup("./exec_cmdline");
+	write_redirect->fd = 0;
+	cmd_block->redirects = ft_lstnew(write_redirect);
+	return ft_lstnew(cmd_block);
+}
+TEST(exec_command_line_G, write_redirect_with_exist_dir) {
+	t_list *cmd_lst;
+
+	cmd_lst = write_redirect_with_exist_dir();
+	exec_command_and_output_file(cmd_lst);
+	compare_file("expected/is_directory2.txt", "stderr_result/result.txt");
+	CHECK_EQUAL(1, g_status);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // パイプ正常系テストケース
