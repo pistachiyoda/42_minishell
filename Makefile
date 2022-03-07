@@ -51,7 +51,7 @@ $(NAME): $(OBJ) $(LIBFT)
 $(LIBFT):
 	make -C ./libft bonus
 clean:
-	rm -f $(OBJ) *.o
+	rm -f $(OBJ)
 	make -C ./libft clean
 fclean: clean
 	rm -f $(NAME)
