@@ -9,6 +9,8 @@
 #include <fstream>
 #include "../test.h"
 
+char	**g_envp = NULL;
+
 void exec_command_and_output_file(t_list *cmd_list)
 {
 	int bak_fd1 = dup(1);
@@ -353,7 +355,7 @@ TEST(exec_command_line_G, cat_with_2append_2_redirect_data) {
 	compare_file("expected/cat_with_2append_2_redirect_data.txt", "out.txt");
 }
 
-// cat > ./exec_cmdline/out.txt < ./exec_cmdline/in.txt > ./exec_cmdline/out2.txt < ./exec_cmdline/in2.txt 
+// cat > ./exec_cmdline/out.txt < ./exec_cmdline/in.txt > ./exec_cmdline/out2.txt < ./exec_cmdline/in2.txt
 t_list *cat_with_multi_redirect1_data()
 {
 	t_cmd_block *cmd_block;
@@ -1351,8 +1353,9 @@ TEST(exec_command_line_G, three_command_pipe)
 	compare_file("in.txt");
 }
 
-int main(int argc, char **argv)
+int main(int argc, char **argv, char **envp)
 {
+	g_envp = envp;
 	return CommandLineTestRunner::RunAllTests(argc, argv);
 }
 
@@ -1369,5 +1372,5 @@ int main(int argc, char **argv)
 // 	STRCMP_EQUAL("cat", ((t_cmd_block *)cmd_lst->content)->command);
 // 	STRCMP_EQUAL("cat", ((t_cmd_block *)cmd_lst->content)->args[0]);
 // 	STRCMP_EQUAL("test.txt", ((t_cmd_block *)cmd_lst->content)->args[1]);
-	
+
 // }

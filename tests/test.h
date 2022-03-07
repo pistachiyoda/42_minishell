@@ -1,3 +1,4 @@
+extern char **g_envp;
 extern "C" {
 	/////////////////////////////////////////////////////////////////////////////////////
 	// libft
@@ -99,6 +100,8 @@ extern "C" {
 	void	free_2d_array(char **two_d_array);
 	void	free_tokens(t_list *tokens);
 
+	// utils/is_env_registered.c
+	char	*is_env_registerd(t_environ *env, char **split_ele, bool key_only);
 	// utils/print_error.c
 	void	print_error(char *target, char *message);
 
@@ -109,6 +112,9 @@ extern "C" {
 					size_t len, char *target);
 	void		*xmalloc(size_t len, char *target);
 	void		malloc_check(void *words, char *target);
+
+	// utils/malloc_check2.c
+	char	*xstrjoin(char const *s1, char const *s2, char *target);
 
 	// exec_command_line/exec_command_line.c
 	int		exec_command_line(t_list *cmd_list, char **envp, int cmd_cnt);
@@ -138,7 +144,7 @@ extern "C" {
 	void		ft_env(t_environ *env);
 
 	// builtin/export.c
-	char		*is_registered(t_environ *env, char **split_ele, bool key_only);
+	char		*is_env_registerd(t_environ *env, char **split_ele, bool key_only);
 	int			update_environ(t_cmd_block *cmd_block, t_environ *env, int i);
 	void		ft_export(t_cmd_block *cmd_block, t_environ *env);
 
@@ -175,8 +181,8 @@ extern "C" {
 	// lexer/lexer.c
 	bool		is_space_tab_newline(char c);
 	int			is_in_quote_dquote(char *str, int i, int status);
-	int			split_by_space(char *str, t_list *words, int *i, int start);
-	bool		add_last_str(char *str, t_list *words, int i, int start);
+	int			split_by_space_lex(char *str, t_list *words, int *i, int start);
+	bool		add_last_str(char *str, t_list *words, int start, int status);
 	t_list		*lexer(char *str);
 
 	// parser/set_cmd_block.c
@@ -193,5 +199,25 @@ extern "C" {
 	t_list		*parser(t_list *words);
 
 	// expansion/expansion.c
+	void		assign_expanded_cmd_args(t_cmd_block *cmd, t_list *words);
+	void		expand_cmd_args(t_cmd_block *cmd, t_environ *env, t_list *words);
+	void		assign_expanded_target(t_cmd_block *cmd, t_list *words, bool error);
+	void		expand_redirects(t_cmd_block *cmd, t_environ *env, t_list *words);
 	t_list		*expansion(t_list *tokens, t_environ *env);
+
+	// expansion/set_expanded_to_words.c
+	char		*left_to_next_head(char *left, char *head, int status);
+	void		add_to_words(t_list **words, char *head, char *str);
+	int			set_expanded_to_words(t_environ *env, char *str, t_list **words);
+
+	// expansion/param_expansion.c
+	size_t		get_left(char *str, int i, char **left);
+	char		*param_expansion(t_environ *env, char *str, char **head, int *i);
+
+	// expansion/word_split.c
+	int			split_by_space_expand(char *str, t_list **words, int *i, int start);
+	char		*word_split(t_list **words, int status, char *head, bool *splitted);
+
+	// test/parser/parser.cpp
+	void		compare_tokens(t_list *tokens, t_list *exp_tokens);
 }

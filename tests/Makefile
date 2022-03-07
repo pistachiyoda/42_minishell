@@ -22,8 +22,10 @@ SOURCES =\
 	../sources/tmp_parser/tmp_parse_data.c\
 	../sources/runner/run_builtin_command.c\
 	../sources/utils/free.c\
+	../sources/utils/is_env_registered.c\
 	../sources/utils/print_error.c\
 	../sources/utils/malloc_check.c\
+	../sources/utils/malloc_check2.c\
 	../sources/debug/debug_funcs.c\
 	../sources/debug/set_dataset.c\
 	../sources/env/create_environ.c\
@@ -35,18 +37,24 @@ SOURCES =\
 	../sources/lexer/lexer.c\
 	../sources/lexer/split_by_redirect_pipe.c\
 	../sources/parser/parser.c\
-	../sources/parser/set_cmd_block.c
+	../sources/parser/set_cmd_block.c\
+	../sources/expansion/expansion.c\
+	../sources/expansion/set_expanded_to_words.c\
+	../sources/expansion/param_expansion.c\
+	../sources/expansion/word_split.c
 OBJ = $(SOURCES:.c=.o)
 
 all: $(NAME)
-$(NAME): exec_cmdline.o lexer.o parser.o $(OBJ) $(LIBFT)
-	c++ $(CXXFLAGS) $(INCLUDES) exec_cmdline.o lexer.o parser.o $(OBJ) -o $(NAME) $(LIBS) $(LDLIBS)
+$(NAME): exec_cmdline.o lexer.o parser.o expansion.o $(OBJ) $(LIBFT)
+	c++ $(CXXFLAGS) $(INCLUDES) exec_cmdline.o lexer.o parser.o expansion.o $(OBJ) -o $(NAME) $(LIBS) $(LDLIBS)
 exec_cmdline.o: ./exec_cmdline/exec_cmdline.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./exec_cmdline/exec_cmdline.cpp $(LIBS)
 lexer.o: ./lexer/lexer.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./lexer/lexer.cpp $(LIBS)
 parser.o: ./parser/parser.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./parser/parser.cpp $(LIBS)
+expansion.o: ./expansion/expansion.cpp
+	c++ $(CXXFLAGS) $(INCLUDES) -c ./expansion/expansion.cpp $(LIBS)
 $(LIBFT):
 	make -C ../libft bonus
 clean:
