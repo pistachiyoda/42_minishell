@@ -59,7 +59,8 @@ extern "C" {
 		WRITE,
 		APPEND,
 		INPUT,
-		HEREDOC
+		HEREDOC,
+		QUOTED_HEREDOC
 	};
 
 	typedef struct s_redirects
