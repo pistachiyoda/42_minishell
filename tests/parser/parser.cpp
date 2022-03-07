@@ -20,13 +20,8 @@ TEST_GROUP(parser_G)
 t_list	*get_tokens_from_parser(char *str)
 {
 	t_list		*tokens;
-	t_cmd_block	*cmd;
-	t_redirects	*redirects;
 
 	tokens = parser(lexer(str));
-	cmd = (t_cmd_block *)tokens->content;
-	if (cmd->redirects)
-		redirects = (t_redirects *)cmd->redirects->content;
 	return (tokens);
 }
 
