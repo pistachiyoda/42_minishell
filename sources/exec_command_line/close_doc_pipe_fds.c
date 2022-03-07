@@ -14,7 +14,7 @@ int	close_doc_pipe_fd(t_cmd_block *cmd_block)
 		if (redirect->redirect == HEREDOC
 			&& is_last_fd_input_redirect(redirect, cmd_block->redirects))
 		{
-			close(redirect->doc_fd);
+			close_wrapper(redirect->doc_fd);
 		}
 		if (!redirect_node->next)
 			break ;

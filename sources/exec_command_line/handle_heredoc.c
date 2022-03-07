@@ -11,9 +11,13 @@ void	flush_heredoc(char *str, int doc_pipe_fds[2])
 	char	*tmp;
 
 	tmp = str;
-	close(doc_pipe_fds[0]);
-	write(doc_pipe_fds[1], str, ft_strlen(str));
-	close(doc_pipe_fds[1]);
+	close_wrapper(doc_pipe_fds[0]);
+	if (write(doc_pipe_fds[1], str, ft_strlen(str)) == -1)
+	{
+		perror("write()");
+		exit(1);
+	}
+	close_wrapper(doc_pipe_fds[1]);
 	free(tmp);
 	exit(0);
 }
@@ -25,6 +29,8 @@ void	handle_each_input(char *limiter, bool is_last, int	doc_pipe_fds[2])
 	char	*tmp;
 
 	str = ft_strdup("");
+	if (str == NULL)
+		exit(1);
 	while (1)
 	{
 		buf = readline("> ");
@@ -45,16 +51,12 @@ void	handle_heredoc(char *limiter, bool is_last, int doc_pipe_fds[2])
 {
 	int		pid;
 
-	if (pipe(doc_pipe_fds) == -1)
-	{
-		perror("pipe()");
-		exit(1);
-	}
-	pid = fork();
+	pipe_wrapper(doc_pipe_fds);
+	pid = fork_wrapper();
 	if (pid == 0)
 		handle_each_input(limiter, is_last, doc_pipe_fds);
-	close(doc_pipe_fds[1]);
-	waitpid(pid, NULL, 0);
+	close_wrapper(doc_pipe_fds[1]);
+	waitpid_wrapper(pid, NULL, 0);
 }
 
 int	handle_heredoc_input(t_list *cmd_list)

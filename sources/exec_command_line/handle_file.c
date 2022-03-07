@@ -16,7 +16,10 @@ int	open_file(char *file)
 
 	file_fd = open(file, O_RDONLY);
 	if (file_fd == -1)
-		return (-1);
+	{
+		perror("open()");
+		exit(1);
+	}
 	return (file_fd);
 }
 
@@ -37,6 +40,9 @@ int	open_or_create_file(char *file, int open_flag)
 	file_fd = open(file, open_flag,
 			S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	if (file_fd == -1)
-		return (-1);
+	{
+		perror("open()");
+		exit(1);
+	}
 	return (file_fd);
 }

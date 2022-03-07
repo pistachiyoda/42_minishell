@@ -29,6 +29,8 @@
 
 # define FD_MAX 256
 
+extern unsigned char	g_status;
+
 // exec_command/exec_command.c
 void		exec_command(char *command_path, char **args, char **envp);
 
@@ -65,6 +67,19 @@ void		malloc_check(void *words, char *target);
 
 // utils/malloc_check2.c
 char		*xstrjoin(char const *s1, char const *s2, char *target);
+
+// utils/wrapper.c
+void		pipe_wrapper(int pipe_fds[2]);
+int			fork_wrapper(void);
+void		close_wrapper(int fd);
+void		waitpid_wrapper(pid_t pid, int *wstatus, int options);
+char		**ft_split_wrapper(char const *s, char c);
+
+// utils/wrapper2.c
+char		*ft_strjoin_wrapper(char const *s1, char const *s2);
+void		execve_wrapper(
+				const char *pathname, char *const argv[], char *const envp[]);
+void		dup2_wrapper(int oldfd, int newfd);
 
 // exec_command_line/exec_command_line.c
 int			exec_command_line(t_list *cmd_list, char **envp, int cmd_cnt);

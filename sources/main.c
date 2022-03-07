@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+unsigned char	g_status = 0;
+
 int	main(int argc, char **argv, char **envp)
 {
 	char		*str;
@@ -23,7 +25,10 @@ int	main(int argc, char **argv, char **envp)
 		cmd_list = expansion(cmd_list, env);
 		print_cmd_lst(cmd_list);
 		if (is_fork_required(cmd_list))
-			exec_command_line(cmd_list, envp, ft_lstsize(cmd_list));
+		{
+			g_status = exec_command_line(cmd_list, envp, ft_lstsize(cmd_list));
+			printf("g_status = %d\n", g_status);
+		}
 		else
 			run_builtin_command(cmd_list->content, env);
 		free(str);
