@@ -10,7 +10,7 @@ int	update_environ(t_cmd_block *cmd_block, t_environ *env, int i)
 		key_only = true;
 	split_ele = ft_split(cmd_block->args[i], '=');
 	malloc_check(split_ele, "export");
-	if (ft_isdigit(split_ele[0][0]) == 1) //valにquoteが文字としてあるパターンも同じエラー
+	if (ft_isdigit(split_ele[0][0]) == 1)
 	{
 		free_2d_array(split_ele);
 		return (-1);
