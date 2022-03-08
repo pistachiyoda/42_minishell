@@ -22,8 +22,11 @@ CFILES =\
 	sources/runner/run_builtin_command.c\
 	sources/exec_builtin/exec_builtin_only_command.c\
 	sources/utils/free.c\
+	sources/utils/is_env_registered.c\
+	sources/utils/is_quote_type_switched.c\
 	sources/utils/print_error.c\
 	sources/utils/malloc_check.c\
+	sources/utils/malloc_check2.c\
 	sources/utils/wrapper.c\
 	sources/utils/wrapper2.c\
 	sources/debug/debug_funcs.c\
@@ -39,7 +42,12 @@ CFILES =\
 	sources/lexer/lexer.c\
 	sources/lexer/split_by_redirect_pipe.c\
 	sources/parser/parser.c\
-	sources/parser/set_cmd_block.c
+	sources/parser/set_cmd_block.c\
+	sources/expansion/expansion.c\
+	sources/expansion/set_expanded_to_words.c\
+	sources/expansion/param_expansion.c\
+	sources/expansion/word_splitting.c\
+	sources/expansion/quote_removal.c
 OBJ = $(CFILES:.c=.o)
 
 all: $(NAME)

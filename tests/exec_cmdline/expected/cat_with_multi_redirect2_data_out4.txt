@@ -3,6 +3,8 @@ builtins
 builtins.o
 exec_cmdline
 exec_cmdline.o
+expansion
+expansion.o
 lexer
 lexer.o
 minishell_test
