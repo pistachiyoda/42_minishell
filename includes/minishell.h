@@ -70,6 +70,7 @@ void		malloc_check(void *words, char *target);
 
 // utils/malloc_check2.c
 char		*xstrjoin(char const *s1, char const *s2, char *target);
+char		*xitoa(int val, char *target);
 
 // utils/wrapper.c
 void		pipe_wrapper(int pipe_fds[2]);

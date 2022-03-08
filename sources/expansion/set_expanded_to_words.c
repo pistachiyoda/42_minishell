@@ -20,6 +20,7 @@ bool	set_expanded_to_words(t_environ *env, char *str, t_list **words)
 	i = 0;
 	quote.prev_q = 0;
 	quote.status = NONE;
+	quote.managed_i = 0;
 	head = NULL;
 	splitted = false;
 	while (str[i] != '\0')
@@ -29,7 +30,7 @@ bool	set_expanded_to_words(t_environ *env, char *str, t_list **words)
 		if (quote.status != QUOTE && str[i] == '$')
 		{
 			set_head_before_dollar(str, &head, i, quote.prev_q);
-			param_expansion(env, str, &head, &i);
+			quote.managed_i = param_expansion(env, str, &head, &i);
 			word_splitting(words, quote.status, &head, &splitted);
 		}
 		i++;
