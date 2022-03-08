@@ -18,7 +18,7 @@ void	assign_expanded_cmd_args(t_cmd_block *cmd, t_list *words)
 			i++;
 		}
 		cmd->args[i] = NULL;
-		ft_lstclear(&words, NULL);
+		ft_lstclear2(&words);
 	}
 }
 
@@ -51,7 +51,7 @@ void	assign_expanded_target(t_cmd_block *cmd, t_list *words, bool error)
 	}
 	free(redirects->target);
 	redirects->target = ft_lstlast(words)->content;
-	ft_lstclear(&words, NULL);
+	ft_lstclear2(&words);
 }
 
 void	expand_redirects(t_cmd_block *cmd, t_environ *env, t_list *words)
@@ -71,21 +71,21 @@ void	expand_redirects(t_cmd_block *cmd, t_environ *env, t_list *words)
 	cmd->redirects = head;
 }
 
-t_list	*expansion(t_list *tokens, t_environ *env)
+void	expansion(t_list **tokens, t_environ *env)
 {
 	t_list		*words;
 	t_list		*head;
 
 	words = NULL;
-	head = tokens;
-	while (tokens != NULL)
+	head = *tokens;
+	while (*tokens != NULL)
 	{
-		if (tokens->content != NULL)
+		if ((*tokens)->content != NULL)
 		{
-			expand_cmd_args((t_cmd_block *)tokens->content, env, words);
-			expand_redirects((t_cmd_block *)tokens->content, env, words);
+			expand_cmd_args((t_cmd_block *)(*tokens)->content, env, words);
+			expand_redirects((t_cmd_block *)(*tokens)->content, env, words);
 		}
-		tokens = tokens->next;
+		*tokens = (*tokens)->next;
 	}
-	return (head);
+	*tokens = head;
 }

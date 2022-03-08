@@ -24,7 +24,7 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		if (!parser(words, &cmd_list, str))
 			continue ;
-		cmd_list = expansion(cmd_list, env);
+		expansion(&cmd_list, env);
 		print_cmd_lst(cmd_list);
 		if (is_fork_required(cmd_list))
 		{

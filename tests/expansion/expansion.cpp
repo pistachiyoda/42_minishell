@@ -17,6 +17,19 @@ TEST_GROUP(expansion_G)
 	}
 };
 
+t_list	*get_tokens_from_expansion(char *str, t_environ *env)
+{
+	t_list	*tokens;
+	t_list	*words;
+
+	words = NULL;
+	tokens = NULL;
+	lexer(str, &words);
+	parser(words, &tokens, str);
+	expansion(&tokens, env);
+	return (tokens);
+}
+
 t_list	*normal(void)
 {
 	t_list		*exp_tokens;
@@ -38,10 +51,9 @@ t_list	*normal(void)
 TEST(expansion_G, normal) {
 	t_list		*tokens;
 	t_list		*exp_tokens;
-	t_environ	*env;
 
-	env = create_environ(g_envp);
-	tokens = expansion(parser(lexer(ft_strdup("cat test.txt"))), env);
+	tokens = get_tokens_from_expansion(ft_strdup("cat test.txt"),
+		create_environ(g_envp));
 	exp_tokens = normal();
 	compare_tokens(tokens, exp_tokens);
 }
@@ -72,10 +84,9 @@ t_list	*normal2(void)
 TEST(expansion_G, normal2) {
 	t_list		*tokens;
 	t_list		*exp_tokens;
-	t_environ	*env;
 
-	env = create_environ(g_envp);
-	tokens = expansion(parser(lexer(ft_strdup("  cat test.txt >a.out  "))), env);
+	tokens = get_tokens_from_expansion(ft_strdup("  cat test.txt >a.out  "),
+		create_environ(g_envp));
 	exp_tokens = normal();
 	compare_tokens(tokens, exp_tokens);
 }
@@ -109,9 +120,9 @@ TEST(expansion_G, has_env) {
 	t_environ	*env;
 
 	env = create_environ(g_envp);
-	tokens = expansion(parser(lexer(ft_strdup("export FF=testfile"))), env);
+	tokens = get_tokens_from_expansion(ft_strdup("export FF=testfile"), env);
 	ft_export((t_cmd_block *)tokens->content, env);
-	tokens = expansion(parser(lexer(ft_strdup("  cat test.txt >$FF  "))), env);
+	tokens = get_tokens_from_expansion(ft_strdup("  cat test.txt >$FF  "), env);
 	exp_tokens = has_env();
 	compare_tokens(tokens, exp_tokens);
 }
@@ -142,9 +153,9 @@ TEST(expansion_G, has_split_env) {
 	t_environ	*env;
 
 	env = create_environ(g_envp);
-	tokens = expansion(parser(lexer(ft_strdup("export SPLIT_ENV=\"test file\""))), env);
+	tokens = get_tokens_from_expansion(ft_strdup("export SPLIT_ENV=\"test file\""), env);
 	ft_export((t_cmd_block *)tokens->content, env);
-	tokens = expansion(parser(lexer(ft_strdup("  cat test.txt $SPLIT_ENV  "))), env);
+	tokens = get_tokens_from_expansion(ft_strdup("  cat test.txt $SPLIT_ENV  "), env);
 	exp_tokens = has_split_env();
 	compare_tokens(tokens, exp_tokens);
 }
@@ -178,9 +189,9 @@ TEST(expansion_G, has_dquoted_env) {
 	t_environ	*env;
 
 	env = create_environ(g_envp);
-	tokens = expansion(parser(lexer(ft_strdup("export FF=testfile"))), env);
+	tokens = get_tokens_from_expansion(ft_strdup("export FF=testfile"), env);
 	ft_export((t_cmd_block *)tokens->content, env);
-	tokens = expansion(parser(lexer(ft_strdup("  cat test.txt >\"$FF\"  "))), env);
+	tokens = get_tokens_from_expansion(ft_strdup("  cat test.txt >\"$FF\"  "), env);
 	exp_tokens = has_dquoted_env();
 	compare_tokens(tokens, exp_tokens);
 }
@@ -216,13 +227,13 @@ TEST(expansion_G, has_multiple_env) {
 	t_environ	*env;
 
 	env = create_environ(g_envp);
-	tokens = expansion(parser(lexer(ft_strdup("export CAT_A=\"cat a\""))), env);
+	tokens = get_tokens_from_expansion(ft_strdup("export CAT_A=\"cat a\""), env);
 	ft_export((t_cmd_block *)tokens->content, env);
-	tokens = expansion(parser(lexer(ft_strdup("export CAT_B=\"cat b\""))), env);
+	tokens = get_tokens_from_expansion(ft_strdup("export CAT_B=\"cat b\""), env);
 	ft_export((t_cmd_block *)tokens->content, env);
-	tokens = expansion(parser(lexer(ft_strdup("export FF=\"testfile\""))), env);
+	tokens = get_tokens_from_expansion(ft_strdup("export FF=\"testfile\""), env);
 	ft_export((t_cmd_block *)tokens->content, env);
-	tokens = expansion(parser(lexer(ft_strdup("aa$CAT_A$CAT_B'b'$CAT_B'cc' > $FF"))), env);
+	tokens = get_tokens_from_expansion(ft_strdup("aa$CAT_A$CAT_B'b'$CAT_B'cc' > $FF"), env);
 	exp_tokens = has_multiple_env();
 	compare_tokens(tokens, exp_tokens);
 }
@@ -251,7 +262,7 @@ TEST(expansion_G, has_quote) {
 	t_environ	*env;
 
 	env = create_environ(g_envp);
-	tokens = expansion(parser(lexer(ft_strdup("ca't' 'test.txt'"))), env);
+	tokens = get_tokens_from_expansion(ft_strdup("ca't' 'test.txt'"), env);
 	exp_tokens = has_quote();
 	compare_tokens(tokens, exp_tokens);
 }
@@ -280,7 +291,7 @@ TEST(expansion_G, has_quote2) {
 	t_environ	*env;
 
 	env = create_environ(g_envp);
-	tokens = expansion(parser(lexer(ft_strdup("ca't' 'test.t'x't'''"))), env);
+	tokens = get_tokens_from_expansion(ft_strdup("ca't' 'test.t'x't'''"), env);
 	exp_tokens = has_quote2();
 	compare_tokens(tokens, exp_tokens);
 }
@@ -309,7 +320,7 @@ TEST(expansion_G, has_quote3) {
 	t_environ	*env;
 
 	env = create_environ(g_envp);
-	tokens = expansion(parser(lexer(ft_strdup("ca't' 'test.t''x't"))), env);
+	tokens = get_tokens_from_expansion(ft_strdup("ca't' 'test.t''x't"), env);
 	exp_tokens = has_quote3();
 	compare_tokens(tokens, exp_tokens);
 }
@@ -338,9 +349,9 @@ TEST(expansion_G, has_signle_quoted_env) {
 	t_environ	*env;
 
 	env = create_environ(g_envp);
-	tokens = expansion(parser(lexer(ft_strdup("export TEST=test"))), env);
+	tokens = get_tokens_from_expansion(ft_strdup("export TEST=test"), env);
 	ft_export((t_cmd_block *)tokens->content, env);
-	tokens = expansion(parser(lexer(ft_strdup("cat '$TEST'"))), env);
+	tokens = get_tokens_from_expansion(ft_strdup("cat '$TEST'"), env);
 	exp_tokens = has_signle_quoted_env();
 	compare_tokens(tokens, exp_tokens);
 }
@@ -369,9 +380,9 @@ TEST(expansion_G, has_signle_quoted_env2) {
 	t_environ	*env;
 
 	env = create_environ(g_envp);
-	tokens = expansion(parser(lexer(ft_strdup("export TEST=test"))), env);
+	tokens = get_tokens_from_expansion(ft_strdup("export TEST=test"), env);
 	ft_export((t_cmd_block *)tokens->content, env);
-	tokens = expansion(parser(lexer(ft_strdup("cat '  $TEST  '"))), env);
+	tokens = get_tokens_from_expansion(ft_strdup("cat '  $TEST  '"), env);
 	exp_tokens = has_signle_quoted_env2();
 	compare_tokens(tokens, exp_tokens);
 }
