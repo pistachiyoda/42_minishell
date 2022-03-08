@@ -33,8 +33,6 @@ bool	add_last_str(char *str, t_list *words, int start, int status)
 				|| ft_strncmp(last->content, "<<", 2) == 0)) || status != NONE)
 	{
 		syntax_error("newline");
-		ft_lstclear(&words, free);
-		free(str);
 		return (false);
 	}
 	if (start < i)
@@ -46,16 +44,15 @@ bool	add_last_str(char *str, t_list *words, int start, int status)
 	return (true);
 }
 
-t_list	*lexer(char *str)
+bool	lexer(char *str, t_list **words)
 {
-	t_list	*words;
 	int		i;
 	int		start;
 	int		status;
 
 	i = 0;
 	status = NONE;
-	words = xlstnew(NULL, "lexer");
+	*words = xlstnew(NULL, "lexer");
 	while (str[i] != '\0' && is_space_tab_newline(str[i]))
 		i++;
 	start = i;
@@ -63,13 +60,13 @@ t_list	*lexer(char *str)
 	{
 		is_quote_type_switched(str, i, &status);
 		if (status == NONE && is_space_tab_newline(str[i]))
-			start = split_by_space_lex(str, words, &i, start);
+			start = split_by_space_lex(str, *words, &i, start);
 		else if (status == NONE
 			&& (str[i] == '>' || str[i] == '<' || str[i] == '|'))
-			start = split_by_redirect_pipe(str, words, &i, start);
+			start = split_by_redirect_pipe(str, *words, &i, start);
 		i++;
 	}
-	if (start != -1 && add_last_str(str, words, start, status))
-		return (words);
-	return (NULL);
+	if (start != -1 && add_last_str(str, *words, start, status))
+		return (true);
+	return (free_words_str(words, str));
 }

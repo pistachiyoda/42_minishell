@@ -13,6 +13,13 @@ void	free_2d_array(char **two_d_array)
 	free(two_d_array);
 }
 
+bool	free_words_str(t_list **words, char *str)
+{
+	ft_lstclear(words, free);
+	free(str);
+	return (false);
+}
+
 void	free_tokens(t_list *tokens)
 {
 	t_cmd_block	*cmd;

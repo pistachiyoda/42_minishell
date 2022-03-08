@@ -46,7 +46,8 @@ TEST(lexer_G, args3) {
 	t_list	*words;
 	char	**expected;
 
-	words = lexer(ft_strdup("cat test.txt 'hoge.txt'"));
+	words = NULL;
+	CHECK_EQUAL(true, lexer(ft_strdup("cat test.txt 'hoge.txt'"), &words));
 	expected = args3(3);
 	compare_words(expected, words);
 }
@@ -71,7 +72,8 @@ TEST(lexer_G, redirect2_args6) {
 	t_list	*words;
 	char	**expected;
 
-	words = lexer(ft_strdup("echo a>test.txt<a.out"));
+	words = NULL;
+	CHECK_EQUAL(true, lexer(ft_strdup("echo a>test.txt<a.out"), &words));
 	expected = redirect2_args6(8);
 	compare_words(expected, words);
 }
@@ -96,7 +98,8 @@ TEST(lexer_G, redirect1_pipe1_args7) {
 	t_list	*words;
 	char	**expected;
 
-	words = lexer(ft_strdup("echo a | echo b >> c"));
+	words = NULL;
+	CHECK_EQUAL(true, lexer(ft_strdup("echo a | echo b >> c"), &words));
 	expected = redirect1_pipe1_args7(8);
 	compare_words(expected, words);
 }
@@ -120,7 +123,8 @@ TEST(lexer_G, heredoc) {
 	t_list	*words;
 	char	**expected;
 
-	words = lexer(ft_strdup("cat in<<EOT wc -l"));
+	words = NULL;
+	CHECK_EQUAL(true, lexer(ft_strdup("cat in<<EOT wc -l"), &words));
 	expected = heredoc(7);
 	compare_words(expected, words);
 }
@@ -146,7 +150,8 @@ TEST(lexer_G, heredoc2) {
 	t_list	*words;
 	char	**expected;
 
-	words = lexer(ft_strdup("echo<< EOT<<EOT2 -n"));
+	words = NULL;
+	CHECK_EQUAL(true, lexer(ft_strdup("echo<< EOT<<EOT2 -n"), &words));
 	expected = heredoc2(9);
 	compare_words(expected, words);
 }
@@ -167,7 +172,8 @@ TEST(lexer_G, has_write_at_beginning) {
 	t_list	*words;
 	char	**expected;
 
-	words = lexer(ft_strdup(">test.txt 'hoge.txt'"));
+	words = NULL;
+	CHECK_EQUAL(true, lexer(ft_strdup(">test.txt 'hoge.txt'"), &words));
 	expected = has_write_at_beginning(4);
 	compare_words(expected, words);
 }
@@ -188,7 +194,8 @@ TEST(lexer_G, has_append_at_beginning) {
 	t_list	*words;
 	char	**expected;
 
-	words = lexer(ft_strdup("  >>  test.txt 'hoge.txt'"));
+	words = NULL;
+	CHECK_EQUAL(true, lexer(ft_strdup("  >>  test.txt 'hoge.txt'"), &words));
 	expected = has_append_at_beginning(4);
 	compare_words(expected, words);
 }
@@ -209,7 +216,8 @@ TEST(lexer_G, has_input_at_beginning) {
 	t_list	*words;
 	char	**expected;
 
-	words = lexer(ft_strdup("<  test.txt 'hoge.txt'"));
+	words = NULL;
+	CHECK_EQUAL(true, lexer(ft_strdup("<  test.txt 'hoge.txt'"), &words));
 	expected = has_input_at_beginning(4);
 	compare_words(expected, words);
 }
@@ -230,7 +238,8 @@ TEST(lexer_G, has_heredoc_at_beginning) {
 	t_list	*words;
 	char	**expected;
 
-	words = lexer(ft_strdup("  <<EOT 'hoge.txt'"));
+	words = NULL;
+	CHECK_EQUAL(true, lexer(ft_strdup("  <<EOT 'hoge.txt'"), &words));
 	expected = has_heredoc_at_beginning(4);
 	compare_words(expected, words);
 }
@@ -250,7 +259,8 @@ TEST(lexer_G, has_space_at_beginning_end) {
 	t_list	*words;
 	char	**expected;
 
-	words = lexer(ft_strdup("  cat  test.txt   'hoge.txt '  "));
+	words = NULL;
+	CHECK_EQUAL(true, lexer(ft_strdup("  cat  test.txt   'hoge.txt '  "), &words));
 	expected = has_space_at_beginning_end(3);
 	compare_words(expected, words);
 }
@@ -270,7 +280,8 @@ TEST(lexer_G, has_pipe_at_end) {
 	t_list	*words;
 	char	**expected;
 
-	words = lexer(ft_strdup("cat test.txt|"));
+	words = NULL;
+	CHECK_EQUAL(true, lexer(ft_strdup("cat test.txt|"), &words));
 	expected = has_pipe_at_end(3);
 	compare_words(expected, words);
 }
@@ -291,7 +302,8 @@ TEST(lexer_G, has_fd_num) {
 	t_list	*words;
 	char	**expected;
 
-	words = lexer(ft_strdup("date 1< in"));
+	words = NULL;
+	CHECK_EQUAL(true, lexer(ft_strdup("date 1< in"), &words));
 	expected = has_fd_num(4);
 	compare_words(expected, words);
 }
@@ -313,7 +325,8 @@ TEST(lexer_G, has_num_as_args) {
 	t_list	*words;
 	char	**expected;
 
-	words = lexer(ft_strdup("date 1 < in"));
+	words = NULL;
+	CHECK_EQUAL(true, lexer(ft_strdup("date 1 < in"), &words));
 	expected = has_num_as_args(5);
 	compare_words(expected, words);
 }
@@ -335,7 +348,8 @@ TEST(lexer_G, has_num_as_args_and_fd) {
 	t_list	*words;
 	char	**expected;
 
-	words = lexer(ft_strdup("date 1 0< in"));
+	words = NULL;
+	CHECK_EQUAL(true, lexer(ft_strdup("date 1 0< in"), &words));
 	expected = has_num_as_args_and_fd(5);
 	compare_words(expected, words);
 }
@@ -357,7 +371,8 @@ TEST(lexer_G, fd_under_min) {
 	t_list	*words;
 	char	**expected;
 
-	words = lexer(ft_strdup("date -1< in"));
+	words = NULL;
+	CHECK_EQUAL(true, lexer(ft_strdup("date -1< in"), &words));
 	expected = fd_under_min(5);
 	compare_words(expected, words);
 }
@@ -378,7 +393,8 @@ TEST(lexer_G, fd_over_max) {
 	t_list	*words;
 	char	**expected;
 
-	words = lexer(ft_strdup("date 257> in"));
+	words = NULL;
+	CHECK_EQUAL(true, lexer(ft_strdup("date 257> in"), &words));
 	expected = fd_over_max(5);
 	compare_words(expected, words);
 }
@@ -399,7 +415,8 @@ TEST(lexer_G, fd_max) {
 	t_list	*words;
 	char	**expected;
 
-	words = lexer(ft_strdup("date 256> in"));
+	words = NULL;
+	CHECK_EQUAL(true, lexer(ft_strdup("date 256> in"), &words));
 	expected = fd_max(4);
 	compare_words(expected, words);
 }
@@ -424,99 +441,109 @@ TEST(lexer_G, has_digit_target) {
 	t_list	*words;
 	char	**expected;
 
-	words = lexer(ft_strdup("cat input <0 > aa"));
+	words = NULL;
+	CHECK_EQUAL(true, lexer(ft_strdup("cat input <0 > aa"), &words));
 	expected = has_digit_target(8);
 	compare_words(expected, words);
 }
 
-//以下、異常系
+//以下、異常系: false時は、wordsはfree後でNULL止めもしてないからwordsのテスト省略
 TEST(lexer_G, redirect_at_end) {
-	STRCMP_EQUAL(NULL, (char *)lexer(ft_strdup("cat test.txt>")));
+	t_list	*words;
+
+	words = NULL;
+	CHECK_EQUAL(false, lexer(ft_strdup("cat test.txt>"), &words));
 }
 
 TEST(lexer_G, unclosed_quote) {
-	STRCMP_EQUAL(NULL, (char *)lexer(ft_strdup("cat test.txt'")));
+	t_list	*words;
+
+	words = NULL;
+	CHECK_EQUAL(false, lexer(ft_strdup("cat test.txt'"), &words));
 }
 
 TEST(lexer_G, unclosed_quote2) {
-	STRCMP_EQUAL(NULL, (char *)lexer(ft_strdup("cat test.txt\"")));
+	t_list	*words;
+
+	words = NULL;
+	CHECK_EQUAL(false, lexer(ft_strdup("cat test.txt\""), &words));
 }
 
 TEST(lexer_G, redirect_in_a_row) {
 	t_list	*words;
 
-	words = lexer(ft_strdup("cat < ><>aa"));
-	STRCMP_EQUAL(NULL, (char *)words);
+	words = NULL;
+	CHECK_EQUAL(false, lexer(ft_strdup("cat < ><>aa"), &words));
 }
 
 TEST(lexer_G, redirect_in_a_row2) {
 	t_list	*words;
 
-	words = lexer(ft_strdup("cat <a><>aa"));
-	STRCMP_EQUAL(NULL, (char *)words);
+	words = NULL;
+	CHECK_EQUAL(false, lexer(ft_strdup("cat <a><>aa"), &words));
 }
 
 TEST(lexer_G, redirect_in_a_row3) {
 	t_list	*words;
 
-	words = lexer(ft_strdup("echo '<a>'<>aa"));
-	STRCMP_EQUAL(NULL, (char *)words);
+	words = NULL;
+	CHECK_EQUAL(false, lexer(ft_strdup("echo '<a>'<>aa"), &words));
 }
 
 TEST(lexer_G, pipe_in_a_row) {
 	t_list	*words;
 
-	words = lexer(ft_strdup("echo '<a>'||aa"));
-	STRCMP_EQUAL(NULL, (char *)words);
+	words = NULL;
+	CHECK_EQUAL(false, lexer(ft_strdup("echo '<a>'||aa"), &words));
 }
 
 TEST(lexer_G, pipe_in_a_row2) {
 	t_list	*words;
 
-	words = lexer(ft_strdup("echo '<a>'| |aa"));
-	STRCMP_EQUAL(NULL, (char *)words);
+	words = NULL;
+	CHECK_EQUAL(false, lexer(ft_strdup("echo '<a>'| |aa"), &words));
 }
 
 TEST(lexer_G, pipe_in_a_row3) {
 	t_list	*words;
 
-	words = lexer(ft_strdup("		| |aa"));
-	STRCMP_EQUAL(NULL, (char *)words);
+	words = NULL;
+	CHECK_EQUAL(false, lexer(ft_strdup("		| |aa"), &words));
 }
 
 TEST(lexer_G, redirect_without_target) {
 	t_list	*words;
 
-	words = lexer(ft_strdup("cat input <| aa"));
-	STRCMP_EQUAL(NULL, (char *)words);
+	words = NULL;
+	CHECK_EQUAL(false, lexer(ft_strdup("cat input <| aa"), &words));
 }
 
 TEST(lexer_G, redirect_without_target2) {
 	t_list	*words;
 
-	words = lexer(ft_strdup("cat input <0> aa"));
-	STRCMP_EQUAL(NULL, (char *)words);
+	words = NULL;
+	CHECK_EQUAL(false, lexer(ft_strdup("cat input <0> aa"), &words));
 }
 
 TEST(lexer_G, redirect_without_target3) {
 	t_list	*words;
 
-	words = lexer(ft_strdup("cat input < 0> aa"));
-	STRCMP_EQUAL(NULL, (char *)words);
+	words = NULL;
+	CHECK_EQUAL(false, lexer(ft_strdup("cat input < 0> aa"), &words));
 }
 
 // bash: syntax error near unexpected token `-1'
 TEST(lexer_G, redirect_without_target4_fd_over_intmax) {
 	t_list	*words;
 
-	words = lexer(ft_strdup("cat input >2147483648> aa"));
-	STRCMP_EQUAL(NULL, (char *)words);
+	words = NULL;
+	CHECK_EQUAL(false, lexer(ft_strdup("cat input >2147483648> aa"), &words));
 }
 
 // bash: file descriptor out of range: Bad file descriptor
 TEST(lexer_G, fd_over_intmax) {
 	t_list	*words;
 
-	words = lexer(ft_strdup("cat input 2147483648> aa"));
-	STRCMP_EQUAL(NULL, (char *)words);
+	words = NULL;
+	CHECK_EQUAL(false, lexer(ft_strdup("cat input 2147483648> aa"), &words));
 }

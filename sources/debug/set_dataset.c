@@ -45,9 +45,9 @@ t_list	*set_dataset(char *str)
 	t_list	*words;
 	t_list	*tokens;
 
+	words = NULL;
 	printf("LEXER-----------\n");
-	words = lexer(str);
-	if (words == NULL)
+	if (!lexer(str, &words))
 		return (NULL);
 	print_words_passed_lexer(words);
 	printf("PARSER-----------\n");

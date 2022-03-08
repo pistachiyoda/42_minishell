@@ -100,6 +100,7 @@ extern "C" {
 
 	// utils/free.c
 	void	free_2d_array(char **two_d_array);
+	bool	free_words_str(t_list **words, char *str);
 	void	free_tokens(t_list *tokens);
 
 	// utils/is_env_registered.c
@@ -181,14 +182,14 @@ extern "C" {
 
 	// lexer/split_by_redirect_pipe.c
 	bool		get_valid_fd_num(char *str, t_list **words, int i, int start);
-	bool		is_valid_redirect_pipe(char *str, t_list *words, int *i, int start);
+	bool		is_valid_redirect_pipe(char *str, int *i, int start);
 	int			split_by_redirect_pipe(char *str, t_list *words, int *i, int start);
 
 	// lexer/lexer.c
 	bool		is_space_tab_newline(char c);
 	int			split_by_space_lex(char *str, t_list *words, int *i, int start);
 	bool		add_last_str(char *str, t_list *words, int start, int status);
-	t_list		*lexer(char *str);
+	bool		lexer(char *str, t_list **words);
 
 	// parser/set_cmd_block.c
 	t_redirects	*set_redirect_member(t_list **words);
