@@ -17,6 +17,7 @@ int		split_by_redirect_pipe(char *str, t_list *words, int *i, int start);
 
 // lexer/lexer.c
 bool	is_space_tab_newline(char c);
+bool	is_character_contained(char *str, int *i);
 int		split_by_space_lex(char *str, t_list *words, int *i, int start);
 bool	add_last_str(char *str, t_list *words, int start, int status);
 bool	lexer(char *str, t_list **words);

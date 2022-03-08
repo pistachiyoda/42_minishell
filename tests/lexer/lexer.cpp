@@ -547,3 +547,17 @@ TEST(lexer_G, fd_over_intmax) {
 	words = NULL;
 	CHECK_EQUAL(false, lexer(ft_strdup("cat input 2147483648> aa"), &words));
 }
+
+TEST(lexer_G, only_space) {
+	t_list	*words;
+
+	words = NULL;
+	CHECK_EQUAL(false, lexer(ft_strdup(" "), &words));
+}
+
+TEST(lexer_G, nothing_typed) {
+	t_list	*words;
+
+	words = NULL;
+	CHECK_EQUAL(false, lexer(ft_strdup(""), &words));
+}

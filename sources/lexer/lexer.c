@@ -7,6 +7,15 @@ bool	is_space_tab_newline(char c)
 	return (false);
 }
 
+bool	is_character_contained(char *str, int *i)
+{
+	while (str[*i] != '\0' && is_space_tab_newline(str[*i]))
+		(*i)++;
+	if (str[*i] == '\0')
+		return (false);
+	return (true);
+}
+
 int	split_by_space_lex(char *str, t_list *words, int *i, int start)
 {
 	t_list	*new;
@@ -53,8 +62,8 @@ bool	lexer(char *str, t_list **words)
 	i = 0;
 	status = NONE;
 	*words = xlstnew(NULL, "lexer");
-	while (str[i] != '\0' && is_space_tab_newline(str[i]))
-		i++;
+	if (!is_character_contained(str, &i))
+		return (free_words_str(words, str));
 	start = i;
 	while (str[i] != '\0' && start != -1)
 	{
