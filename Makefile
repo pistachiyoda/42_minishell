@@ -20,6 +20,7 @@ CFILES =\
 	sources/exec_command_line/handle_pipe.c\
 	sources/tmp_parser/tmp_parse_data.c\
 	sources/runner/run_builtin_command.c\
+	sources/exec_builtin/exec_builtin_only_command.c\
 	sources/utils/free.c\
 	sources/utils/print_error.c\
 	sources/utils/malloc_check.c\

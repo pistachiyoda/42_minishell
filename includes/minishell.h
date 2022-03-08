@@ -112,6 +112,9 @@ bool		is_builtin_command(t_cmd_block *cmd_block);
 bool		is_fork_required(t_list *cmd_list);
 int			run_builtin_command(t_cmd_block *cmd_block, t_environ *env);
 
+// exec_builtin
+int			run_builtin_only_command(t_list *cmd_list, t_environ *env);
+
 // env/create_environ.c
 t_environ	*init_environ(char *msg);
 char		**split_by_delimiter(char *env_str, char *msg);
