@@ -7,7 +7,8 @@ size_t	get_left_len(char *str, int i)
 	left = NULL;
 	while (str[i + 1] != '\0')
 	{
-		if (str[i + 1] == '"' || str[i + 1] == '\'' || str[i + 1] == '$')
+		if (str[i + 1] == '"' || str[i + 1] == '\'' || str[i + 1] == '$'
+			|| is_space_tab_newline(str[i + 1]))
 		{
 			left = &str[i + 1];
 			break ;
@@ -19,7 +20,7 @@ size_t	get_left_len(char *str, int i)
 	return (0);
 }
 
-void	param_expansion(t_environ *env, char *str, char **head, int *i)
+int	param_expansion(t_environ *env, char *str, char **head, int *i)
 {
 	char	*param;
 	char	*tmp;
@@ -31,4 +32,5 @@ void	param_expansion(t_environ *env, char *str, char **head, int *i)
 	free(param);
 	free(*head);
 	*head = tmp;
+	return (*i + 1);
 }
