@@ -34,6 +34,7 @@ SOURCES =\
     ../sources/builtin/export.c\
 	../sources/builtin/export_display_env.c\
     ../sources/builtin/unset.c\
+	../sources/builtin/pwd.c\
 	../sources/lexer/lexer.c\
 	../sources/lexer/split_by_redirect_pipe.c\
 	../sources/parser/parser.c\
@@ -41,14 +42,18 @@ SOURCES =\
 OBJ = $(SOURCES:.c=.o)
 
 all: $(NAME)
-$(NAME): exec_cmdline.o lexer.o parser.o $(OBJ) $(LIBFT)
-	c++ $(CXXFLAGS) $(INCLUDES) exec_cmdline.o lexer.o parser.o $(OBJ) -o $(NAME) $(LIBS) $(LDLIBS)
+$(NAME): exec_cmdline.o lexer.o parser.o builtins.o utils.o $(OBJ) $(LIBFT)
+	c++ $(CXXFLAGS) $(INCLUDES) exec_cmdline.o lexer.o parser.o builtins.o utils.o $(OBJ) -o $(NAME) $(LIBS) $(LDLIBS)
 exec_cmdline.o: ./exec_cmdline/exec_cmdline.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./exec_cmdline/exec_cmdline.cpp $(LIBS)
 lexer.o: ./lexer/lexer.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./lexer/lexer.cpp $(LIBS)
 parser.o: ./parser/parser.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./parser/parser.cpp $(LIBS)
+builtins.o: ./builtins/builtins.cpp
+	c++ $(CXXFLAGS) $(INCLUDES) -c ./builtins/builtins.cpp $(LIBS)
+utils.o: ./utils/utils.cpp
+	c++ $(CXXFLAGS) $(INCLUDES) -c ./utils/utils.cpp $(LIBS)
 $(LIBFT):
 	make -C ../libft bonus
 clean:

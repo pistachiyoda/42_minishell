@@ -1,73 +1,61 @@
-#include <CppUTest/CommandLineTestRunner.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <iostream>
-#include <fstream>
 #include "../test.h"
 
 unsigned char	g_status = 0;
+char 			**g_envp;
+char			**envp_in_test;
 
-void exec_command_and_output_file(t_list *cmd_list)
-{
-	int bak_fd1 = dup(1);
-	int bak_fd2 = dup(2);
-    int file_fd1 = open("./exec_cmdline/stdout_result/result.txt", O_RDWR | O_CREAT | O_TRUNC, S_IRWXU | S_IRWXG | S_IRWXO);
-	int file_fd2 = open("./exec_cmdline/stderr_result/result.txt", O_RDWR | O_CREAT | O_TRUNC, S_IRWXU | S_IRWXG | S_IRWXO);
-    dup2(file_fd1, 1);
-	dup2(file_fd2, 2);
-	char **envp = (char **)malloc(sizeof(char *) * 2);
-	envp[0] = ft_strjoin("PATH=", getenv("PATH")); // ["PATH=xxx"]
-	envp[1] = NULL;
-	g_status = exec_command_line(cmd_list, envp, ft_lstsize(cmd_list));
-	close(file_fd1);
-	close(file_fd2);
-	dup2(bak_fd1, 1);
-	dup2(bak_fd2, 2);
-	close(bak_fd1);
-	close(bak_fd2);
-}
+// void exec_command_and_output_file(t_list *cmd_list)
+// {
+// 	int bak_fd1 = dup(1);
+// 	int bak_fd2 = dup(2);
+//     int file_fd1 = open("./exec_cmdline/stdout_result/result.txt", O_RDWR | O_CREAT | O_TRUNC, S_IRWXU | S_IRWXG | S_IRWXO);
+// 	int file_fd2 = open("./exec_cmdline/./stderr_result/result.txt", O_RDWR | O_CREAT | O_TRUNC, S_IRWXU | S_IRWXG | S_IRWXO);
+//     dup2(file_fd1, 1);
+// 	dup2(file_fd2, 2);
+// 	g_status = exec_command_line(cmd_list, envp_in_test, ft_lstsize(cmd_list));
+// 	close(file_fd1);
+// 	close(file_fd2);
+// 	dup2(bak_fd1, 1);
+// 	dup2(bak_fd2, 2);
+// 	close(bak_fd1);
+// 	close(bak_fd2);
+// }
 
-void exec_command_without_dup(t_list *cmd_list)
-{
-	char **envp = (char **)malloc(sizeof(char *) * 2);
-	envp[0] = ft_strjoin("PATH=", getenv("PATH")); // ["PATH=xxx"]
-	envp[1] = NULL;
-	g_status = exec_command_line(cmd_list, envp, ft_lstsize(cmd_list));
-}
+// void exec_command_without_dup(t_list *cmd_list)
+// {
+// 	g_status = exec_command_line(cmd_list, envp_in_test, ft_lstsize(cmd_list));
+// }
 
-void compare_file(
-	std::string expected_filename,
-	std::string actual_filename = "stdout_result/result.txt")
-{
-	std::string prefix = "./exec_cmdline/";
-	std::ifstream actual_stream((prefix + actual_filename).c_str());
-	std::string actual_string = std::string(std::istreambuf_iterator<char>(actual_stream), std::istreambuf_iterator<char>());
-	std::ifstream expected_stream((prefix + expected_filename).c_str());
-	std::string expected_string = std::string(std::istreambuf_iterator<char>(expected_stream), std::istreambuf_iterator<char>());
+// void compare_file(
+// 	std::string expected_filename,
+// 	std::string actual_filename)
+// {
+// 	std::string prefix = "./exec_cmdline/";
+// 	std::ifstream actual_stream((prefix + actual_filename).c_str());
+// 	std::string actual_string = std::string(std::istreambuf_iterator<char>(actual_stream), std::istreambuf_iterator<char>());
+// 	std::ifstream expected_stream((prefix + expected_filename).c_str());
+// 	std::string expected_string = std::string(std::istreambuf_iterator<char>(expected_stream), std::istreambuf_iterator<char>());
 
-	// printf("expected:\n%s\nactual:\n%s\n", expected_string.c_str(), actual_string.c_str());
-	CHECK_EQUAL(expected_string, actual_string);
-}
+// 	// printf("./exec_cmdline/expected:\n%s\nactual:\n%s\n", expected_string.c_str(), actual_string.c_str());
+// 	CHECK_EQUAL(expected_string, actual_string);
+// }
 
 TEST_GROUP(exec_command_line_G)
 {
 	void setup() {
+    	envp_in_test = g_envp;
 		remove("./exec_cmdline/out.txt");
 		remove("./exec_cmdline/out2.txt");
 		remove("./exec_cmdline/out3.txt");
 		remove("./exec_cmdline/out4.txt");
-		remove("./exec_cmdline/stdout_result/result.txt");
+		remove("./stdout_result/result.txt");
 	}
 	void teardown() {
 		remove("./exec_cmdline/out.txt");
 		remove("./exec_cmdline/out2.txt");
 		remove("./exec_cmdline/out3.txt");
 		remove("./exec_cmdline/out4.txt");
-		remove("./exec_cmdline/stdout_result/result.txt");
+		remove("./stdout_result/result.txt");
 	}
 };
 
@@ -91,7 +79,7 @@ TEST(exec_command_line_G, cat_and_arg) {
 
 	cmd_lst = cat_and_arg_data();
 	exec_command_and_output_file(cmd_lst);
-	compare_file("in.txt");
+	compare_file("./exec_cmdline/in.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -116,7 +104,7 @@ TEST(exec_command_line_G, cat_with_input_redirect) {
 
 	cmd_lst = cat_with_input_redirect();
 	exec_command_and_output_file(cmd_lst);
-	compare_file("in.txt");
+	compare_file("./exec_cmdline/in.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -142,7 +130,7 @@ TEST(exec_command_line_G, cat_with_write_redirect) {
 	cmd_lst = cat_with_write_redirect();
 	exec_command_without_dup(cmd_lst);
 	// out.txtの比較
-	compare_file("in.txt", "out.txt");
+	compare_file("./exec_cmdline/in.txt", "./exec_cmdline/out.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -167,9 +155,9 @@ TEST(exec_command_line_G, cat_with_append_redirect) {
 
 	cmd_lst = cat_with_append_redirect();
 	exec_command_without_dup(cmd_lst);
-	compare_file("in.txt", "out.txt");
+	compare_file("./exec_cmdline/in.txt", "./exec_cmdline/out.txt");
 	exec_command_without_dup(cmd_lst); // 2回実行する
-	compare_file("expected/cat_with_append_redirect.txt", "out.txt");
+	compare_file("./exec_cmdline/expected/cat_with_append_redirect.txt", "./exec_cmdline/out.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -200,7 +188,7 @@ TEST(exec_command_line_G, cat_with_input_write_redirect_data) {
 
 	cmd_lst = cat_with_input_write_redirect_data();
 	exec_command_without_dup(cmd_lst);
-	compare_file("in.txt", "out.txt");
+	compare_file("./exec_cmdline/in.txt", "./exec_cmdline/out.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -231,7 +219,7 @@ TEST(exec_command_line_G, cat_with_write_input_redirect_data) {
 
 	cmd_lst = cat_with_write_input_redirect_data();
 	exec_command_without_dup(cmd_lst);
-	compare_file("in.txt", "out.txt");
+	compare_file("./exec_cmdline/in.txt", "./exec_cmdline/out.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -263,7 +251,7 @@ TEST(exec_command_line_G, cat_with_input_append_redirect_data) {
 	cmd_lst = cat_with_input_append_redirect_data();
 	exec_command_without_dup(cmd_lst);
 	exec_command_without_dup(cmd_lst); // 2回実行する
-	compare_file("expected/cat_with_append_redirect.txt", "out.txt");
+	compare_file("./exec_cmdline/expected/cat_with_append_redirect.txt", "./exec_cmdline/out.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -295,7 +283,7 @@ TEST(exec_command_line_G, cat_with_append_input_redirect_data) {
 	cmd_lst = cat_with_append_input_redirect_data();
 	exec_command_without_dup(cmd_lst);
 	exec_command_without_dup(cmd_lst); // 2回実行する
-	compare_file("expected/cat_with_append_redirect.txt", "out.txt");
+	compare_file("./exec_cmdline/expected/cat_with_append_redirect.txt", "./exec_cmdline/out.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -327,9 +315,9 @@ TEST(exec_command_line_G, cat_with_2append_1_redirect_data) {
 	cmd_lst = cat_with_2append_1_redirect_data();
 	exec_command_without_dup(cmd_lst);
 	// 一つ目のファイルは空
-	compare_file("expected/empty.txt", "out.txt");
+	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out.txt");
 	// ２つ目のファイルはin.txtと同様の内容が記入される
-	compare_file("expected/cat_with_2append_1_redirect_data.txt", "out2.txt");
+	compare_file("./exec_cmdline/expected/cat_with_2append_1_redirect_data.txt", "./exec_cmdline/out2.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -361,7 +349,7 @@ TEST(exec_command_line_G, cat_with_2append_2_redirect_data) {
 	cmd_lst = cat_with_2append_2_redirect_data();
 	exec_command_without_dup(cmd_lst);
 	// 追記は最後のものしか実行されないため、in.txtと同様の内容が記入される
-	compare_file("expected/cat_with_2append_2_redirect_data.txt", "out.txt");
+	compare_file("./exec_cmdline/expected/cat_with_2append_2_redirect_data.txt", "./exec_cmdline/out.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -408,8 +396,8 @@ TEST(exec_command_line_G, cat_with_multi_redirect_data) {
 
 	cmd_lst = cat_with_multi_redirect1_data();
 	exec_command_without_dup(cmd_lst);
-	compare_file("expected/empty.txt", "out.txt");
-	compare_file("in2.txt", "out2.txt");
+	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out.txt");
+	compare_file("./exec_cmdline/in2.txt", "./exec_cmdline/out2.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -458,10 +446,10 @@ TEST(exec_command_line_G, cat_with_multi_redirect2_data) {
 	cmd_lst = cat_with_multi_redirect2_data();
 	exec_command_without_dup(cmd_lst);
 	// 最後のwriteリダイレクトのみ実行される
-	compare_file("expected/empty.txt", "out.txt");
-	compare_file("expected/empty.txt", "out2.txt");
-	compare_file("expected/empty.txt", "out3.txt");
-	compare_file("expected/cat_with_multi_redirect2_data_out4.txt", "out4.txt");
+	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out.txt");
+	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out2.txt");
+	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out3.txt");
+	compare_file("./exec_cmdline/expected/cat_with_multi_redirect2_data_out4.txt", "./exec_cmdline/out4.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -488,7 +476,7 @@ TEST(exec_command_line_G, fd_redirect_and_file_only_data)
 	cmd_list = fd_redirect_and_file_only_data();
 	exec_command_and_output_file(cmd_list);
 	// コマンドが実行されなくてもファイルは作成される
-	compare_file("expected/empty.txt", "out.txt");
+	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -515,7 +503,7 @@ TEST(exec_command_line_G, unrelated_fd_redirect)
 	cmd_list = unrelated_fd_redirect_data();
 	exec_command_and_output_file(cmd_list);
 	// 特に何も起こらない
-	compare_file("in.txt");
+	compare_file("./exec_cmdline/in.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -542,8 +530,8 @@ TEST(exec_command_line_G, unrelated_fd_redirect_with_cat)
 	cmd_list = unrelated_fd_redirect_with_cat_data();
 	exec_command_and_output_file(cmd_list);
 	// 何も書かれていないout.txtが作成され、result.txt(標準出力先)にin.txtの内容が出力される
-	compare_file("expected/empty.txt", "out.txt");
-	compare_file("in.txt");
+	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out.txt");
+	compare_file("./exec_cmdline/in.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -571,8 +559,8 @@ TEST(exec_command_line_G, unrelated_fd_redirect_with_echo)
 	cmd_list = unrelated_fd_redirect_with_echo_data();
 	exec_command_and_output_file(cmd_list);
 	// 何も書かれていないout.txtが作成され、result.txt(標準出力先)にin3.txt(hoge)の内容が出力される
-	compare_file("expected/empty.txt", "out.txt");
-	compare_file("in3.txt");
+	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out.txt");
+	compare_file("./exec_cmdline/in3.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -609,10 +597,10 @@ TEST(exec_command_line_G, two_unrelated_fd_write_redirect_with_echo)
 	cmd_list = two_unrelated_fd_write_redirect_with_echo_data();
 	exec_command_and_output_file(cmd_list);
 	// 何も書かれていないout1.txt, out2.txtが作成される
-	compare_file("expected/empty.txt", "out1.txt");
-	compare_file("expected/empty.txt", "out2.txt");
+	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out1.txt");
+	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out2.txt");
 	// result.txt(標準出力先)にin3.txt(hoge)の内容が出力される
-	compare_file("in3.txt");
+	compare_file("./exec_cmdline/in3.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -656,10 +644,10 @@ TEST(exec_command_line_G, two_unrelated_fd_and_1_write_with_echo)
 	cmd_list = two_unrelated_fd_and_1_write_with_echo_data();
 	exec_command_without_dup(cmd_list);
 	// 何も書かれていないout1.txt, out2.txtが作成される
-	compare_file("expected/empty.txt", "out1.txt");
-	compare_file("expected/empty.txt", "out2.txt");
+	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out1.txt");
+	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out2.txt");
 	// 標準出力からリダイレクトされたout3.txtにin3.txt(hoge)の内容が出力される
-	compare_file("in3.txt", "out3.txt");
+	compare_file("./exec_cmdline/in3.txt", "./exec_cmdline/out3.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -695,9 +683,9 @@ TEST(exec_command_line_G, two_fd_write_redirect_with_echo_date) {
 	cmd_lst = two_fd_write_redirect_with_echo_date();
 	exec_command_without_dup(cmd_lst);
 	// echoから1に書き込まれる。
-	compare_file("expected/two_fd_write_redirect_with_echo_out1.txt", "out1.txt");
+	compare_file("./exec_cmdline/expected/two_fd_write_redirect_with_echo_out1.txt", "./exec_cmdline/out1.txt");
 	// エラー出力（2）は何も受け取らないので空
-	compare_file("expected/empty.txt", "out2.txt");
+	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out2.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -733,9 +721,9 @@ TEST(exec_command_line_G, two_fd_write_redirect_with_echo2_date) {
 	cmd_lst = two_fd_write_redirect_with_echo2_date();
 	exec_command_without_dup(cmd_lst);
 	// エラー出力（2）は何も受け取らないのでout1.txtは空
-	compare_file("expected/empty.txt", "out1.txt");
+	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out1.txt");
 	// echoから1に書き込まれる。
-	compare_file("expected/two_fd_write_redirect_with_echo2_out2.txt", "out2.txt");
+	compare_file("./exec_cmdline/expected/two_fd_write_redirect_with_echo2_out2.txt", "./exec_cmdline/out2.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -780,11 +768,11 @@ TEST(exec_command_line_G, three_fd_write_redirect_with_echo_date) {
 	cmd_lst = three_fd_write_redirect_with_echo_date();
 	exec_command_without_dup(cmd_lst);
 	// 最初の1は処理されないのでout1.txtは空
-	compare_file("expected/empty.txt", "out1.txt");
+	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out1.txt");
 	// エラー出力（2）は何も受け取らないのでout2.txtは空
-	compare_file("expected/empty.txt", "out2.txt");
+	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out2.txt");
 	// echoから最後の1にのみ書き込まれる。
-	compare_file("expected/three_fd_write_redirect_with_echo_out3.txt", "out3.txt");
+	compare_file("./exec_cmdline/expected/three_fd_write_redirect_with_echo_out3.txt", "./exec_cmdline/out3.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -826,9 +814,9 @@ TEST(exec_command_line_G, two_fd_write_redirect_with_dog_date) {
 	cmd_lst = two_fd_write_redirect_with_dog_date();
 	exec_command_without_dup(cmd_lst);
 	// 標準出力（1）は何も受け取らないのでout1.txtは空
-	compare_file("expected/empty.txt", "out1.txt");
+	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out1.txt");
 	// dogコマンドのエラー出力が2に書き込まれる。
-	compare_file("expected/two_fd_write_redirect_with_dog_out2.txt", "out2.txt");
+	compare_file("./exec_cmdline/expected/two_fd_write_redirect_with_dog_out2.txt", "./exec_cmdline/out2.txt");
 	CHECK_EQUAL(127, g_status);
 }
 
@@ -873,11 +861,11 @@ TEST(exec_command_line_G, three_fd_write_redirect_with_dog_date) {
 	cmd_lst = three_fd_write_redirect_with_dog_date();
 	exec_command_without_dup(cmd_lst);
 	// 最初の2は処理されないのでout1.txtは空
-	compare_file("expected/empty.txt", "out1.txt");
+	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out1.txt");
 	// 標準出力（1）は何も受け取らないのでout2.txtは空
-	compare_file("expected/empty.txt", "out2.txt");
+	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out2.txt");
 	// echoから最後の2にのみ書き込まれる。
-	compare_file("expected/three_fd_write_redirect_with_dog_out3.txt", "out3.txt");
+	compare_file("./exec_cmdline/expected/three_fd_write_redirect_with_dog_out3.txt", "./exec_cmdline/out3.txt");
 	CHECK_EQUAL(127, g_status);
 }
 
@@ -913,7 +901,7 @@ TEST(exec_command_line_G, zero_100_input_redirect_with_cat_date) {
 	cmd_lst = zero_100_input_redirect_with_cat_date();
 	exec_command_and_output_file(cmd_lst);
 	// 標準出力（1）にin.txtの内容が出力されるので、result.txtと比較
-	compare_file("in.txt");
+	compare_file("./exec_cmdline/in.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -949,7 +937,7 @@ TEST(exec_command_line_G, two_fd_input_redirect_with_cat_date) {
 	cmd_lst = two_fd_input_redirect_with_cat_date();
 	exec_command_and_output_file(cmd_lst);
 	// 後半の0<が実行され、標準出力（1）にin2.txtの内容が出力されるので、result.txtと比較
-	compare_file("in2.txt");
+	compare_file("./exec_cmdline/in2.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -983,7 +971,7 @@ TEST(exec_command_line_G, invalid_stdout_redirect_input_data) {
 	exec_command_without_dup(cmd_lst);
 	// catを実行するが、1< in.txtで標準出力(1)がcloseされるため、エラーになり、
 	// out.txtにエラー文が出力される。
-	compare_file("expected/invalid_stdout_redirect_input.txt", "out.txt");
+	compare_file("./exec_cmdline/expected/invalid_stdout_redirect_input.txt", "./exec_cmdline/out.txt");
 	CHECK_EQUAL(1, g_status);
 }
 
@@ -1011,7 +999,7 @@ TEST(exec_command_line_G, cmd_not_found)
 
 	cmd_lst = cmd_not_found_data();
 	exec_command_and_output_file(cmd_lst);
-	compare_file("expected/cmd_not_found.txt", "stderr_result/result.txt");
+	compare_file("./exec_cmdline/expected/cmd_not_found.txt", "./stderr_result/result.txt");
 	CHECK_EQUAL(127, g_status);
 }
 
@@ -1041,7 +1029,7 @@ TEST(exec_command_line_G, no_read_permission)
 	system("chmod -r ./exec_cmdline/no_read_permission.txt");
 	exec_command_and_output_file(cmd_lst);
 	system("chmod +r ./exec_cmdline/no_read_permission.txt");
-	compare_file("expected/no_read_permission.txt", "stderr_result/result.txt");
+	compare_file("./exec_cmdline/expected/no_read_permission.txt", "./stderr_result/result.txt");
 	CHECK_EQUAL(1, g_status);
 }
 
@@ -1070,7 +1058,7 @@ TEST(exec_command_line_G, no_write_permission)
 	cmd_lst = no_write_permission_data();
 	system("chmod -w ./exec_cmdline/no_write_permission.txt");
 	exec_command_and_output_file(cmd_lst);
-	compare_file("expected/no_write_permission.txt", "stderr_result/result.txt");
+	compare_file("./exec_cmdline/expected/no_write_permission.txt", "./stderr_result/result.txt");
 	CHECK_EQUAL(1, g_status);
 }
 
@@ -1094,7 +1082,7 @@ TEST(exec_command_line_G, no_exec_permission)
 	cmd_lst = no_exec_permission_data();
 	system("chmod -x ./exec_cmdline/no_exec_permission.sh");
 	exec_command_and_output_file(cmd_lst);
-	compare_file("expected/no_exec_permission.txt", "stderr_result/result.txt");
+	compare_file("./exec_cmdline/expected/no_exec_permission.txt", "./stderr_result/result.txt");
 	CHECK_EQUAL(126, g_status);
 }
 
@@ -1117,7 +1105,7 @@ TEST(exec_command_line_G, is_directory)
 
 	cmd_lst = is_directory_data();
 	exec_command_and_output_file(cmd_lst);
-	compare_file("expected/is_directory.txt", "stderr_result/result.txt");
+	compare_file("./exec_cmdline/expected/is_directory.txt", "./stderr_result/result.txt");
 	CHECK_EQUAL(126, g_status);
 }
 
@@ -1146,7 +1134,7 @@ TEST(exec_command_line_G, input_redirect_directory)
 
 	cmd_lst = input_redirect_directory_data();
 	exec_command_and_output_file(cmd_lst);
-	compare_file("expected/input_redirect_directory.txt", "stderr_result/result.txt");
+	compare_file("./exec_cmdline/expected/input_redirect_directory.txt", "./stderr_result/result.txt");
 	CHECK_EQUAL(1, g_status);
 }
 
@@ -1174,7 +1162,7 @@ TEST(exec_command_line_G, write_redirect_directory)
 
 	cmd_lst = write_redirect_directory_data();
 	exec_command_and_output_file(cmd_lst);
-	compare_file("expected/write_redirect_directory.txt", "stderr_result/result.txt");
+	compare_file("./exec_cmdline/expected/write_redirect_directory.txt", "./stderr_result/result.txt");
 	CHECK_EQUAL(1, g_status);
 }
 
@@ -1198,7 +1186,7 @@ TEST(exec_command_line_G, no_such_file_exec)
 
 	cmd_lst = no_such_file_exec_data();
 	exec_command_and_output_file(cmd_lst);
-	compare_file("expected/no_such_file_exec.txt", "stderr_result/result.txt");
+	compare_file("./exec_cmdline/expected/no_such_file_exec.txt", "./stderr_result/result.txt");
 	CHECK_EQUAL(127, g_status);
 }
 
@@ -1226,7 +1214,7 @@ TEST(exec_command_line_G, no_such_file_redirect)
 
 	cmd_lst = no_such_file_redirect_data();
 	exec_command_and_output_file(cmd_lst);
-	compare_file("expected/no_such_file_redirect.txt", "stderr_result/result.txt");
+	compare_file("./exec_cmdline/expected/no_such_file_redirect.txt", "./stderr_result/result.txt");
 	CHECK_EQUAL(1, g_status);
 }
 
@@ -1270,9 +1258,9 @@ TEST(exec_command_line_G, no_permission_file_in_middle) {
 	system("chmod -w ./exec_cmdline/no_write_permission.txt");
 	exec_command_and_output_file(cmd_lst);
 	// outは空
-	compare_file("expected/empty.txt", "out.txt");
+	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out.txt");
 	// permission deniedの出力
-	compare_file("expected/no_write_permission.txt", "stderr_result/result.txt");
+	compare_file("./exec_cmdline/expected/no_write_permission.txt", "./stderr_result/result.txt");
 	// out2ができてない
 	CHECK_EQUAL(-1, access("./exec_cmdline/out2.txt", F_OK));
 	CHECK_EQUAL(1, g_status);
@@ -1300,7 +1288,7 @@ TEST(exec_command_line_G, input_redirect_with_exist_dir) {
 
 	cmd_lst = input_redirect_with_exist_dir();
 	exec_command_and_output_file(cmd_lst);
-	compare_file("expected/empty.txt");
+	compare_file("./exec_cmdline/expected/empty.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -1325,7 +1313,7 @@ TEST(exec_command_line_G, write_redirect_with_exist_dir) {
 
 	cmd_lst = write_redirect_with_exist_dir();
 	exec_command_and_output_file(cmd_lst);
-	compare_file("expected/is_directory2.txt", "stderr_result/result.txt");
+	compare_file("./exec_cmdline/expected/is_directory2.txt", "./stderr_result/result.txt");
 	CHECK_EQUAL(1, g_status);
 }
 
@@ -1363,7 +1351,7 @@ TEST(exec_command_line_G, two_cmd_block_pipe) {
 	cmd_lst = two_cmd_block_pipe();
 	// 標準出力にfugaが出力される
 	exec_command_and_output_file(cmd_lst);
-	compare_file("./expected/two_cmd_block_pipe.txt");
+	compare_file("./exec_cmdline/expected/two_cmd_block_pipe.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -1406,7 +1394,7 @@ TEST(exec_command_line_G, redirect_in_cat_and_redirect_out_grep) {
 
 	cmd_lst = redirect_in_cat_and_redirect_out_grep_data();
 	exec_command_without_dup(cmd_lst);
-	compare_file("expected/redirect_in_cat_and_redirect_out_grep.txt", "out.txt");
+	compare_file("./exec_cmdline/expected/redirect_in_cat_and_redirect_out_grep.txt", "./exec_cmdline/out.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
@@ -1439,12 +1427,13 @@ TEST(exec_command_line_G, three_command_pipe)
 {
 	t_list *cmd_list = three_command_pipe_data();
 	exec_command_and_output_file(cmd_list);
-	compare_file("in.txt");
+	compare_file("./exec_cmdline/in.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
-int main(int argc, char **argv)
+int main(int argc, char **argv,  char **envp)
 {
+	g_envp = envp;
 	return CommandLineTestRunner::RunAllTests(argc, argv);
 }
 

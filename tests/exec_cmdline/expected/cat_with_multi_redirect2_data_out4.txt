@@ -1,4 +1,6 @@
 Makefile
+builtins
+builtins.o
 exec_cmdline
 exec_cmdline.o
 lexer
@@ -6,4 +8,8 @@ lexer.o
 minishell_test
 parser
 parser.o
+stderr_result
+stdout_result
 test.h
+utils
+utils.o

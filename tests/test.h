@@ -1,4 +1,17 @@
+#include <CppUTest/CommandLineTestRunner.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <iostream>
+#include <fstream>
+
 extern	unsigned char	g_status;
+extern	char **g_envp;
+extern	char **envp_in_test;
+
 extern "C" {
 	/////////////////////////////////////////////////////////////////////////////////////
 	// libft
@@ -123,7 +136,7 @@ extern "C" {
 
 	// runner/run_builtin_command.c
 	bool	is_fork_required(t_list *cmd_list);
-	int		run_builtin_command(t_cmd_block *cmd_block);
+	int	run_builtin_command(t_cmd_block *cmd_block, t_environ *env);
 
 	// env/create_environ.c
 	t_environ	*init_environ(char *msg);
@@ -194,3 +207,14 @@ extern "C" {
 	void		set_tokens(t_list **tokens, t_cmd_block *cmd);
 	t_list		*parser(t_list *words);
 }
+
+
+// テスト内で定義した関数
+void exec_command_and_output_file(t_list *cmd_list);
+void compare_file(
+	std::string expected_filename,
+	std::string actual_filename = "stdout_result/result.txt");
+void exec_command_without_dup(t_list *cmd_list);
+void exec_builtin_and_output_file(t_cmd_block *cmd_block, t_environ *env);
+void exec_builtin_without_dup(t_cmd_block *cmd_block, t_environ *env);
+void compare_file(std::string expected_filename, std::string actual_filename);
