@@ -147,6 +147,9 @@ void		ft_unset(t_cmd_block *cmd_block, t_environ *env);
 // builtin/pwd.c
 int			ft_pwd(void);
 
+// builtin/echo.c
+int			ft_echo(t_cmd_block *cmd_block);
+
 // [後々削除]debug/debug_funcs.c
 void		print_cmd_lst(t_list *cmd_lst);
 t_list		*set_dataset(char *str);

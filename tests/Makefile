@@ -35,6 +35,7 @@ SOURCES =\
 	../sources/builtin/export_display_env.c\
     ../sources/builtin/unset.c\
 	../sources/builtin/pwd.c\
+	../sources/builtin/echo.c\
 	../sources/lexer/lexer.c\
 	../sources/lexer/split_by_redirect_pipe.c\
 	../sources/parser/parser.c\

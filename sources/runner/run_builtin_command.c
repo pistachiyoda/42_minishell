@@ -40,7 +40,7 @@ bool	is_fork_required(t_list *cmd_list)
 int	run_builtin_command(t_cmd_block *cmd_block, t_environ *env)
 {
 	if (is_builtin(cmd_block->command, "echo"))
-		ft_putstr_fd(cmd_block->command, 1);
+		ft_echo(cmd_block);
 	if (is_builtin(cmd_block->command, "cd"))
 		ft_putstr_fd(cmd_block->command, 1);
 	if (is_builtin(cmd_block->command, "pwd"))
