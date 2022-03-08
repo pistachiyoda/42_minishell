@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-bool	get_valid_fd_num(char *str, t_list **words, int i, int start)
+bool	get_valid_fd_num(char *str, t_list *words, int i, int start)
 {
 	int		count;
 	char	*fd;
@@ -12,23 +12,21 @@ bool	get_valid_fd_num(char *str, t_list **words, int i, int start)
 	if (i - start == count && (count > 10 || ft_atoi(fd) == -1))
 	{
 		print_error("file descriptor out of range", EMESS_LARGE_FD);
-		ft_lstclear(words, free);
-		free(str);
 		free(fd);
 		return (false);
 	}
 	if ((count == 0 || i - start != count) && str[i] != '|')
 	{
 		if (str[i] == '>')
-			ft_lstadd_back(words, xlstnew(xstrdup("1", "lexer"), "lexer"));
+			ft_lstadd_back(&words, xlstnew(xstrdup("1", "lexer"), "lexer"));
 		else if (str[i] == '<')
-			ft_lstadd_back(words, xlstnew(xstrdup("0", "lexer"), "lexer"));
+			ft_lstadd_back(&words, xlstnew(xstrdup("0", "lexer"), "lexer"));
 	}
 	free(fd);
 	return (true);
 }
 
-bool	is_valid_redirect_pipe(char *str, t_list *words, int *i, int start)
+bool	is_valid_redirect_pipe(char *str, int *i, int start)
 {
 	int		j;
 
@@ -50,8 +48,6 @@ bool	is_valid_redirect_pipe(char *str, t_list *words, int *i, int start)
 		else
 			str[*i + j + 1] = '\0';
 		syntax_error(&str[*i + 1]);
-		ft_lstclear(&words, free);
-		free(str);
 		return (false);
 	}
 	return (true);
@@ -66,7 +62,7 @@ int	split_by_redirect_pipe(char *str, t_list *words, int *i, int start)
 		new = xlstnew(xsubstr(str, start, *i - start, "lexer"), "lexer");
 		ft_lstadd_back(&words, new);
 	}
-	if (!get_valid_fd_num(str, &words, *i, start))
+	if (!get_valid_fd_num(str, words, *i, start))
 		return (-1);
 	start = *i;
 	if (ft_strncmp(&str[*i], ">>", 2) == 0
@@ -78,7 +74,7 @@ int	split_by_redirect_pipe(char *str, t_list *words, int *i, int start)
 	else
 		new = xlstnew(xsubstr(str, start, 1, "lexer"), "lexer");
 	ft_lstadd_back(&words, new);
-	if (!is_valid_redirect_pipe(str, words, i, start))
+	if (!is_valid_redirect_pipe(str, i, start))
 		return (-1);
 	return (start = *i + 1);
 }
