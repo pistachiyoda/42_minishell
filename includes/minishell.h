@@ -45,6 +45,7 @@ bool		is_executable(char *command_path);
 
 // utils/free.c
 void		free_2d_array(char **two_d_array);
+void		ft_lstclear2(t_list **lst);
 bool		free_words_str(t_list **words, char *str);
 void		free_tokens(t_list *tokens);
 

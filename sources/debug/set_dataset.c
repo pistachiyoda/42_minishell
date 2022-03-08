@@ -46,17 +46,14 @@ t_list	*set_dataset(char *str)
 	t_list	*tokens;
 
 	words = NULL;
+	tokens = NULL;
 	printf("LEXER-----------\n");
 	if (!lexer(str, &words))
 		return (NULL);
 	print_words_passed_lexer(words);
 	printf("PARSER-----------\n");
-	tokens = parser(words);
-	if (tokens == NULL)
-	{
-		free(str);
+	if (!parser(words, &tokens, str))
 		return (NULL);
-	}
 	print_tokens_passed_parser(tokens);
 	printf("EXPANSION-----------\n");
 	return (tokens);

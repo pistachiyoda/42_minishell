@@ -1,16 +1,11 @@
 #include "minishell.h"
 
-bool	is_valid_words(t_list *head)
+bool	is_valid_words(t_list *head, char *str)
 {
-	t_list	*words;
-
-	if (head == NULL)
-		return (false);
-	words = head->next;
-	if (ft_strncmp(words->content, "|", 1) == 0)
+	if (ft_strncmp(head->content, "|", 1) == 0)
 	{
 		syntax_error("|");
-		ft_lstclear(&head, free);
+		free_words_str(&head, str);
 		return (false);
 	}
 	return (true);
@@ -34,28 +29,28 @@ void	set_tokens(t_list **tokens, t_cmd_block *cmd)
 		ft_lstadd_back(tokens, xlstnew(cmd, "parser"));
 }
 
-t_list	*parser(t_list *words)
+bool	parser(t_list *words, t_list **tokens, char *str)
 {
-	t_list		*tokens;
 	t_cmd_block	*cmd;
+	t_list		*head;
 
-	tokens = NULL;
-	if (!is_valid_words(words))
-		return (NULL);
-	words = words->next;
+	if (!is_valid_words(words, str))
+		return (false);
+	head = words;
 	while (words != NULL)
 	{
 		cmd = xmalloc(sizeof(t_cmd_block), "parser");
 		set_cmd_block(&words, cmd);
-		set_tokens(&tokens, cmd);
+		set_tokens(tokens, cmd);
 		if (words == NULL)
 			break ;
 		if (words->next == NULL && ft_strncmp(words->content, "|", 1) == 0)
 		{
-			set_tokens(&tokens, NULL);
+			set_tokens(tokens, NULL);
 			break ;
 		}
 		words = words->next;
 	}
-	return (tokens);
+	ft_lstclear2(&head);
+	return (true);
 }

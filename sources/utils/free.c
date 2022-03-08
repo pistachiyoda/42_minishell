@@ -13,6 +13,21 @@ void	free_2d_array(char **two_d_array)
 	free(two_d_array);
 }
 
+void	ft_lstclear2(t_list **lst)
+{
+	t_list	*next_lst;
+
+	if (lst == NULL)
+		return ;
+	while (*lst != NULL)
+	{
+		next_lst = (*lst)->next;
+		free(*lst);
+		*lst = next_lst;
+	}
+	*lst = NULL;
+}
+
 bool	free_words_str(t_list **words, char *str)
 {
 	ft_lstclear(words, free);
