@@ -22,6 +22,7 @@ int	main(int argc, char **argv, char **envp)
 		cmd_list = parser(words);
 		if (cmd_list == NULL)
 			continue ;
+		cmd_list = expansion(cmd_list, env);
 		print_cmd_lst(cmd_list);
 		if (is_fork_required(cmd_list))
 		{

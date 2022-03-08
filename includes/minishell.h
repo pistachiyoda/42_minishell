@@ -11,6 +11,7 @@
 # include "cmdline_data.h"
 # include "lexer.h"
 # include "parser.h"
+# include "expansion.h"
 
 # define EMESS_NO_FILE_DIR "No such file or directory\n"
 # define EMESS_IS_DIR "is a directory\n"
@@ -24,6 +25,7 @@
 # define EMESS_INVALID_ID "not a valid identifier\n"
 # define EMESS_SYNTAX "syntax error near unexpected token"
 # define EMESS_LARGE_FD "Bad file descriptor\n"
+# define EMESS_REDIRECT "ambiguous redirect\n"
 
 # define FD_MAX 256
 
@@ -45,6 +47,12 @@ bool		is_executable(char *command_path);
 void		free_2d_array(char **two_d_array);
 void		free_tokens(t_list *tokens);
 
+// utils/is_env_registered.c
+char		*is_env_registerd(t_environ *env, char **split_ele, bool key_only);
+
+// utils/is_quote_type_switched.c
+bool		is_quote_type_switched(char *str, int i, int *status);
+
 // utils/print_error.c
 void		syntax_error(char *str);
 void		print_error(char *target, char *message);
@@ -56,6 +64,9 @@ char		*xsubstr(char const *s, unsigned int start,
 				size_t len, char *target);
 void		*xmalloc(size_t len, char *target);
 void		malloc_check(void *words, char *target);
+
+// utils/malloc_check2.c
+char		*xstrjoin(char const *s1, char const *s2, char *target);
 
 // utils/wrapper.c
 void		pipe_wrapper(int pipe_fds[2]);
@@ -125,7 +136,7 @@ char		**t_environ_to_vector(t_environ *env);
 void		ft_env(t_environ *env);
 
 // builtin/export.c
-bool		is_registered(t_environ *env, char **split_ele, bool key_only);
+char		*is_env_registerd(t_environ *env, char **split_ele, bool key_only);
 int			update_environ(t_cmd_block *cmd_block, t_environ *env, int i);
 void		ft_export(t_cmd_block *cmd_block, t_environ *env);
 

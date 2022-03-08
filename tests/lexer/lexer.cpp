@@ -434,6 +434,14 @@ TEST(lexer_G, redirect_at_end) {
 	STRCMP_EQUAL(NULL, (char *)lexer(ft_strdup("cat test.txt>")));
 }
 
+TEST(lexer_G, unclosed_quote) {
+	STRCMP_EQUAL(NULL, (char *)lexer(ft_strdup("cat test.txt'")));
+}
+
+TEST(lexer_G, unclosed_quote2) {
+	STRCMP_EQUAL(NULL, (char *)lexer(ft_strdup("cat test.txt\"")));
+}
+
 TEST(lexer_G, redirect_in_a_row) {
 	t_list	*words;
 

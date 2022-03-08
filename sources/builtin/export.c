@@ -1,28 +1,5 @@
 #include "minishell.h"
 
-bool	is_registered(t_environ *env, char **split_ele, bool key_only)
-{
-	size_t	len;
-	bool	registered;
-
-	len = ft_strlen(split_ele[0]);
-	registered = false;
-	env = env->next;
-	while (env->key != NULL)
-	{
-		if (ft_strlen(env->key) > len)
-			len = ft_strlen(env->key);
-		if (ft_strncmp(env->key, split_ele[0], len) == 0)
-		{
-			if (!key_only)
-				env->value = split_ele[1];
-			registered = true;
-		}
-		env = env->next;
-	}
-	return (registered);
-}
-
 int	update_environ(t_cmd_block *cmd_block, t_environ *env, int i)
 {
 	char	**split_ele;
@@ -38,7 +15,7 @@ int	update_environ(t_cmd_block *cmd_block, t_environ *env, int i)
 		free_2d_array(split_ele);
 		return (-1);
 	}
-	if (!is_registered(env, split_ele, key_only))
+	if (is_env_registerd(env, split_ele, key_only) == NULL)
 	{
 		env = add_environ(env->prev, env, split_ele, "export");
 		env = env->next;
