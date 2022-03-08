@@ -28,13 +28,13 @@ int	split_by_space_lex(char *str, t_list *words, int *i, int start)
 	return (start);
 }
 
-bool	add_last_str(char *str, t_list *words, int start, int status)
+bool	add_last_str(char *str, t_list **words, int start, int status)
 {
-	t_list	*new_ele;
+	t_list	*next_ele;
 	t_list	*last;
 	int		i;
 
-	last = ft_lstlast(words);
+	last = ft_lstlast(*words);
 	i = ft_strlen(str);
 	if ((start == i && (ft_strncmp(last->content, ">", 1) == 0
 				|| ft_strncmp(last->content, "<", 1) == 0
@@ -45,11 +45,11 @@ bool	add_last_str(char *str, t_list *words, int start, int status)
 		return (false);
 	}
 	if (start < i)
-	{
-		new_ele = xlstnew(xsubstr(str, start, i - start, "lexer"), "lexer");
-		ft_lstadd_back(&words, new_ele);
-		return (true);
-	}
+		ft_lstadd_back(words,
+			xlstnew(xsubstr(str, start, i - start, "lexer"), "lexer"));
+	next_ele = (*words)->next;
+	free(*words);
+	*words = next_ele;
 	return (true);
 }
 
@@ -75,7 +75,7 @@ bool	lexer(char *str, t_list **words)
 			start = split_by_redirect_pipe(str, *words, &i, start);
 		i++;
 	}
-	if (start != -1 && add_last_str(str, *words, start, status))
+	if (start != -1 && add_last_str(str, words, start, status))
 		return (true);
 	return (free_words_str(words, str));
 }

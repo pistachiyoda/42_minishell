@@ -22,7 +22,6 @@ void	compare_words(char **expected, t_list *words)
 	int		i;
 
 	i = 0;
-	words = words->next;
 	while (words != NULL)
 	{
 		STRCMP_EQUAL(expected[i], (char *)(words->content));
@@ -447,6 +446,23 @@ TEST(lexer_G, has_digit_target) {
 	compare_words(expected, words);
 }
 
+// 以下、正常系かつparserに進まないケース
+// no error massage
+TEST(lexer_G, only_space) {
+	t_list	*words;
+
+	words = NULL;
+	CHECK_EQUAL(false, lexer(ft_strdup(" "), &words));
+}
+
+// no error massage
+TEST(lexer_G, nothing_typed) {
+	t_list	*words;
+
+	words = NULL;
+	CHECK_EQUAL(false, lexer(ft_strdup(""), &words));
+}
+
 //以下、異常系: false時は、wordsはfree後でNULL止めもしてないからwordsのテスト省略
 TEST(lexer_G, redirect_at_end) {
 	t_list	*words;
@@ -546,18 +562,4 @@ TEST(lexer_G, fd_over_intmax) {
 
 	words = NULL;
 	CHECK_EQUAL(false, lexer(ft_strdup("cat input 2147483648> aa"), &words));
-}
-
-TEST(lexer_G, only_space) {
-	t_list	*words;
-
-	words = NULL;
-	CHECK_EQUAL(false, lexer(ft_strdup(" "), &words));
-}
-
-TEST(lexer_G, nothing_typed) {
-	t_list	*words;
-
-	words = NULL;
-	CHECK_EQUAL(false, lexer(ft_strdup(""), &words));
 }
