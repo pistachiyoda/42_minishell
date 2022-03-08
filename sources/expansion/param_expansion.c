@@ -25,10 +25,19 @@ int	param_expansion(t_environ *env, char *str, char **head, int *i)
 	char	*param;
 	char	*tmp;
 
-	param = xsubstr(str, *i + 1,
-			ft_strlen(str) - (*i + 1) - get_left_len(str, *i), "expansion");
-	*i += ft_strlen(param);
-	tmp = xstrjoin(*head, is_env_registerd(env, &param, true), "expansion");
+	if (ft_strncmp(&str[*i], "$?", 2) == 0)
+	{
+		*i += 1;
+		param = xitoa(g_status, "expansion");
+		tmp = xstrjoin(*head, param, "expansion");
+	}
+	else
+	{
+		param = xsubstr(str, *i + 1,
+				ft_strlen(str) - (*i + 1) - get_left_len(str, *i), "expansion");
+		*i += ft_strlen(param);
+		tmp = xstrjoin(*head, is_env_registerd(env, &param, true), "expansion");
+	}
 	free(param);
 	free(*head);
 	*head = tmp;

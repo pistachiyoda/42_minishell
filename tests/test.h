@@ -123,6 +123,7 @@ extern "C" {
 
 	// utils/malloc_check2.c
 	char		*xstrjoin(char const *s1, char const *s2, char *target);
+	char		*xitoa(int val, char *target);
 
 	// exec_command_line/exec_command_line.c
 	int		exec_command_line(t_list *cmd_list, char **envp, int cmd_cnt);
