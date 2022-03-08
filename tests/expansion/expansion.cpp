@@ -196,6 +196,129 @@ TEST(expansion_G, has_dquoted_env) {
 	compare_tokens(tokens, exp_tokens);
 }
 
+t_list	*has_dquoted_env2(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = NULL;
+	exp_cmd->command = ft_strdup("cat");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("cat");
+	exp_args[1] = ft_strdup("'test'");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(expansion_G, has_dquoted_env2) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export TEST=test"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("cat \"'$TEST'\""), env);
+	exp_tokens = has_dquoted_env2();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_dquoted_env3(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = NULL;
+	exp_cmd->command = ft_strdup("cat");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("cat");
+	exp_args[1] = ft_strdup("'  test  '");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(expansion_G, has_dquoted_env3) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export TEST=test"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("cat \"'  $TEST  '\""), env);
+	exp_tokens = has_dquoted_env3();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_dquoted_env4(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = NULL;
+	exp_cmd->command = ft_strdup("cat");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("cat");
+	exp_args[1] = ft_strdup(" '  test  ' ");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(expansion_G, has_dquoted_env4) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export TEST=test"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("cat \" '  $TEST  ' \""), env);
+	exp_tokens = has_dquoted_env4();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_dquoted_env5(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = NULL;
+	exp_cmd->command = ft_strdup("cat  ' test' ");
+	exp_args = (char **)malloc(sizeof(char *) * 2);
+	exp_args[0] = ft_strdup("cat  ' test' ");
+	exp_args[1] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(expansion_G, has_dquoted_env5) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export TEST=test"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("\"cat  ' $TEST' \""), env);
+	exp_tokens = has_dquoted_env5();
+	compare_tokens(tokens, exp_tokens);
+}
+
 t_list	*has_multiple_env(void)
 {
 	t_list		*exp_tokens;
@@ -386,3 +509,32 @@ TEST(expansion_G, has_signle_quoted_env2) {
 	exp_tokens = has_signle_quoted_env2();
 	compare_tokens(tokens, exp_tokens);
 }
+
+// t_list	*has_exit_status(void)
+// {
+// 	t_list		*exp_tokens;
+// 	t_cmd_block	*exp_cmd;
+// 	char		**exp_args;
+
+// 	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+// 	exp_cmd->redirects = NULL;
+// 	exp_cmd->command = ft_strdup("echo");
+// 	exp_args = (char **)malloc(sizeof(char *) * 3);
+// 	exp_args[0] = ft_strdup("echo");
+// 	exp_args[1] = ft_strdup("");
+// 	exp_args[2] = NULL;
+// 	exp_cmd->args = exp_args;
+// 	exp_tokens = ft_lstnew(exp_cmd);
+// 	return (exp_tokens);
+// }
+
+// TEST(expansion_G, has_exit_status) {
+// 	t_list		*tokens;
+// 	t_list		*exp_tokens;
+// 	t_environ	*env;
+
+// 	env = create_environ(g_envp);
+// 	tokens = get_tokens_from_expansion(ft_strdup("echo $?"), env);
+// 	exp_tokens = has_exit_status();
+// 	compare_tokens(tokens, exp_tokens);
+// }

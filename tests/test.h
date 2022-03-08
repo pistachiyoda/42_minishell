@@ -123,6 +123,7 @@ extern "C" {
 
 	// utils/malloc_check2.c
 	char		*xstrjoin(char const *s1, char const *s2, char *target);
+	char		*xitoa(int val, char *target);
 
 	// exec_command_line/exec_command_line.c
 	int		exec_command_line(t_list *cmd_list, char **envp, int cmd_cnt);
@@ -210,6 +211,7 @@ extern "C" {
 	{
 		int	prev_q;
 		int	status;
+		int	managed_i;
 	}	t_quote;
 
 	// expansion/expansion.c
@@ -226,13 +228,16 @@ extern "C" {
 
 	// expansion/param_expansion.c
 	size_t		get_left_len(char *str, int i);
-	void		param_expansion(t_environ *env, char *str, char **head, int *i);
+	int			param_expansion(t_environ *env, char *str, char **head, int *i);
 
 	// expansion/word_splitting.c
 	int			split_by_space_expand(char *str, t_list **words, int *i, int start);
 	void		word_splitting(t_list **words, int status, char **head, bool *splitted);
 
 	// expansion/quote_removal.c
+	void		concat_normal_str(char *str, char **head, int i, t_quote *quote);
+	void		concat_expanded_and_left(char *str, char **head, int i, t_quote *quote);
+	void		concat_all(char *str, char **head, int i);
 	void		quote_removal(char *str, char **head, int i, t_quote *quote);
 	void		set_head_before_dollar(char *str, char **head, int i, int prev_q);
 
