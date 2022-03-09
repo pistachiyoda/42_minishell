@@ -134,6 +134,7 @@ int			run_builtin_command(t_cmd_block *cmd_block, t_environ *env);
 t_environ	*init_environ(char *msg);
 t_environ	*add_environ(t_environ *env, t_environ *first_ele,
 				char **split_ele, char *msg);
+char		**split_by_delimiter(char *str, bool *key_only, char *target);
 t_environ	*create_environ(char **envp);
 
 // env/t_environ_to_vector.c
@@ -144,7 +145,6 @@ char		**t_environ_to_vector(t_environ *env);
 void		ft_env(t_environ *env);
 
 // builtin/export.c
-char		**split_by_delimiter(char *str, bool *key_only, char *target);
 void		update_environ(char *str, t_environ *env);
 void		ft_export(t_cmd_block *cmd_block, t_environ *env);
 
