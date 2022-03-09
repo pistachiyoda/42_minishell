@@ -52,6 +52,6 @@ int	run_builtin_command(t_cmd_block *cmd_block, t_environ *env)
 	if (is_builtin(cmd_block->command, "env"))
 		ft_env(env);
 	if (is_builtin(cmd_block->command, "exit"))
-		ft_putstr_fd(cmd_block->command, 1);
+		return (ft_exit(cmd_block));
 	return (0);
 }

@@ -29,6 +29,7 @@ SOURCES =\
 	../sources/utils/malloc_check2.c\
 	../sources/utils/wrapper.c\
 	../sources/utils/wrapper2.c\
+	../sources/utils/ft_atol.c\
 	../sources/debug/debug_funcs.c\
 	../sources/debug/set_dataset.c\
 	../sources/env/create_environ.c\
@@ -39,6 +40,7 @@ SOURCES =\
     ../sources/builtin/unset.c\
 	../sources/builtin/pwd.c\
 	../sources/builtin/echo.c\
+	../sources/builtin/exit.c\
 	../sources/lexer/lexer.c\
 	../sources/lexer/split_by_redirect_pipe.c\
 	../sources/parser/parser.c\

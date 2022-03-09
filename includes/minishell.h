@@ -13,6 +13,7 @@
 # include "parser.h"
 # include <sys/syslimits.h>
 # include "expansion.h"
+# include "limits.h"
 
 # define EMESS_NO_FILE_DIR "No such file or directory\n"
 # define EMESS_IS_DIR "is a directory\n"
@@ -27,6 +28,7 @@
 # define EMESS_SYNTAX "syntax error near unexpected token"
 # define EMESS_LARGE_FD "Bad file descriptor\n"
 # define EMESS_REDIRECT "ambiguous redirect\n"
+# define EMESS_TM_ARGS "too many arguments\n"
 
 # define FD_MAX 256
 
@@ -84,6 +86,9 @@ char		*ft_strjoin_wrapper(char const *s1, char const *s2);
 void		execve_wrapper(
 				const char *pathname, char *const argv[], char *const envp[]);
 void		dup2_wrapper(int oldfd, int newfd);
+
+// utils/ft_atol.c
+long long	ft_atol(const char *str, bool *is_invalid);
 
 // exec_command_line/exec_command_line.c
 int			exec_command_line(t_list *cmd_list, char **envp, int cmd_cnt);
@@ -163,6 +168,9 @@ int			ft_pwd(void);
 
 // builtin/echo.c
 int			ft_echo(t_cmd_block *cmd_block);
+
+// builtin/exit.c
+int			ft_exit(t_cmd_block *cmd_block);
 
 // [後々削除]debug/debug_funcs.c
 void		print_cmd_lst(t_list *cmd_lst);
