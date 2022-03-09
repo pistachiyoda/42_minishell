@@ -36,7 +36,7 @@ int	param_expansion(t_environ *env, char *str, char **head, int *i)
 		param = xsubstr(str, *i + 1,
 				ft_strlen(str) - (*i + 1) - get_left_len(str, *i), "expansion");
 		*i += ft_strlen(param);
-		tmp = xstrjoin(*head, is_env_registerd(env, &param, true), "expansion");
+		tmp = xstrjoin(*head, is_env_registerd(env, &param, true, NULL), "expansion");
 	}
 	free(param);
 	free(*head);
