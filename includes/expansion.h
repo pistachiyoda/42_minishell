@@ -27,6 +27,7 @@ int		param_expansion(t_environ *env, char *str, char **head, int *i);
 
 // sources/expansion/word_splitting.c
 int		split_by_space_expand(char *str, t_list **words, int *i, int start);
+void	get_new_head(char **head, int j, int start);
 void	word_splitting(t_list **words, int status, char **head, bool *splitted);
 
 // sources/expansion/quote_removal.c
