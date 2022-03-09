@@ -8,4 +8,5 @@ void	ft_env(t_environ *env)
 		printf("%s=%s\n", env->key, env->value);
 		env = env->next;
 	}
+	g_status = 0;
 }
