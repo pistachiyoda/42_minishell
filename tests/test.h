@@ -105,7 +105,7 @@ extern "C" {
 	void	free_tokens(t_list *tokens);
 
 	// utils/is_env_registered.c
-	char		*is_env_registerd(t_environ *env, char **split_ele, bool key_only);
+	char		*is_env_registerd(t_environ *env, char **split_ele, bool key_only, char *target);
 	bool		is_character_contained(char *str, int *i);
 	bool		is_space_tab_newline(char c);
 
@@ -127,6 +127,9 @@ extern "C" {
 	char		*xstrjoin(char const *s1, char const *s2, char *target);
 	char		*xitoa(int val, char *target);
 
+	// utils/validation.c
+	bool		is_valid_arg(char *str);
+
 	// exec_command_line/exec_command_line.c
 	int		exec_command_line(t_list *cmd_list, char **envp, int cmd_cnt);
 
@@ -142,7 +145,6 @@ extern "C" {
 
 	// env/create_environ.c
 	t_environ	*init_environ(char *msg);
-	char		**split_by_delimiter(char *env_str, char *msg);
 	t_environ	*add_environ(t_environ *env, t_environ *first_ele,
 					char **split_ele, char *msg);
 	t_environ	*create_environ(char **envp);
@@ -155,8 +157,8 @@ extern "C" {
 	void		ft_env(t_environ *env);
 
 	// builtin/export.c
-	char		*is_env_registerd(t_environ *env, char **split_ele, bool key_only);
-	int			update_environ(t_cmd_block *cmd_block, t_environ *env, int i);
+	char		**split_by_delimiter(char *str, bool *key_only, char *target);
+	void		update_environ(char *str, t_environ *env);
 	void		ft_export(t_cmd_block *cmd_block, t_environ *env);
 
 	// builtin/export_display_env.c
