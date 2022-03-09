@@ -7,7 +7,6 @@ bool	is_builtin(char	*command, char *builtin)
 
 	builtin_length = ft_strlen(builtin);
 	command_length = ft_strlen(command);
-
 	if ((builtin_length == command_length)
 		&& ft_strncmp(command, builtin, builtin_length) == 0)
 		return (true);
@@ -17,12 +16,12 @@ bool	is_builtin(char	*command, char *builtin)
 bool	is_builtin_command(t_cmd_block *cmd_block)
 {
 	return (is_builtin(cmd_block->command, "echo")
-			|| is_builtin(cmd_block->command, "cd")
-			|| is_builtin(cmd_block->command, "pwd")
-			|| is_builtin(cmd_block->command, "export")
-			|| is_builtin(cmd_block->command, "unset")
-			|| is_builtin(cmd_block->command, "env")
-			|| is_builtin(cmd_block->command, "exit"));
+		|| is_builtin(cmd_block->command, "cd")
+		|| is_builtin(cmd_block->command, "pwd")
+		|| is_builtin(cmd_block->command, "export")
+		|| is_builtin(cmd_block->command, "unset")
+		|| is_builtin(cmd_block->command, "env")
+		|| is_builtin(cmd_block->command, "exit"));
 }
 
 bool	is_fork_required(t_list *cmd_list)
@@ -40,11 +39,11 @@ bool	is_fork_required(t_list *cmd_list)
 int	run_builtin_command(t_cmd_block *cmd_block, t_environ *env)
 {
 	if (is_builtin(cmd_block->command, "echo"))
-		ft_echo(cmd_block);
+		return (ft_echo(cmd_block));
 	if (is_builtin(cmd_block->command, "cd"))
-		return(ft_cd(cmd_block, env));
+		return (ft_cd(cmd_block, env));
 	if (is_builtin(cmd_block->command, "pwd"))
-		return ft_pwd();
+		return (ft_pwd());
 	if (is_builtin(cmd_block->command, "export"))
 		ft_export(cmd_block, env);
 	if (is_builtin(cmd_block->command, "unset"))

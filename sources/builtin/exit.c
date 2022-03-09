@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-int		cnt_args(t_cmd_block *cmd_block)
+int	cnt_args(t_cmd_block *cmd_block)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (cmd_block->args[i])
@@ -12,7 +12,7 @@ int		cnt_args(t_cmd_block *cmd_block)
 
 bool	is_numeric(char *arg)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (arg[i] == '+' || arg[i] == '-')
@@ -36,41 +36,30 @@ void	print_non_numeric_error(char *arg)
 	ft_putstr_fd("numeric argument required\n", 2);
 }
 
-bool	is_bigger_than_longlong(char *arg)
+int	ft_exit(t_cmd_block *cmd_block)
 {
-	bool is_invalid;
-
-	printf("nn = %lld\n", ft_atol(arg, &is_invalid));
-	// if (ft_atol(arg) == (unsigned long long)LLONG_MAX + (unsigned long long)1)
-	if (is_invalid)
-	{
-		printf("test\n");
-		return (true);
-	}
-	return (false);
-}
-
-int		ft_exit(t_cmd_block *cmd_block)
-{
-	bool	is_invalid;
+	bool		is_invalid;
+	char		*first_arg;
+	long long	status;
 
 	if (cnt_args(cmd_block) >= 3)
 	{
 		print_error("exit", EMESS_TM_ARGS);
 		return (1);
 	}
-	if ((cmd_block->args[1] != NULL && !(is_numeric(cmd_block->args[1])))
-		|| (cmd_block->args[1] != NULL && is_bigger_than_longlong(cmd_block->args[1])))
+	first_arg = cmd_block->args[1];
+	if (first_arg == NULL)
 	{
 		ft_putstr_fd("exit\n", 2);
-		print_non_numeric_error(cmd_block->args[1]);
+		exit(g_status);
+	}
+	status = ft_atol(first_arg, &is_invalid);
+	if (!is_numeric(first_arg) || is_invalid)
+	{
+		ft_putstr_fd("exit\n", 2);
+		print_non_numeric_error(first_arg);
 		exit(255);
 	}
-	if (cmd_block->args[1] != NULL && is_numeric(cmd_block->args[1]))
-	{
-		ft_putstr_fd("exit\n", 2);
-		exit(ft_atol(cmd_block->args[1], &is_invalid));
-	}
 	ft_putstr_fd("exit\n", 2);
-	exit(g_status);
+	exit(status);
 }
