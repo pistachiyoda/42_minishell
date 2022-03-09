@@ -90,6 +90,9 @@ void		dup2_wrapper(int oldfd, int newfd);
 // utils/ft_atol.c
 long long	ft_atol(const char *str, bool *is_invalid);
 
+// utils/get_env_val.c
+char		*get_env_val(char *key, char **envp);
+
 // exec_command_line/exec_command_line.c
 int			exec_command_line(t_list *cmd_list, char **envp, int cmd_cnt);
 void		handle_command_line(t_cmd_block *cmd_block, char **envp);
@@ -171,6 +174,9 @@ int			ft_echo(t_cmd_block *cmd_block);
 
 // builtin/exit.c
 int			ft_exit(t_cmd_block *cmd_block);
+
+// builtin/cd.c
+int			ft_cd(t_cmd_block *cmd_block, t_environ *env);
 
 // [後々削除]debug/debug_funcs.c
 void		print_cmd_lst(t_list *cmd_lst);

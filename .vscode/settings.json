@@ -5,6 +5,7 @@
 		"filesystem": "cpp",
 		"string": "cpp",
 		"minishell.h": "c",
-		"syslimits.h": "c"
+		"syslimits.h": "c",
+		"stdexcept": "cpp"
 	}
 }
