@@ -407,6 +407,7 @@ t_list *cat_with_multi_redirect2_data()
 TEST(exec_command_line_G, cat_with_multi_redirect2_data) {
 	t_list *cmd_lst;
 
+	system("ls > ./exec_cmdline/expected/cat_with_multi_redirect2_data_out4.txt");
 	cmd_lst = cat_with_multi_redirect2_data();
 	exec_command_without_dup(cmd_lst);
 	// 最後のwriteリダイレクトのみ実行される
@@ -414,6 +415,7 @@ TEST(exec_command_line_G, cat_with_multi_redirect2_data) {
 	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out2.txt");
 	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out3.txt");
 	compare_file("./exec_cmdline/expected/cat_with_multi_redirect2_data_out4.txt", "./exec_cmdline/out4.txt");
+	remove("./exec_cmdline/expected/cat_with_multi_redirect2_data_out4.txt");
 	CHECK_EQUAL(0, g_status);
 }
 
