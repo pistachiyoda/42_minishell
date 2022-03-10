@@ -81,7 +81,7 @@ int	handle_redirect(t_redirects	*redirect, t_cmd_block *cmd_block)
 	return (0);
 }
 
-void	handle_redirects(t_cmd_block *cmd_block)
+int	handle_redirects(t_cmd_block *cmd_block)
 {
 	t_list		*redirect_node;
 	t_redirects	*redirect;
@@ -95,9 +95,10 @@ void	handle_redirects(t_cmd_block *cmd_block)
 		redirect = redirect_node->content;
 		ret = handle_redirect(redirect, cmd_block);
 		if (ret != 0)
-			exit(ret);
+			return (ret);
 		if (redirect_node->next == NULL)
 			break ;
 		redirect_node = redirect_node->next;
 	}
+	return (0);
 }

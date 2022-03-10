@@ -6,6 +6,7 @@
 int	handle_first_block(t_cmd_block *cmd_block, char	**envp, int pipe_write[2])
 {
 	int	pid;
+	int	status;
 
 	pipe_wrapper(pipe_write);
 	pid = fork_wrapper();
@@ -14,7 +15,9 @@ int	handle_first_block(t_cmd_block *cmd_block, char	**envp, int pipe_write[2])
 		close_wrapper(pipe_write[0]);
 		dup2_wrapper(pipe_write[1], 1);
 		close_wrapper(pipe_write[1]);
-		handle_redirects(cmd_block);
+		status = handle_redirects(cmd_block);
+		if (status != 0)
+			exit(status);
 		exec_command(cmd_block, envp);
 	}
 	close_doc_pipe_fd(cmd_block);
@@ -30,6 +33,7 @@ int	handle_middle_block(
 	t_cmd_block *cmd_block, char **envp, int pipe_read[2], int pipe_write[2])
 {
 	int	pid;
+	int	status;
 
 	pipe_wrapper(pipe_write);
 	pid = fork_wrapper();
@@ -41,7 +45,9 @@ int	handle_middle_block(
 		dup2_wrapper(pipe_write[1], 1);
 		close_wrapper(pipe_read[0]);
 		close_wrapper(pipe_write[1]);
-		handle_redirects(cmd_block);
+		status = handle_redirects(cmd_block);
+		if (status != 0)
+			exit(status);
 		exec_command(cmd_block, envp);
 	}
 	close_wrapper(pipe_read[0]);
@@ -58,6 +64,7 @@ int	handle_middle_block(
 int	handle_last_block(t_cmd_block *cmd_block, char	**envp, int pipe_read[2])
 {
 	int	pid;
+	int	status;
 
 	pid = fork_wrapper();
 	if (pid == 0)
@@ -65,7 +72,9 @@ int	handle_last_block(t_cmd_block *cmd_block, char	**envp, int pipe_read[2])
 		close_wrapper(pipe_read[1]);
 		dup2_wrapper(pipe_read[0], 0);
 		close_wrapper(pipe_read[0]);
-		handle_redirects(cmd_block);
+		status = handle_redirects(cmd_block);
+		if (status != 0)
+			exit(status);
 		exec_command(cmd_block, envp);
 	}
 	close_wrapper(pipe_read[0]);

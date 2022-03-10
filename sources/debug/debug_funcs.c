@@ -23,6 +23,8 @@ char	*print_redirect(enum e_REDIRECTS redirect)
 		return ("<");
 	if (redirect == HEREDOC)
 		return ("<<");
+	if (redirect == QUOTED_HEREDOC)
+		return ("'<<'");
 	return ("not_redirection");
 }
 

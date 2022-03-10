@@ -8,7 +8,9 @@ int	handle_single_block(t_cmd_block *cmd_block, char **envp)
 	pid = fork_wrapper();
 	if (pid == 0)
 	{
-		handle_redirects(cmd_block);
+		status = handle_redirects(cmd_block);
+		if (status != 0)
+			exit(status);
 		exec_command(cmd_block, envp);
 	}
 	close_doc_pipe_fd(cmd_block);
