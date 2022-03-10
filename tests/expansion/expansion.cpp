@@ -361,7 +361,7 @@ t_list	*has_multiple_env(void)
 	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
 	exp_cmd->redirects = ft_lstnew(exp_redir);
 	exp_cmd->command = ft_strdup("aacat");
-	exp_args = (char **)malloc(sizeof(char *) * 4);
+	exp_args = (char **)malloc(sizeof(char *) * 5);
 	exp_args[0] = ft_strdup("aacat");
 	exp_args[1] = ft_strdup("acat");
 	exp_args[2] = ft_strdup("bbcat");

@@ -45,7 +45,6 @@ void	free_tokens(t_list *tokens)
 		cmd = tokens->content;
 		if (cmd != NULL)
 		{
-			free(cmd->command);
 			free_2d_array(cmd->args);
 			while (cmd->redirects != NULL)
 			{
