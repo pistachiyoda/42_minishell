@@ -329,3 +329,189 @@ TEST(export_G, export_equal_signs_val) {
 	exp_tokens = export_equal_signs_val();
 	compare_tokens(tokens, exp_tokens);
 }
+
+t_list	*export_same_keys(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = NULL;
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("new");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, export_same_keys) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export TEST=old TEST=new"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("echo $TEST"), env);
+	exp_tokens = export_same_keys();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*check_exit_status(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = NULL;
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("0");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, check_exit_status) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export VALID_ARG"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("echo $?"), env);
+	exp_tokens = check_exit_status();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*check_exit_status2(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = NULL;
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("0");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, check_exit_status2) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export VALID_ARG=valid"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("echo $?"), env);
+	exp_tokens = check_exit_status2();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*check_exit_status3(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = NULL;
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("0");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, check_exit_status3) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export UESR"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("echo $?"), env);
+	exp_tokens = check_exit_status3();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*check_exit_status_error(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = NULL;
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("1");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, check_exit_status_error) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export TEST 0invalid TEST2"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("echo $?"), env);
+	exp_tokens = check_exit_status_error();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*check_exit_status_error2(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = NULL;
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("1");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, check_exit_status_error2) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export TEST _invalid* TEST2"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("echo $?"), env);
+	exp_tokens = check_exit_status_error2();
+	compare_tokens(tokens, exp_tokens);
+}
