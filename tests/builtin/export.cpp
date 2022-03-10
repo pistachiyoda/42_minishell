@@ -386,10 +386,11 @@ TEST(export_G, check_exit_status) {
 
 	env = create_environ(g_envp);
 	tokens = get_tokens_from_expansion(ft_strdup("export VALID_ARG"), env);
-	ft_export((t_cmd_block *)tokens->content, env);
+	g_status = ft_export((t_cmd_block *)tokens->content, env);
 	tokens = get_tokens_from_expansion(ft_strdup("echo $?"), env);
 	exp_tokens = check_exit_status();
 	compare_tokens(tokens, exp_tokens);
+	g_status = 0;
 }
 
 t_list	*check_exit_status2(void)
@@ -417,10 +418,11 @@ TEST(export_G, check_exit_status2) {
 
 	env = create_environ(g_envp);
 	tokens = get_tokens_from_expansion(ft_strdup("export VALID_ARG=valid"), env);
-	ft_export((t_cmd_block *)tokens->content, env);
+	g_status = ft_export((t_cmd_block *)tokens->content, env);
 	tokens = get_tokens_from_expansion(ft_strdup("echo $?"), env);
 	exp_tokens = check_exit_status2();
 	compare_tokens(tokens, exp_tokens);
+	g_status = 0;
 }
 
 t_list	*check_exit_status3(void)
@@ -448,10 +450,11 @@ TEST(export_G, check_exit_status3) {
 
 	env = create_environ(g_envp);
 	tokens = get_tokens_from_expansion(ft_strdup("export UESR"), env);
-	ft_export((t_cmd_block *)tokens->content, env);
+	g_status = ft_export((t_cmd_block *)tokens->content, env);
 	tokens = get_tokens_from_expansion(ft_strdup("echo $?"), env);
 	exp_tokens = check_exit_status3();
 	compare_tokens(tokens, exp_tokens);
+	g_status = 0;
 }
 
 t_list	*check_exit_status_error(void)
@@ -479,10 +482,11 @@ TEST(export_G, check_exit_status_error) {
 
 	env = create_environ(g_envp);
 	tokens = get_tokens_from_expansion(ft_strdup("export TEST 0invalid TEST2"), env);
-	ft_export((t_cmd_block *)tokens->content, env);
+	g_status = ft_export((t_cmd_block *)tokens->content, env);
 	tokens = get_tokens_from_expansion(ft_strdup("echo $?"), env);
 	exp_tokens = check_exit_status_error();
 	compare_tokens(tokens, exp_tokens);
+	g_status = 0;
 }
 
 t_list	*check_exit_status_error2(void)
@@ -510,8 +514,9 @@ TEST(export_G, check_exit_status_error2) {
 
 	env = create_environ(g_envp);
 	tokens = get_tokens_from_expansion(ft_strdup("export TEST _invalid* TEST2"), env);
-	ft_export((t_cmd_block *)tokens->content, env);
+	g_status = ft_export((t_cmd_block *)tokens->content, env);
 	tokens = get_tokens_from_expansion(ft_strdup("echo $?"), env);
 	exp_tokens = check_exit_status_error2();
 	compare_tokens(tokens, exp_tokens);
+	g_status = 0;
 }
