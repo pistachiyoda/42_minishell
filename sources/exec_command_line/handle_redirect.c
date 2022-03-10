@@ -95,7 +95,7 @@ int	handle_redirects(t_cmd_block *cmd_block)
 		redirect = redirect_node->content;
 		ret = handle_redirect(redirect, cmd_block);
 		if (ret != 0)
-			return(ret);
+			return (ret);
 		if (redirect_node->next == NULL)
 			break ;
 		redirect_node = redirect_node->next;
