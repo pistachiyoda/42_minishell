@@ -46,7 +46,7 @@ void exec_builtin_and_output_file(t_list *cmd_list, t_environ *env)
 	int file_fd2 = open("./stderr_result/result.txt", O_RDWR | O_CREAT | O_TRUNC, S_IRWXU | S_IRWXG | S_IRWXO);
     dup2(file_fd1, 1);
 	dup2(file_fd2, 2);
-	g_status = run_builtin_only_command(cmd_list, env);
+	g_status = run_builtin_command((t_cmd_block *)cmd_list->content, env);
 	close(file_fd1);
 	close(file_fd2);
 	dup2(bak_fd1, 1);
