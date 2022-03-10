@@ -120,7 +120,7 @@ int			close_doc_pipe_fd(t_cmd_block *cmd_block);
 
 // exec_command_line/handle_redirect.c
 int			handle_redirect(t_redirects	*redirect, t_cmd_block *cmd_block);
-void		handle_redirects(t_cmd_block *cmd_block);
+int			handle_redirects(t_cmd_block *cmd_block);
 
 // exec_command_line/handle_input_redirect.c
 bool		is_last_fd_input_redirect(t_redirects *redirect, t_list *redirects);
