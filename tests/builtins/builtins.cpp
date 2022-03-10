@@ -82,14 +82,14 @@ TEST(builtins_G, check_env_after_export)
 
 	cmd_lst_1 = export_hoge_test();
 	cmd_lst_2 = env_pipe_grep_hoge();
-	exec_builtin_and_output_file((t_cmd_block *)cmd_lst_1->content, env);
+	// exec_builtin_and_output_file((t_cmd_block *)cmd_lst_1->content, env);
 	// 出力なし
-	compare_file("./builtins/expected/empty.txt");
-	exec_command_and_output_file(cmd_lst_2);
+	// compare_file("./builtins/expected/empty.txt");
+	// exec_command_and_output_file(cmd_lst_2);
 	// hoge=testが出力される
-	compare_file("./builtins/expected/check_env_after_export.txt");
-	CHECK_EQUAL(0, g_status);
-
+	// compare_file("./builtins/expected/check_env_after_export.txt");
+	// CHECK_EQUAL(0, g_status);
+	FAIL("テスト未実装");
 }
 
 // bash-3.2$ date | export fuga=test2

@@ -38,7 +38,7 @@ void compare_file(
 }
 
 // ビルトインコマンド単体のブロックが実行された結果をresult.txtに出力
-void exec_builtin_and_output_file(t_cmd_block *cmd_block, t_environ *env)
+void exec_builtin_and_output_file(t_list *cmd_list, t_environ *env)
 {
 	int bak_fd1 = dup(1);
 	int bak_fd2 = dup(2);
@@ -46,7 +46,7 @@ void exec_builtin_and_output_file(t_cmd_block *cmd_block, t_environ *env)
 	int file_fd2 = open("./stderr_result/result.txt", O_RDWR | O_CREAT | O_TRUNC, S_IRWXU | S_IRWXG | S_IRWXO);
     dup2(file_fd1, 1);
 	dup2(file_fd2, 2);
-	g_status = run_builtin_command(cmd_block, env);
+	g_status = run_builtin_only_command(cmd_list, env);
 	close(file_fd1);
 	close(file_fd2);
 	dup2(bak_fd1, 1);
@@ -56,7 +56,7 @@ void exec_builtin_and_output_file(t_cmd_block *cmd_block, t_environ *env)
 }
 
 // ビルトインコマンド単体のブロックを実行
-void exec_builtin_without_dup(t_cmd_block *cmd_block, t_environ *env)
+void exec_builtin_without_dup(t_list *cmd_list, t_environ *env)
 {
-	g_status = run_builtin_command(cmd_block, env);
+	g_status = run_builtin_only_command(cmd_list, env);
 }
