@@ -33,7 +33,6 @@ int	run_builtin_only_command(t_list *cmd_list, t_environ *env)
 	if (status != 0)
 		return (status);
 	status = run_builtin_command((t_cmd_block *)cmd_list->content, env);
-	close_doc_pipe_fd((t_cmd_block *)cmd_list->content);
 	i = 0;
 	current_redirect = first_redirect;
 	while (current_redirect)
