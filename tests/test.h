@@ -152,6 +152,9 @@ extern "C" {
 	bool	is_fork_required(t_list *cmd_list);
 	int	run_builtin_command(t_cmd_block *cmd_block, t_environ *env);
 
+	// exec_builtin/exec_builtin_only_command.c
+	int		run_builtin_only_command(t_list *cmd_list, t_environ *env);
+
 	// env/create_environ.c
 	t_environ	*init_environ(char *msg);
 	char		**split_by_delimiter(char *env_str, char *msg);
@@ -268,6 +271,6 @@ void compare_file(
 	std::string expected_filename,
 	std::string actual_filename = "stdout_result/result.txt");
 void exec_command_without_dup(t_list *cmd_list);
-void exec_builtin_and_output_file(t_cmd_block *cmd_block, t_environ *env);
-void exec_builtin_without_dup(t_cmd_block *cmd_block, t_environ *env);
+void exec_builtin_and_output_file(t_list *cmd_list, t_environ *env);
+void exec_builtin_without_dup(t_list *cmd_list, t_environ *env);
 void compare_file(std::string expected_filename, std::string actual_filename);

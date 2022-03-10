@@ -23,6 +23,7 @@ SOURCES =\
 	../sources/exec_command_line/handle_pipe.c\
 	../sources/tmp_parser/tmp_parse_data.c\
 	../sources/runner/run_builtin_command.c\
+	../sources/exec_builtin/exec_builtin_only_command.c\
 	../sources/utils/free.c\
 	../sources/utils/is_env_registered.c\
 	../sources/utils/is_quote_type_switched.c\
@@ -59,8 +60,8 @@ OBJ = $(SOURCES:.c=.o)
 all: $(NAME)
 $(NAME): exec_cmdline.o lexer.o parser.o builtins.o utils.o expansion.o $(OBJ) $(LIBFT)
 	c++ $(CXXFLAGS) $(INCLUDES) exec_cmdline.o lexer.o parser.o builtins.o utils.o expansion.o $(OBJ) -o $(NAME) $(LIBS) $(LDLIBS)
-$(NAME): exec_cmdline.o lexer.o parser.o expansion.o export.o $(OBJ) $(LIBFT)
-	c++ $(CXXFLAGS) $(INCLUDES) exec_cmdline.o lexer.o parser.o expansion.o export.o $(OBJ) -o $(NAME) $(LIBS) $(LDLIBS)
+$(NAME): exec_cmdline.o lexer.o parser.o builtins.o utils.o expansion.o $(OBJ) $(LIBFT)
+	c++ $(CXXFLAGS) $(INCLUDES) exec_cmdline.o lexer.o parser.o builtins.o utils.o expansion.o $(OBJ) -o $(NAME) $(LIBS) $(LDLIBS)
 exec_cmdline.o: ./exec_cmdline/exec_cmdline.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./exec_cmdline/exec_cmdline.cpp $(LIBS)
 lexer.o: ./lexer/lexer.cpp
