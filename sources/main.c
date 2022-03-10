@@ -21,9 +21,7 @@ int	main(int argc, char **argv, char **envp)
 		str = readline("minishell$ ");
 		if (ft_strlen(str) == 0)
 			continue ;
-		if (!lexer(str, &words))
-			continue ;
-		if (!parser(words, &cmd_list, str))
+		if (!lexer(str, &words) || !parser(words, &cmd_list, str))
 			continue ;
 		expansion(&cmd_list, env);
 		print_cmd_lst(cmd_list);
