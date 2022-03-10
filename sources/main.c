@@ -12,11 +12,10 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	words = NULL;
-	cmd_list = NULL;
 	env = create_environ(envp);
 	while (1)
 	{
+		words = NULL;
 		cmd_list = NULL;
 		str = readline("minishell$ ");
 		if (ft_strlen(str) == 0)
