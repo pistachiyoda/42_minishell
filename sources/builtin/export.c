@@ -12,7 +12,7 @@ void	update_environ(char *str, t_environ *env, int *status)
 		*status = 1;
 		free_2d_array(split_ele);
 	}
-	else if (is_env_registerd(env, split_ele, key_only, "export"))
+	else if (is_env_registered(env, split_ele, key_only, "export"))
 		free_2d_array(split_ele);
 	else
 	{

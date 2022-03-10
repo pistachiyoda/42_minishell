@@ -53,7 +53,7 @@ bool		free_words_str(t_list **words, char *str);
 void		free_tokens(t_list *tokens);
 
 // utils/is_env_registered.c
-char		*is_env_registerd(t_environ *env, char **split_ele,
+char		*is_env_registered(t_environ *env, char **split_ele,
 				bool key_only, char *target);
 bool		is_character_contained(char *str, int *i);
 bool		is_space_tab_newline(char c);

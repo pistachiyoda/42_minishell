@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-char	*is_env_registerd(t_environ *env, char **split_ele, bool key_only,
+char	*is_env_registered(t_environ *env, char **split_ele, bool key_only,
 	char *target)
 {
 	size_t	len;
