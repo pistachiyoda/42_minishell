@@ -91,6 +91,34 @@ TEST(expansion_G, normal2) {
 	compare_tokens(tokens, exp_tokens);
 }
 
+t_list	*has_pipe_redirects_in_dquote(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = NULL;
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("cat test.txt | >test.txt ");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(expansion_G, has_pipe_redirects_in_dquote) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+
+	tokens = get_tokens_from_expansion(ft_strdup("echo \"cat test.txt | >test.txt \""),
+		create_environ(g_envp));
+	exp_tokens = has_pipe_redirects_in_dquote();
+	compare_tokens(tokens, exp_tokens);
+}
+
 t_list	*has_env(void)
 {
 	t_list		*exp_tokens;
@@ -509,6 +537,39 @@ TEST(expansion_G, has_signle_quoted_env2) {
 	exp_tokens = has_signle_quoted_env2();
 	compare_tokens(tokens, exp_tokens);
 }
+
+t_list	*export_env(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = NULL;
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 4);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("-n");
+	exp_args[2] = ft_strdup("abc");
+	exp_args[3] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(expansion_G, export_env) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export CHO=\"cho -n\""), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("e$CHO abc"), env);
+	exp_tokens = export_env();
+	compare_tokens(tokens, exp_tokens);
+}
+
 
 // t_list	*has_exit_status(void)
 // {

@@ -1,8 +1,10 @@
 Makefile
+builtin
 exec_cmdline
 exec_cmdline.o
 expansion
 expansion.o
+export.o
 lexer
 lexer.o
 minishell_test

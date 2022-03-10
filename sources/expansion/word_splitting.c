@@ -19,17 +19,34 @@ int	split_by_space_expand(char *str, t_list **words, int *i, int start)
 	return (start);
 }
 
+void	get_new_head(char **head, int j, int start)
+{
+	char	*tmp;
+
+	if (start != j)
+		tmp = xsubstr(*head, start, j - start, "expansion");
+	else
+		tmp = ft_strdup("");
+	free(*head);
+	*head = tmp;
+}
+
 void	word_splitting(t_list **words, int status, char **head, bool *splitted)
 {
 	int		j;
 	int		start;
-	char	*tmp;
 
 	j = 0;
-	start = 0;
 	if (status == NONE)
 	{
-		while (ft_strlen(*head) - j > 0)
+		if (!is_character_contained(*head, &j))
+		{
+			free(*head);
+			*head = ft_strdup("");
+			return ;
+		}
+		start = j;
+		while ((*head)[j] != '\0')
 		{
 			if (is_space_tab_newline((*head)[j]))
 			{
@@ -38,11 +55,6 @@ void	word_splitting(t_list **words, int status, char **head, bool *splitted)
 			}
 			j++;
 		}
-		if (start != j)
-		{
-			tmp = xsubstr(*head, start, j - start, "expansion");
-			free(*head);
-			*head = tmp;
-		}
+		get_new_head(head, j, start);
 	}
 }
