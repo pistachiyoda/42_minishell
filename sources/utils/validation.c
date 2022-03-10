@@ -16,7 +16,6 @@ bool	is_valid_arg(char *str)
 	if (str[j] != '\0')
 	{
 		print_error(str, EMESS_INVALID_ID);
-		g_status = 1;
 		return (false);
 	}
 	return (true);
