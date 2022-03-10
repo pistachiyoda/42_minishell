@@ -23,6 +23,7 @@ SOURCES =\
 	../sources/exec_command_line/handle_pipe.c\
 	../sources/tmp_parser/tmp_parse_data.c\
 	../sources/runner/run_builtin_command.c\
+	../sources/exec_builtin/exec_builtin_only_command.c\
 	../sources/utils/free.c\
 	../sources/utils/is_env_registered.c\
 	../sources/utils/is_quote_type_switched.c\
@@ -32,6 +33,8 @@ SOURCES =\
 	../sources/utils/wrapper.c\
 	../sources/utils/wrapper2.c\
 	../sources/utils/validation.c\
+	../sources/utils/ft_atol.c\
+	../sources/utils/get_env_val.c\
 	../sources/debug/debug_funcs.c\
 	../sources/debug/set_dataset.c\
 	../sources/env/create_environ.c\
@@ -40,6 +43,10 @@ SOURCES =\
     ../sources/builtin/export.c\
 	../sources/builtin/export_display_env.c\
     ../sources/builtin/unset.c\
+	../sources/builtin/pwd.c\
+	../sources/builtin/echo.c\
+	../sources/builtin/exit.c\
+	../sources/builtin/cd.c\
 	../sources/lexer/lexer.c\
 	../sources/lexer/split_by_redirect_pipe.c\
 	../sources/parser/parser.c\
@@ -52,14 +59,18 @@ SOURCES =\
 OBJ = $(SOURCES:.c=.o)
 
 all: $(NAME)
-$(NAME): exec_cmdline.o lexer.o parser.o expansion.o export.o $(OBJ) $(LIBFT)
-	c++ $(CXXFLAGS) $(INCLUDES) exec_cmdline.o lexer.o parser.o expansion.o export.o $(OBJ) -o $(NAME) $(LIBS) $(LDLIBS)
+$(NAME): exec_cmdline.o lexer.o parser.o builtins.o utils.o expansion.o export.o $(OBJ) $(LIBFT)
+	c++ $(CXXFLAGS) $(INCLUDES) exec_cmdline.o lexer.o parser.o builtins.o utils.o expansion.o export.o $(OBJ) -o $(NAME) $(LIBS) $(LDLIBS)
 exec_cmdline.o: ./exec_cmdline/exec_cmdline.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./exec_cmdline/exec_cmdline.cpp $(LIBS)
 lexer.o: ./lexer/lexer.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./lexer/lexer.cpp $(LIBS)
 parser.o: ./parser/parser.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./parser/parser.cpp $(LIBS)
+builtins.o: ./builtins/builtins.cpp
+	c++ $(CXXFLAGS) $(INCLUDES) -c ./builtins/builtins.cpp $(LIBS)
+utils.o: ./utils/utils.cpp
+	c++ $(CXXFLAGS) $(INCLUDES) -c ./utils/utils.cpp $(LIBS)
 expansion.o: ./expansion/expansion.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./expansion/expansion.cpp $(LIBS)
 export.o: ./builtin/export.cpp

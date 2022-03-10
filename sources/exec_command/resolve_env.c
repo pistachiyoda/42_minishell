@@ -1,23 +1,5 @@
 #include "minishell.h"
 
-char	*get_env_val(char *key, char **envp)
-{
-	int		i;
-	char	**value;
-
-	i = 0;
-	while (envp[i] != NULL)
-	{
-		if (ft_strncmp(envp[i], key, ft_strlen(key)) == 0)
-		{
-			value = ft_split_wrapper(envp[i], '=');
-			return (value[1]);
-		}
-		i++;
-	}
-	return (NULL);
-}
-
 char	*resolve_path(char	*command, char *path_val)
 {
 	char	**paths;
