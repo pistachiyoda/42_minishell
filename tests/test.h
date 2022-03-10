@@ -155,11 +155,11 @@ extern "C" {
 	char		**t_environ_to_vector(t_environ *env);
 
 	// builtin/env.c
-	void		ft_env(t_environ *env);
+	int			ft_env(t_environ *env);
 
 	// builtin/export.c
-	void		update_environ(char *str, t_environ *env);
-	void		ft_export(t_cmd_block *cmd_block, t_environ *env);
+	void		update_environ(char *str, t_environ *env, int *status);
+	int			ft_export(t_cmd_block *cmd_block, t_environ *env);
 
 	// builtin/export_display_env.c
 	t_environ	*get_tmp_min(t_environ *env, int *min_i, char *flags, int f_len);
@@ -169,7 +169,8 @@ extern "C" {
 					char *flags, int f_len);
 
 	// builtin/unset.c
-	void		ft_unset(t_cmd_block *cmd_block, t_environ *env);
+	void		unset_env(char *str, t_environ *env, size_t len);
+	int			ft_unset(t_cmd_block *cmd_block, t_environ *env);
 
 	// [後々削除]debug/debug_funcs.c
 	void	print_cmd_lst(t_list *cmd_lst);

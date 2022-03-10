@@ -27,11 +27,11 @@ int	run_builtin_command(t_cmd_block *cmd_block, t_environ *env)
 	if (ft_strncmp(cmd_block->command, "pwd", 3) == 0)
 		ft_putstr_fd(cmd_block->command, 1);
 	if (ft_strncmp(cmd_block->command, "export", 6) == 0)
-		ft_export(cmd_block, env);
+		return (ft_export(cmd_block, env));
 	if (ft_strncmp(cmd_block->command, "unset", 5) == 0)
-		ft_unset(cmd_block, env);
+		return (ft_unset(cmd_block, env));
 	if (ft_strncmp(cmd_block->command, "env", 3) == 0)
-		ft_env(env);
+		return (ft_env(env));
 	if (ft_strncmp(cmd_block->command, "exit", 4) == 0)
 		ft_putstr_fd(cmd_block->command, 1);
 	return (0);
