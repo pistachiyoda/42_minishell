@@ -1,24 +1,24 @@
 #include "minishell.h"
 
-void	assign_expanded_cmd_args(t_cmd_block *cmd, t_list *words)
+void	assign_expanded_cmd_args(t_cmd_block *cmd, t_list **words)
 {
 	int	i;
 
 	i = 0;
-	if (words != NULL)
+	if (*words != NULL)
 	{
 		free_2d_array(cmd->args);
-		cmd->command = words->content;
-		cmd->args = xmalloc(sizeof(char *) * (ft_lstsize(words) + 1),
+		cmd->command = (*words)->content;
+		cmd->args = xmalloc(sizeof(char *) * (ft_lstsize(*words) + 1),
 				"expansion");
-		while (words != NULL)
+		while (*words != NULL)
 		{
-			cmd->args[i] = words->content;
-			words = words->next;
+			cmd->args[i] = (*words)->content;
+			*words = (*words)->next;
 			i++;
 		}
 		cmd->args[i] = NULL;
-		ft_lstclear2(&words);
+		ft_lstclear2(words);
 	}
 }
 
@@ -35,23 +35,20 @@ void	expand_cmd_args(t_cmd_block *cmd, t_environ *env, t_list *words)
 			set_expanded_to_words(env, cmd->args[i], &words);
 			i++;
 		}
-		assign_expanded_cmd_args(cmd, words);
+		assign_expanded_cmd_args(cmd, &words);
 	}
 }
 
-void	assign_expanded_target(t_cmd_block *cmd, t_list *words, bool error)
+void	assign_expanded_target(char **str, t_list **words, bool error)
 {
-	t_redirects	*redirects;
-
-	redirects = cmd->redirects->content;
 	if (error)
 	{
 		print_error("expansion", EMESS_REDIRECT);
 		exit(EXIT_FAILURE);
 	}
-	free(redirects->target);
-	redirects->target = ft_lstlast(words)->content;
-	ft_lstclear2(&words);
+	free(*str);
+	*str = (*words)->content;
+	ft_lstclear2(words);
 }
 
 void	expand_redirects(t_cmd_block *cmd, t_environ *env, t_list *words)
@@ -65,7 +62,7 @@ void	expand_redirects(t_cmd_block *cmd, t_environ *env, t_list *words)
 	{
 		redirect = cmd->redirects->content;
 		error = set_expanded_to_words(env, redirect->target, &words);
-		assign_expanded_target(cmd, words, error);
+		assign_expanded_target(&redirect->target, &words, error);
 		cmd->redirects = cmd->redirects->next;
 	}
 	cmd->redirects = head;

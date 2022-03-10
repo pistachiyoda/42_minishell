@@ -87,7 +87,89 @@ TEST(expansion_G, normal2) {
 
 	tokens = get_tokens_from_expansion(ft_strdup("  cat test.txt >a.out  "),
 		create_environ(g_envp));
-	exp_tokens = normal();
+	exp_tokens = normal2();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*normal3(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	t_redirects	*exp_redir;
+	t_redirects	*exp_redir2;
+	char		**exp_args;
+
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 0;
+	exp_redir->redirect = INPUT;
+	exp_redir->target = ft_strdup("in");
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_redir2 = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir2->fd = 0;
+	exp_redir2->redirect = INPUT;
+	exp_redir2->target = ft_strdup("in2");
+	ft_lstadd_back(&exp_cmd->redirects, ft_lstnew(exp_redir2));
+	exp_cmd->command = ft_strdup("cat");
+	exp_args = (char **)malloc(sizeof(char *) * 2);
+	exp_args[0] = ft_strdup("cat");
+	exp_args[1] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(expansion_G, normal3) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+
+	tokens = get_tokens_from_expansion(ft_strdup("cat < in < in2"),
+		create_environ(g_envp));
+	exp_tokens = normal3();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*normal4(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	t_redirects	*exp_redir;
+	t_redirects	*exp_redir2;
+	t_redirects	*exp_redir3;
+	char		**exp_args;
+
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 0;
+	exp_redir->redirect = INPUT;
+	exp_redir->target = ft_strdup("in");
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_redir2 = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir2->fd = 0;
+	exp_redir2->redirect = INPUT;
+	exp_redir2->target = ft_strdup("in2");
+	ft_lstadd_back(&exp_cmd->redirects, ft_lstnew(exp_redir2));
+	exp_redir3 = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir3->fd = 0;
+	exp_redir3->redirect = INPUT;
+	exp_redir3->target = ft_strdup("in3");
+	ft_lstadd_back(&exp_cmd->redirects, ft_lstnew(exp_redir3));
+	exp_cmd->command = ft_strdup("cat");
+	exp_args = (char **)malloc(sizeof(char *) * 2);
+	exp_args[0] = ft_strdup("cat");
+	exp_args[1] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(expansion_G, normal4) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+
+	tokens = get_tokens_from_expansion(ft_strdup("cat < in < in2 < in3"),
+		create_environ(g_envp));
+	exp_tokens = normal4();
 	compare_tokens(tokens, exp_tokens);
 }
 
