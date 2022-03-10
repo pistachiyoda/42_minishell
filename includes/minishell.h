@@ -11,7 +11,9 @@
 # include "cmdline_data.h"
 # include "lexer.h"
 # include "parser.h"
+# include <sys/syslimits.h>
 # include "expansion.h"
+# include "limits.h"
 
 # define EMESS_NO_FILE_DIR "No such file or directory\n"
 # define EMESS_IS_DIR "is a directory\n"
@@ -26,13 +28,14 @@
 # define EMESS_SYNTAX "syntax error near unexpected token"
 # define EMESS_LARGE_FD "Bad file descriptor\n"
 # define EMESS_REDIRECT "ambiguous redirect\n"
+# define EMESS_TM_ARGS "too many arguments\n"
 
 # define FD_MAX 256
 
 extern unsigned char	g_status;
 
 // exec_command/exec_command.c
-void		exec_command(char *command_path, char **args, char **envp);
+void		exec_command(t_cmd_block *cmd_block, char **envp);
 
 // exec_command/resolve_env.c
 char		*get_env_val(char *key, char **envp);
@@ -86,6 +89,12 @@ void		execve_wrapper(
 				const char *pathname, char *const argv[], char *const envp[]);
 void		dup2_wrapper(int oldfd, int newfd);
 
+// utils/ft_atol.c
+long long	ft_atol(const char *str, bool *is_invalid);
+
+// utils/get_env_val.c
+char		*get_env_val(char *key, char **envp);
+
 // exec_command_line/exec_command_line.c
 int			exec_command_line(t_list *cmd_list, char **envp, int cmd_cnt);
 void		handle_command_line(t_cmd_block *cmd_block, char **envp);
@@ -123,8 +132,12 @@ int			handle_last_block(
 				t_cmd_block *cmd_block, char **envp, int pipe_read[2]);
 
 // runner/run_builtin_command.c
+bool		is_builtin_command(t_cmd_block *cmd_block);
 bool		is_fork_required(t_list *cmd_list);
 int			run_builtin_command(t_cmd_block *cmd_block, t_environ *env);
+
+// exec_builtin
+int			run_builtin_only_command(t_list *cmd_list, t_environ *env);
 
 // env/create_environ.c
 t_environ	*init_environ(char *msg);
@@ -154,6 +167,18 @@ void		display_sorted_env(t_environ *env, int min_i,
 
 // builtin/unset.c
 void		ft_unset(t_cmd_block *cmd_block, t_environ *env);
+
+// builtin/pwd.c
+int			ft_pwd(void);
+
+// builtin/echo.c
+int			ft_echo(t_cmd_block *cmd_block);
+
+// builtin/exit.c
+int			ft_exit(t_cmd_block *cmd_block);
+
+// builtin/cd.c
+int			ft_cd(t_cmd_block *cmd_block, t_environ *env);
 
 // [後々削除]debug/debug_funcs.c
 void		print_cmd_lst(t_list *cmd_lst);

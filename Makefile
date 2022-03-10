@@ -20,6 +20,7 @@ CFILES =\
 	sources/exec_command_line/handle_pipe.c\
 	sources/tmp_parser/tmp_parse_data.c\
 	sources/runner/run_builtin_command.c\
+	sources/exec_builtin/exec_builtin_only_command.c\
 	sources/utils/free.c\
 	sources/utils/is_env_registered.c\
 	sources/utils/is_quote_type_switched.c\
@@ -28,6 +29,8 @@ CFILES =\
 	sources/utils/malloc_check2.c\
 	sources/utils/wrapper.c\
 	sources/utils/wrapper2.c\
+	sources/utils/ft_atol.c\
+	sources/utils/get_env_val.c\
 	sources/debug/debug_funcs.c\
 	sources/debug/set_dataset.c\
 	sources/env/create_environ.c\
@@ -36,6 +39,10 @@ CFILES =\
 	sources/builtin/export.c\
 	sources/builtin/export_display_env.c\
 	sources/builtin/unset.c\
+	sources/builtin/pwd.c\
+	sources/builtin/echo.c\
+	sources/builtin/exit.c\
+	sources/builtin/cd.c\
 	sources/lexer/lexer.c\
 	sources/lexer/split_by_redirect_pipe.c\
 	sources/parser/parser.c\
