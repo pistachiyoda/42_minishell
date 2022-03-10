@@ -29,6 +29,7 @@ CFILES =\
 	sources/utils/malloc_check2.c\
 	sources/utils/wrapper.c\
 	sources/utils/wrapper2.c\
+	sources/utils/validation.c\
 	sources/utils/ft_atol.c\
 	sources/utils/get_env_val.c\
 	sources/debug/debug_funcs.c\

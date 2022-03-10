@@ -53,7 +53,8 @@ bool		free_words_str(t_list **words, char *str);
 void		free_tokens(t_list *tokens);
 
 // utils/is_env_registered.c
-char		*is_env_registerd(t_environ *env, char **split_ele, bool key_only);
+char		*is_env_registered(t_environ *env, char **split_ele,
+				bool key_only, char *target);
 bool		is_character_contained(char *str, int *i);
 bool		is_space_tab_newline(char c);
 
@@ -88,6 +89,9 @@ char		*ft_strjoin_wrapper(char const *s1, char const *s2);
 void		execve_wrapper(
 				const char *pathname, char *const argv[], char *const envp[]);
 void		dup2_wrapper(int oldfd, int newfd);
+
+// utils/validation.c
+bool		is_valid_arg(char *str);
 
 // utils/ft_atol.c
 long long	ft_atol(const char *str, bool *is_invalid);
@@ -141,9 +145,9 @@ int			run_builtin_only_command(t_list *cmd_list, t_environ *env);
 
 // env/create_environ.c
 t_environ	*init_environ(char *msg);
-char		**split_by_delimiter(char *env_str, char *msg);
 t_environ	*add_environ(t_environ *env, t_environ *first_ele,
 				char **split_ele, char *msg);
+char		**split_by_delimiter(char *str, bool *key_only, char *target);
 t_environ	*create_environ(char **envp);
 
 // env/t_environ_to_vector.c
@@ -151,12 +155,11 @@ int			count_environ_ele(t_environ *env);
 char		**t_environ_to_vector(t_environ *env);
 
 // builtin/env.c
-void		ft_env(t_environ *env);
+int			ft_env(t_environ *env);
 
 // builtin/export.c
-char		*is_env_registerd(t_environ *env, char **split_ele, bool key_only);
-int			update_environ(t_cmd_block *cmd_block, t_environ *env, int i);
-void		ft_export(t_cmd_block *cmd_block, t_environ *env);
+void		update_environ(char *str, t_environ *env, int *status);
+int			ft_export(t_cmd_block *cmd_block, t_environ *env);
 
 // builtin/export_display_env.c
 t_environ	*get_tmp_min(t_environ *env, int *min_i, char *flags, int f_len);
@@ -166,7 +169,8 @@ void		display_sorted_env(t_environ *env, int min_i,
 				char *flags, int f_len);
 
 // builtin/unset.c
-void		ft_unset(t_cmd_block *cmd_block, t_environ *env);
+void		unset_env(char *str, t_environ *env, size_t len);
+int			ft_unset(t_cmd_block *cmd_block, t_environ *env);
 
 // builtin/pwd.c
 int			ft_pwd(void);

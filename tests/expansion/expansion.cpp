@@ -569,33 +569,3 @@ TEST(expansion_G, export_env) {
 	exp_tokens = export_env();
 	compare_tokens(tokens, exp_tokens);
 }
-
-
-// t_list	*has_exit_status(void)
-// {
-// 	t_list		*exp_tokens;
-// 	t_cmd_block	*exp_cmd;
-// 	char		**exp_args;
-
-// 	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
-// 	exp_cmd->redirects = NULL;
-// 	exp_cmd->command = ft_strdup("echo");
-// 	exp_args = (char **)malloc(sizeof(char *) * 3);
-// 	exp_args[0] = ft_strdup("echo");
-// 	exp_args[1] = ft_strdup("");
-// 	exp_args[2] = NULL;
-// 	exp_cmd->args = exp_args;
-// 	exp_tokens = ft_lstnew(exp_cmd);
-// 	return (exp_tokens);
-// }
-
-// TEST(expansion_G, has_exit_status) {
-// 	t_list		*tokens;
-// 	t_list		*exp_tokens;
-// 	t_environ	*env;
-
-// 	env = create_environ(g_envp);
-// 	tokens = get_tokens_from_expansion(ft_strdup("echo $?"), env);
-// 	exp_tokens = has_exit_status();
-// 	compare_tokens(tokens, exp_tokens);
-// }

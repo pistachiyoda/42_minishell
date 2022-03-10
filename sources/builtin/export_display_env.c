@@ -35,7 +35,7 @@ void	print_env(t_environ *min)
 		printf("declare -x %s=\"", min->key);
 		while (min->value[i] != '\0')
 		{
-			if (min->value[i] == '"')
+			if (ft_strchr("\"$`\n\\", min->value[i]))
 				printf("\\%c", min->value[i]);
 			else
 				printf("%c", min->value[i]);

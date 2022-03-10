@@ -32,6 +32,7 @@ SOURCES =\
 	../sources/utils/malloc_check2.c\
 	../sources/utils/wrapper.c\
 	../sources/utils/wrapper2.c\
+	../sources/utils/validation.c\
 	../sources/utils/ft_atol.c\
 	../sources/utils/get_env_val.c\
 	../sources/debug/debug_funcs.c\
@@ -58,10 +59,8 @@ SOURCES =\
 OBJ = $(SOURCES:.c=.o)
 
 all: $(NAME)
-$(NAME): exec_cmdline.o lexer.o parser.o builtins.o utils.o expansion.o $(OBJ) $(LIBFT)
-	c++ $(CXXFLAGS) $(INCLUDES) exec_cmdline.o lexer.o parser.o builtins.o utils.o expansion.o $(OBJ) -o $(NAME) $(LIBS) $(LDLIBS)
-$(NAME): exec_cmdline.o lexer.o parser.o builtins.o utils.o expansion.o $(OBJ) $(LIBFT)
-	c++ $(CXXFLAGS) $(INCLUDES) exec_cmdline.o lexer.o parser.o builtins.o utils.o expansion.o $(OBJ) -o $(NAME) $(LIBS) $(LDLIBS)
+$(NAME): exec_cmdline.o lexer.o parser.o builtins.o utils.o expansion.o export.o $(OBJ) $(LIBFT)
+	c++ $(CXXFLAGS) $(INCLUDES) exec_cmdline.o lexer.o parser.o builtins.o utils.o expansion.o export.o $(OBJ) -o $(NAME) $(LIBS) $(LDLIBS)
 exec_cmdline.o: ./exec_cmdline/exec_cmdline.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./exec_cmdline/exec_cmdline.cpp $(LIBS)
 lexer.o: ./lexer/lexer.cpp

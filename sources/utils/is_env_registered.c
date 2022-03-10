@@ -1,6 +1,7 @@
 #include "minishell.h"
 
-char	*is_env_registerd(t_environ *env, char **split_ele, bool key_only)
+char	*is_env_registered(t_environ *env, char **split_ele, bool key_only,
+	char *target)
 {
 	size_t	len;
 	char	*value;
@@ -15,7 +16,10 @@ char	*is_env_registerd(t_environ *env, char **split_ele, bool key_only)
 		if (ft_strncmp(env->key, split_ele[0], len) == 0)
 		{
 			if (!key_only)
-				env->value = split_ele[1];
+			{
+				free(env->value);
+				env->value = xstrdup(split_ele[1], target);
+			}
 			value = env->value;
 		}
 		env = env->next;
