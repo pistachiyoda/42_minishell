@@ -1,3 +1,5 @@
 *.o
 *.a
 minishell
+minishell_test
+result.txt

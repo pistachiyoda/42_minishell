@@ -1,0 +1,1 @@
+minishell: ./exec_cmdline/no_write_permission.txt: Permission denied

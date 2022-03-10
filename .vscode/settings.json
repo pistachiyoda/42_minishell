@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+		"iosfwd": "cpp",
+		"iterator": "cpp",
+		"filesystem": "cpp",
+		"string": "cpp",
+		"minishell.h": "c",
+		"syslimits.h": "c",
+		"stdexcept": "cpp"
+	}
+}

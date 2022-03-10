@@ -4,7 +4,9 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/libft"
+                "${workspaceFolder}/libft",
+                "/opt/homebrew/Cellar/cpputest/4.0/include",
+                "${workspaceFolder}/includes"
             ],
             "defines": [],
             "macFrameworkPath": [
