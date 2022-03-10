@@ -117,7 +117,9 @@ extern "C" {
 	void	free_tokens(t_list *tokens);
 
 	// utils/is_env_registered.c
-	char	*is_env_registerd(t_environ *env, char **split_ele, bool key_only);
+	char		*is_env_registerd(t_environ *env, char **split_ele, bool key_only);
+	bool		is_character_contained(char *str, int *i);
+	bool		is_space_tab_newline(char c);
 
 	// utils/is_quote_type_switched.c
 	bool		is_quote_type_switched(char *str, int i, int *status);
@@ -200,8 +202,6 @@ extern "C" {
 	int			split_by_redirect_pipe(char *str, t_list *words, int *i, int start);
 
 	// lexer/lexer.c
-	bool		is_space_tab_newline(char c);
-	bool		is_character_contained(char *str, int *i);
 	int			split_by_space_lex(char *str, t_list *words, int *i, int start);
 	bool		add_last_str(char *str, t_list **words, int start, int status);
 	bool		lexer(char *str, t_list **words);
@@ -244,6 +244,7 @@ extern "C" {
 
 	// expansion/word_splitting.c
 	int			split_by_space_expand(char *str, t_list **words, int *i, int start);
+	void		get_new_head(char **head, int j, int start);
 	void		word_splitting(t_list **words, int status, char **head, bool *splitted);
 
 	// expansion/quote_removal.c
@@ -255,6 +256,9 @@ extern "C" {
 
 	// test/parser/parser.cpp
 	void		compare_tokens(t_list *tokens, t_list *exp_tokens);
+
+	// test/expansion/expansion.cpp
+	t_list		*get_tokens_from_expansion(char *str, t_environ *env);
 }
 
 

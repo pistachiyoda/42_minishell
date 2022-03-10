@@ -54,6 +54,8 @@ void		free_tokens(t_list *tokens);
 
 // utils/is_env_registered.c
 char		*is_env_registerd(t_environ *env, char **split_ele, bool key_only);
+bool		is_character_contained(char *str, int *i);
+bool		is_space_tab_newline(char c);
 
 // utils/is_quote_type_switched.c
 bool		is_quote_type_switched(char *str, int i, int *status);

@@ -1,6 +1,8 @@
 
 NAME = minishell_test
 CC = gcc
+C_MEMOLY_LEAK = -include /usr/local/opt/cpputest/include/CppUTest/MemoryLeakDetectorMallocMacros.h
+CXX_MEMOLY_LEAK = -include /usr/local/opt/cpputest/include/CppUTest/MemoryLeakDetectorNewMacros.h
 INCLUDES = -I../includes/ -I../libft/
 CXXFLAGS=-D_GLIBCXX_DEBUG -std=c++11 -Wall -Wextra -g -I /opt/homebrew/Cellar/cpputest/4.0/include -L /opt/homebrew/Cellar/cpputest/4.0/lib
 LDLIBS=-lCppUTest
@@ -57,6 +59,8 @@ OBJ = $(SOURCES:.c=.o)
 all: $(NAME)
 $(NAME): exec_cmdline.o lexer.o parser.o builtins.o utils.o expansion.o $(OBJ) $(LIBFT)
 	c++ $(CXXFLAGS) $(INCLUDES) exec_cmdline.o lexer.o parser.o builtins.o utils.o expansion.o $(OBJ) -o $(NAME) $(LIBS) $(LDLIBS)
+$(NAME): exec_cmdline.o lexer.o parser.o expansion.o export.o $(OBJ) $(LIBFT)
+	c++ $(CXXFLAGS) $(INCLUDES) exec_cmdline.o lexer.o parser.o expansion.o export.o $(OBJ) -o $(NAME) $(LIBS) $(LDLIBS)
 exec_cmdline.o: ./exec_cmdline/exec_cmdline.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./exec_cmdline/exec_cmdline.cpp $(LIBS)
 lexer.o: ./lexer/lexer.cpp
@@ -69,6 +73,8 @@ utils.o: ./utils/utils.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./utils/utils.cpp $(LIBS)
 expansion.o: ./expansion/expansion.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./expansion/expansion.cpp $(LIBS)
+export.o: ./builtin/export.cpp
+	c++ $(CXXFLAGS) $(INCLUDES) -c ./builtin/export.cpp $(LIBS)
 $(LIBFT):
 	make -C ../libft bonus
 clean:
