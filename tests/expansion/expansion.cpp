@@ -683,6 +683,74 @@ TEST(expansion_G, has_quote7) {
 	compare_tokens(tokens, exp_tokens);
 }
 
+t_list	*has_quote8(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = NULL;
+	exp_cmd->command = ft_strdup("cat");
+	exp_args = (char **)malloc(sizeof(char *) * 6);
+	exp_args[0] = ft_strdup("cat");
+	exp_args[1] = ft_strdup("test.txt");
+	exp_args[2] = ft_strdup("space");
+	exp_args[3] = ft_strdup("space");
+	exp_args[4] = ft_strdup("space");
+	exp_args[5] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(expansion_G, has_quote8) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export SPACE=\" space    space   space  \""), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("ca't' 'test.t''x't $SPACE"), env);
+	exp_tokens = has_quote8();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_quote9(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = NULL;
+	exp_cmd->command = ft_strdup("cat");
+	exp_args = (char **)malloc(sizeof(char *) * 6);
+	exp_args[0] = ft_strdup("cat");
+	exp_args[1] = ft_strdup("test.txt");
+	exp_args[2] = ft_strdup("space");
+	exp_args[3] = ft_strdup("space");
+	exp_args[4] = ft_strdup("space");
+	exp_args[5] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(expansion_G, has_quote9) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export SPACE=\" space    space   space  \""), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("ca't' 'test.t''x't $SPACE   "), env);
+	exp_tokens = has_quote9();
+	compare_tokens(tokens, exp_tokens);
+}
+
 t_list	*has_signle_quoted_env(void)
 {
 	t_list		*exp_tokens;
