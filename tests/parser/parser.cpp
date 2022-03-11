@@ -29,43 +29,60 @@ t_list	*get_tokens_from_parser(char *str)
 	return (tokens);
 }
 
+void	compare_command_args(t_cmd_block *cmd, t_cmd_block *exp_cmd)
+{
+	int	i;
+
+	i = 0;
+	STRCMP_EQUAL(exp_cmd->command, cmd->command);
+	if (exp_cmd->args != NULL)
+	{
+		while (exp_cmd->args[i] != NULL)
+		{
+			STRCMP_EQUAL(exp_cmd->args[i], cmd->args[i]);
+			i++;
+		}
+		STRCMP_EQUAL((char *)exp_cmd->args[i], (char *)cmd->args[i]);
+	}
+}
+
+void	compare_redirects(t_cmd_block *cmd, t_cmd_block *exp_cmd)
+{
+	t_redirects	*redirects;
+	t_redirects	*exp_redirects;
+
+	while (exp_cmd != NULL && exp_cmd->redirects != NULL)
+	{
+		redirects = (t_redirects *)cmd->redirects->content;
+		exp_redirects = (t_redirects *)exp_cmd->redirects->content;
+		CHECK_EQUAL(exp_redirects->redirect, redirects->redirect);
+		STRCMP_EQUAL(exp_redirects->target, redirects->target);
+		CHECK_EQUAL(exp_redirects->fd, redirects->fd);
+		cmd->redirects = cmd->redirects->next;
+		exp_cmd->redirects = exp_cmd->redirects->next;
+	}
+	if (exp_cmd != NULL && exp_cmd->redirects == NULL)
+		STRCMP_EQUAL((char *)exp_cmd->redirects, (char *)cmd->redirects);
+}
+
 void	compare_tokens(t_list *tokens, t_list *exp_tokens)
 {
-	int			i;
 	t_cmd_block	*cmd;
-	t_redirects	*redirects;
 	t_cmd_block	*exp_cmd;
-	t_redirects	*exp_redirects;
 
 	while (exp_tokens != NULL)
 	{
-		i = 0;
 		cmd = (t_cmd_block *)tokens->content;
 		exp_cmd = (t_cmd_block *)exp_tokens->content;
 		if (exp_cmd == NULL)
 			STRCMP_EQUAL((char *)exp_cmd, (char *)cmd);
 		else
-		{
-			STRCMP_EQUAL(exp_cmd->command, cmd->command);
-			while (exp_cmd->args[i] != NULL)
-			{
-				STRCMP_EQUAL(exp_cmd->args[i], cmd->args[i]);
-				i++;
-			}
-		}
-		while (exp_cmd != NULL && exp_cmd->redirects != NULL)
-		{
-			redirects = (t_redirects *)cmd->redirects->content;
-			exp_redirects = (t_redirects *)exp_cmd->redirects->content;
-			CHECK_EQUAL(exp_redirects->redirect, redirects->redirect);
-			STRCMP_EQUAL(exp_redirects->target, redirects->target);
-			CHECK_EQUAL(exp_redirects->fd, redirects->fd);
-			cmd->redirects = cmd->redirects->next;
-			exp_cmd->redirects = exp_cmd->redirects->next;
-		}
+			compare_command_args(cmd, exp_cmd);
+		compare_redirects(cmd, exp_cmd);
 		tokens = tokens->next;
 		exp_tokens = exp_tokens->next;
 	}
+	STRCMP_EQUAL((char *)exp_tokens, (char *)tokens);
 }
 
 t_list	*args2(void)
@@ -331,6 +348,86 @@ TEST(parser_G, cmd_at_end) {
 
 	tokens = get_tokens_from_parser(ft_strdup("0<a 1>>b cat b  "));
 	exp_tokens = cmd_at_end();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*multi_redirects_parser(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redirects;
+	t_redirects	*exp_redirects2;
+
+	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redirects->redirect = INPUT;
+	exp_redirects->target = ft_strdup("in");
+	exp_redirects->fd = 0;
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = ft_lstnew(exp_redirects);
+	exp_redirects2 = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redirects2->redirect = INPUT;
+	exp_redirects2->target = ft_strdup("in2");
+	exp_redirects2->fd = 0;
+	ft_lstadd_back(&exp_cmd->redirects, ft_lstnew(exp_redirects2));
+	exp_cmd->command = ft_strdup("cat");
+	exp_args = (char **)malloc(sizeof(char *) * 2);
+	exp_args[0] = ft_strdup("cat");
+	exp_args[1] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(parser_G, multi_redirects_parser) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+
+	tokens = get_tokens_from_parser(ft_strdup("cat < in < in2"));
+	exp_tokens = multi_redirects_parser();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*multi_redirects_parser2(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redirects;
+	t_redirects	*exp_redirects2;
+	t_redirects	*exp_redirects3;
+
+	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redirects->redirect = INPUT;
+	exp_redirects->target = ft_strdup("in");
+	exp_redirects->fd = 0;
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = ft_lstnew(exp_redirects);
+	exp_redirects2 = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redirects2->redirect = INPUT;
+	exp_redirects2->target = ft_strdup("in2");
+	exp_redirects2->fd = 0;
+	ft_lstadd_back(&exp_cmd->redirects, ft_lstnew(exp_redirects2));
+	exp_redirects3 = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redirects3->redirect = INPUT;
+	exp_redirects3->target = ft_strdup("in3");
+	exp_redirects3->fd = 0;
+	ft_lstadd_back(&exp_cmd->redirects, ft_lstnew(exp_redirects3));
+	exp_cmd->command = ft_strdup("cat");
+	exp_args = (char **)malloc(sizeof(char *) * 2);
+	exp_args[0] = ft_strdup("cat");
+	exp_args[1] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(parser_G, multi_redirects_parser2) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+
+	tokens = get_tokens_from_parser(ft_strdup("cat < in < in2 < in3"));
+	exp_tokens = multi_redirects_parser2();
 	compare_tokens(tokens, exp_tokens);
 }
 

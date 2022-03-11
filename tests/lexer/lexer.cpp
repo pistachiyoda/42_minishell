@@ -103,6 +103,59 @@ TEST(lexer_G, redirect1_pipe1_args7) {
 	compare_words(expected, words);
 }
 
+char	**multi_redirects(int num)
+{
+	char	**expected;
+
+	expected = (char **)malloc(sizeof(char *) * num);
+	expected[0] = ft_strdup("cat");
+	expected[1] = ft_strdup("0");
+	expected[2] = ft_strdup("<");
+	expected[3] = ft_strdup("in");
+	expected[4] = ft_strdup("0");
+	expected[5] = ft_strdup("<");
+	expected[6] = ft_strdup("in2");
+	return (expected);
+}
+
+TEST(lexer_G, multi_redirects) {
+	t_list	*words;
+	char	**expected;
+
+	words = NULL;
+	CHECK_EQUAL(true, lexer(ft_strdup("cat < in < in2"), &words));
+	expected = multi_redirects(7);
+	compare_words(expected, words);
+}
+
+char	**multi_redirects2(int num)
+{
+	char	**expected;
+
+	expected = (char **)malloc(sizeof(char *) * num);
+	expected[0] = ft_strdup("cat");
+	expected[1] = ft_strdup("0");
+	expected[2] = ft_strdup("<");
+	expected[3] = ft_strdup("in");
+	expected[4] = ft_strdup("0");
+	expected[5] = ft_strdup("<");
+	expected[6] = ft_strdup("in2");
+	expected[7] = ft_strdup("0");
+	expected[8] = ft_strdup("<");
+	expected[9] = ft_strdup("in3");
+	return (expected);
+}
+
+TEST(lexer_G, multi_redirects2) {
+	t_list	*words;
+	char	**expected;
+
+	words = NULL;
+	CHECK_EQUAL(true, lexer(ft_strdup("cat < in < in2 < in3"), &words));
+	expected = multi_redirects2(10);
+	compare_words(expected, words);
+}
+
 char	**heredoc(int num)
 {
 	char	**expected;

@@ -20,27 +20,40 @@ size_t	get_left_len(char *str, int i)
 	return (0);
 }
 
-int	param_expansion(t_environ *env, char *str, char **head, int *i)
+bool	is_space_at_end(char *str)
+{
+	size_t	i;
+
+	i = ft_strlen(str);
+	if (is_space_tab_newline(str[i - 1]))
+		return (true);
+	return (false);
+}
+
+void	param_expansion(t_environ *env, t_expand *data, char *str, char **head)
 {
 	char	*param;
 	char	*tmp;
 
-	if (ft_strncmp(&str[*i], "$?", 2) == 0)
+	if (ft_strncmp(&str[data->i], "$?", 2) == 0)
 	{
-		*i += 1;
+		data->i += 1;
 		param = xitoa(g_status, "expansion");
 		tmp = xstrjoin(*head, param, "expansion");
 	}
 	else
 	{
-		param = xsubstr(str, *i + 1,
-				ft_strlen(str) - (*i + 1) - get_left_len(str, *i), "expansion");
-		*i += ft_strlen(param);
+		param = xsubstr(str, data->i + 1,
+				ft_strlen(str) - (data->i + 1) - get_left_len(str, data->i),
+				"expansion");
+		data->i += ft_strlen(param);
 		tmp = xstrjoin(*head, is_env_registered(env, &param, true, NULL),
 				"expansion");
 	}
 	free(param);
 	free(*head);
 	*head = tmp;
-	return (*i + 1);
+	data->managed_i = data->i + 1;
+	if (data->managed_i == (int)ft_strlen(str) && is_space_at_end(*head))
+		data->end = true;
 }
