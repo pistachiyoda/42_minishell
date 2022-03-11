@@ -30,7 +30,7 @@ int	main(int argc, char **argv, char **envp)
 		if (is_fork_required(cmd_list))
 		{
 			minishell_envp = t_environ_to_vector(env);
-			g_status = exec_command_line(cmd_list, minishell_envp, ft_lstsize(cmd_list));
+			g_status = exec_command_line(env, cmd_list, minishell_envp, ft_lstsize(cmd_list));
 			printf("g_status = %d\n", g_status);
 		}
 		else

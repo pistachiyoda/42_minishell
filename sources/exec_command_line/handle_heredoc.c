@@ -22,11 +22,14 @@ void	flush_heredoc(char *str, int doc_pipe_fds[2])
 	exit(0);
 }
 
-void	handle_each_input(char *limiter, bool is_last, int	doc_pipe_fds[2])
+void	handle_each_input(t_environ *env, char *limiter, bool is_last, int	doc_pipe_fds[2])
 {
 	char	*str;
 	char	*buf;
 	char	*tmp;
+	char	*head;
+	int		i;
+	int		j;
 
 	str = ft_strdup("");
 	if (str == NULL)
@@ -38,7 +41,22 @@ void	handle_each_input(char *limiter, bool is_last, int	doc_pipe_fds[2])
 			&& ft_strncmp(buf, limiter, ft_strlen(limiter)) == 0)
 			break ;
 		tmp = str;
-		str = ft_strjoin2(str, buf);
+
+		i = 0;
+		j = 0;
+		head = NULL;
+		while (buf[i])
+		{
+			if (buf[i] == '$')
+			{	
+				set_head_before_dollar(buf, &head, i, j);
+				param_expansion(env, buf, &head, &i);
+			}
+			i++;
+		}
+		printf("head = %s\n", head);
+		str = ft_strjoin2(str, head);
+
 		free(buf);
 		free(tmp);
 	}
@@ -47,19 +65,19 @@ void	handle_each_input(char *limiter, bool is_last, int	doc_pipe_fds[2])
 	flush_heredoc(str, doc_pipe_fds);
 }
 
-void	handle_heredoc(char *limiter, bool is_last, int doc_pipe_fds[2])
+void	handle_heredoc(t_environ *env, char *limiter, bool is_last, int doc_pipe_fds[2])
 {
 	int		pid;
 
 	pipe_wrapper(doc_pipe_fds);
 	pid = fork_wrapper();
 	if (pid == 0)
-		handle_each_input(limiter, is_last, doc_pipe_fds);
+		handle_each_input(env, limiter, is_last, doc_pipe_fds);
 	close_wrapper(doc_pipe_fds[1]);
 	waitpid_wrapper(pid, NULL, 0);
 }
 
-int	handle_heredoc_input(t_list *cmd_list)
+int	handle_heredoc_input(t_environ *env, t_list *cmd_list)
 {
 	t_cmd_block	*cmd_block;
 	t_list		*redirect_node;
@@ -75,7 +93,7 @@ int	handle_heredoc_input(t_list *cmd_list)
 			redirect = redirect_node->content;
 			if (redirect->redirect == HEREDOC)
 			{
-				handle_heredoc(redirect->target,
+				handle_heredoc(env, redirect->target,
 					is_last_fd_input_redirect(
 						redirect, cmd_block->redirects),
 					doc_pipe_fds);

@@ -100,7 +100,7 @@ long long	ft_atol(const char *str, bool *is_invalid);
 char		*get_env_val(char *key, char **envp);
 
 // exec_command_line/exec_command_line.c
-int			exec_command_line(t_list *cmd_list, char **envp, int cmd_cnt);
+int			exec_command_line(t_environ *env, t_list *cmd_list, char **envp, int cmd_cnt);
 void		handle_command_line(t_cmd_block *cmd_block, char **envp);
 
 // exec_command_line/handle_file.c
@@ -110,7 +110,7 @@ bool		is_writable(char *file);
 int			open_or_create_file(char *file, int open_flag);
 
 // exec_command_line/handle_heredoc.c
-int			handle_heredoc_input(t_list *cmd_list);
+int			handle_heredoc_input(t_environ *env, t_list *cmd_list);
 
 // exec_command_line/handle_heredoc2.c
 char		*ft_strjoin2(char const *s1, char const *s2);
