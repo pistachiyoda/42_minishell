@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-char	*xstrjoin(char const *s1, char const *s2, char *target)
+char	*ft_xstrjoin(char const *s1, char const *s2, char *target)
 {
 	char	*ret;
 
@@ -13,7 +13,7 @@ char	*xstrjoin(char const *s1, char const *s2, char *target)
 	return (ret);
 }
 
-char	*xitoa(int val, char *target)
+char	*ft_xitoa(int val, char *target)
 {
 	char	*ret;
 

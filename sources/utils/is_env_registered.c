@@ -18,7 +18,7 @@ char	*is_env_registered(t_environ *env, char **split_ele, bool key_only,
 			if (!key_only)
 			{
 				free(env->value);
-				env->value = xstrdup(split_ele[1], target);
+				env->value = ft_xstrdup(split_ele[1], target);
 			}
 			value = env->value;
 		}
