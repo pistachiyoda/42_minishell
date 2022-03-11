@@ -50,6 +50,7 @@ bool		is_executable(char *command_path);
 void		free_2d_array(char **two_d_array);
 void		ft_lstclear2(t_list **lst);
 bool		free_words_str(t_list **words, char *str);
+void		free_cmd_block(t_list **tokens);
 void		free_tokens(t_list *tokens);
 
 // utils/is_env_registered.c
@@ -60,6 +61,9 @@ bool		is_space_tab_newline(char c);
 
 // utils/is_quote_type_switched.c
 bool		is_quote_type_switched(char *str, int i, int *status);
+
+// utils/check_str_type.c
+int			check_str_type(char *str);
 
 // utils/print_error.c
 void		syntax_error(char *str);
