@@ -13,6 +13,8 @@ TEST_GROUP(exec_command_line_G)
 		remove("./exec_cmdline/out3.txt");
 		remove("./exec_cmdline/out4.txt");
 		remove("./stdout_result/result.txt");
+		system("chmod -r ./exec_cmdline/no_read_permission.txt");
+		system("ls > ./exec_cmdline/expected/ls_result.txt");
 	}
 	void teardown() {
 		remove("./exec_cmdline/out.txt");
@@ -20,6 +22,8 @@ TEST_GROUP(exec_command_line_G)
 		remove("./exec_cmdline/out3.txt");
 		remove("./exec_cmdline/out4.txt");
 		remove("./stdout_result/result.txt");
+		system("chmod +r ./exec_cmdline/no_read_permission.txt");
+		remove("./exec_cmdline/expected/ls_result.txt");
 	}
 };
 
@@ -407,14 +411,13 @@ t_list *cat_with_multi_redirect2_data()
 TEST(exec_command_line_G, cat_with_multi_redirect2_data) {
 	t_list *cmd_lst;
 
-	system("ls > ./exec_cmdline/expected/cat_with_multi_redirect2_data_out4.txt");
 	cmd_lst = cat_with_multi_redirect2_data();
 	exec_command_without_dup(cmd_lst);
 	// 最後のwriteリダイレクトのみ実行される
 	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out.txt");
 	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out2.txt");
 	compare_file("./exec_cmdline/expected/empty.txt", "./exec_cmdline/out3.txt");
-	compare_file("./exec_cmdline/expected/cat_with_multi_redirect2_data_out4.txt", "./exec_cmdline/out4.txt");
+	compare_file("./exec_cmdline/expected/ls_result.txt", "./exec_cmdline/out4.txt");
 	remove("./exec_cmdline/expected/cat_with_multi_redirect2_data_out4.txt");
 	CHECK_EQUAL(0, g_status);
 }
@@ -992,9 +995,9 @@ TEST(exec_command_line_G, no_read_permission)
 	t_list	*cmd_lst;
 
 	cmd_lst = no_read_permission_data();
-	system("chmod -r ./exec_cmdline/no_read_permission.txt");
+	// system("chmod -r ./exec_cmdline/no_read_permission.txt");
 	exec_command_and_output_file(cmd_lst);
-	system("chmod +r ./exec_cmdline/no_read_permission.txt");
+	// system("chmod +r ./exec_cmdline/no_read_permission.txt");
 	compare_file("./exec_cmdline/expected/no_read_permission.txt", "./stderr_result/result.txt");
 	CHECK_EQUAL(1, g_status);
 }
@@ -1394,6 +1397,87 @@ TEST(exec_command_line_G, three_command_pipe)
 	t_list *cmd_list = three_command_pipe_data();
 	exec_command_and_output_file(cmd_list);
 	compare_file("./exec_cmdline/in.txt");
+	CHECK_EQUAL(0, g_status);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// パイプ異常系テストケース
+
+// date | date < no_read_permission.txt
+t_list *err_with_2block_data()
+{
+	t_list *cmd_list;
+	t_cmd_block *cmd_block_1;
+	t_cmd_block *cmd_block_2;
+	t_redirects *input_redirect;
+
+	cmd_block_1 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block_1->command = ft_strdup("date");
+	cmd_block_1->args = ft_split("date", ' ');
+	cmd_block_1->redirects = NULL;
+
+	cmd_block_2 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block_2->command = ft_strdup("date");
+	cmd_block_2->args = ft_split("date", ' ');
+	input_redirect = (t_redirects *)malloc(sizeof(t_redirects));
+	input_redirect->redirect = INPUT;
+	input_redirect->target = ft_strdup("./exec_cmdline/no_read_permission.txt");
+	input_redirect->fd = 0;
+	cmd_block_2->redirects = ft_lstnew(input_redirect);
+	cmd_list = ft_lstnew(cmd_block_1);
+	ft_lstadd_back(&cmd_list, ft_lstnew(cmd_block_2));
+	return cmd_list;
+}
+TEST(exec_command_line_G, err_with_2block)
+{
+	t_list *cmd_list = err_with_2block_data();
+	exec_command_and_output_file(cmd_list);
+	compare_file("./exec_cmdline/expected/no_read_permission.txt", "./stderr_result/result.txt");
+	CHECK_EQUAL(1, g_status);
+}
+
+// cat in > out | dog | ls
+t_list *err_with_3blocks_data()
+{
+	t_list *cmd_list;
+	t_cmd_block *cmd_block_1;
+	t_cmd_block *cmd_block_2;
+	t_cmd_block *cmd_block_3;
+	t_redirects *write_redirect;
+
+	cmd_block_1 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block_1->command = ft_strdup("cat");
+	cmd_block_1->args = ft_split("cat ./exec_cmdline/in.txt", ' ');
+	write_redirect = (t_redirects *)malloc(sizeof(t_redirects));
+	write_redirect->redirect = WRITE;
+	write_redirect->target = ft_strdup("./exec_cmdline/out.txt");
+	write_redirect->fd = 1;
+	cmd_block_1->redirects = ft_lstnew(write_redirect);
+
+	cmd_block_2 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block_2->command = ft_strdup("dog");
+	cmd_block_2->args = ft_split("dog", ' ');
+	cmd_block_2->redirects = NULL;
+
+	cmd_block_3 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	cmd_block_3->command = ft_strdup("ls");
+	cmd_block_3->args = ft_split("ls", ' ');
+	cmd_block_3->redirects = NULL;
+
+	cmd_list = ft_lstnew(cmd_block_1);
+	ft_lstadd_back(&cmd_list, ft_lstnew(cmd_block_2));
+	ft_lstadd_back(&cmd_list, ft_lstnew(cmd_block_3));
+	return (cmd_list);
+}
+TEST(exec_command_line_G, err_with_3blocks)
+{
+	t_list *cmd_list = err_with_3blocks_data();
+	exec_command_without_dup(cmd_list);
+	compare_file("./exec_cmdline/in.txt", "./exec_cmdline/out.txt");
+	exec_command_and_output_file(cmd_list);
+	compare_file("./exec_cmdline/expected/cmd_not_found.txt", "./stderr_result/result.txt");
+	compare_file("./exec_cmdline/expected/ls_result.txt");
 	CHECK_EQUAL(0, g_status);
 }
 

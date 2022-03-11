@@ -25,6 +25,7 @@ CFILES =\
 	sources/utils/free.c\
 	sources/utils/is_env_registered.c\
 	sources/utils/is_quote_type_switched.c\
+	sources/utils/check_str_type.c\
 	sources/utils/print_error.c\
 	sources/utils/malloc_check.c\
 	sources/utils/malloc_check2.c\
@@ -50,6 +51,7 @@ CFILES =\
 	sources/parser/parser.c\
 	sources/parser/set_cmd_block.c\
 	sources/expansion/expansion.c\
+	sources/expansion/expand_str.c\
 	sources/expansion/set_expanded_to_words.c\
 	sources/expansion/param_expansion.c\
 	sources/expansion/word_splitting.c\

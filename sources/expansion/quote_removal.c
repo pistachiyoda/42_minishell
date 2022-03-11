@@ -1,23 +1,23 @@
 #include "minishell.h"
 
-void	concat_normal_str(char *str, char **head, int i, t_quote *quote)
+void	concat_normal_str(char *str, char **head, t_expand *data)
 {
 	char	*front;
 	char	*add;
 
-	add = xsubstr(str, quote->prev_q, i - quote->prev_q, "expansion");
+	add = xsubstr(str, data->prev_q, data->i - data->prev_q, "expansion");
 	front = xstrjoin(*head, add, "expansion");
 	free(add);
 	free(*head);
 	*head = front;
 }
 
-void	concat_expanded_and_left(char *str, char **head, int i, t_quote *quote)
+void	concat_expanded_and_left(char *str, char **head, t_expand *data)
 {
 	char	*front;
 	char	*add;
 
-	add = xsubstr(str, quote->managed_i, i - quote->managed_i, "expansion");
+	add = xsubstr(str, data->managed_i, data->i - data->managed_i, "expansion");
 	front = xstrjoin(*head, add, "expansion");
 	free(add);
 	free(*head);
@@ -37,31 +37,31 @@ void	concat_all(char *str, char **head, int i)
 	}
 }
 
-void	quote_removal(char *str, char **head, int i, t_quote *quote)
+void	quote_removal(char *str, char **head, t_expand *data)
 {
 	if (*head == NULL)
-		*head = xsubstr(str, 0, i, "expansion");
-	else if (ft_strnstr(&str[quote->prev_q], "$", i - quote->prev_q) == NULL
-		|| (ft_strnstr(&str[quote->prev_q], "$", i - quote->prev_q)
-			&& str[i] == '\'' && quote->status == NONE))
-		concat_normal_str(str, head, i, quote);
-	else if (ft_strnstr(&str[quote->prev_q], "$", i - quote->prev_q)
-		&& str[i] == '"' && quote->status == NONE && i != quote->prev_q)
-		concat_expanded_and_left(str, head, i, quote);
-	concat_all(str, head, i);
-	quote->prev_q = i + 1;
+		*head = xsubstr(str, 0, data->i, "expansion");
+	else if (ft_strnstr(&str[data->prev_q], "$", data->i - data->prev_q) == NULL
+		|| (ft_strnstr(&str[data->prev_q], "$", data->i - data->prev_q)
+			&& str[data->i] == '\'' && data->status == NONE))
+		concat_normal_str(str, head, data);
+	else if (ft_strnstr(&str[data->prev_q], "$", data->i - data->prev_q) \
+	&& str[data->i] == '"' && data->status == NONE && data->i != data->prev_q)
+		concat_expanded_and_left(str, head, data);
+	concat_all(str, head, data->i);
+	data->prev_q = data->i + 1;
 }
 
-void	set_head_before_dollar(char *str, char **head, int i, int prev_q)
+void	set_head_before_dollar(char *str, char **head, t_expand data)
 {
 	char	*front;
 	char	*add;
 
 	if (*head == NULL)
-		*head = xsubstr(str, 0, i, "expansion");
-	else if (prev_q != 0 && prev_q != i)
+		*head = xsubstr(str, 0, data.i, "expansion");
+	else if (data.prev_q != 0 && data.prev_q != data.i)
 	{
-		add = xsubstr(str, prev_q, i - prev_q, "expansion");
+		add = xsubstr(str, data.prev_q, data.i - data.prev_q, "expansion");
 		front = xstrjoin(*head, add, "expansion");
 		free(add);
 		free(*head);
