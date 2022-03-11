@@ -3,11 +3,11 @@
 void	add_to_words(t_list **words, char *head, char *str)
 {
 	if (head == NULL)
-		head = xstrdup(str, "expansion");
+		head = ft_xstrdup(str, "expansion");
 	if (*words == NULL)
-		*words = xlstnew(head, "expansion");
+		*words = ft_xlstnew(head, "expansion");
 	else
-		ft_lstadd_back(words, xlstnew(head, "expansion"));
+		ft_lstadd_back(words, ft_xlstnew(head, "expansion"));
 }
 
 t_expand	init_struct(void)

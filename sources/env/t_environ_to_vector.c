@@ -21,17 +21,13 @@ char	**t_environ_to_vector(t_environ *env)
 	char	*tmp;
 
 	i = 0;
-	env_vec = malloc(sizeof(char *) * (count_environ_ele(env) + 1));
-	if (env_vec == NULL)
-	{
-		print_error("env_conversion", EMESS_MALLOC_FAIL);
-		exit(EXIT_FAILURE);
-	}
+	env_vec = ft_xmalloc(sizeof(char *) * (count_environ_ele(env) + 1),
+			"env_conversion");
 	env = env->next;
 	while (env->key != NULL)
 	{
-		tmp = ft_strjoin(env->key, "=");
-		env_vec[i++] = ft_strjoin(tmp, env->value);
+		tmp = ft_xstrjoin(env->key, "=", "env_conversion");
+		env_vec[i++] = ft_xstrjoin(tmp, env->value, "env_conversion");
 		free(tmp);
 		env = env->next;
 	}

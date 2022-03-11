@@ -9,7 +9,7 @@ void	assign_expanded_cmd_args(t_cmd_block *cmd, t_list **words)
 	{
 		free_2d_array(cmd->args);
 		cmd->command = (*words)->content;
-		cmd->args = xmalloc(sizeof(char *) * (ft_lstsize(*words) + 1),
+		cmd->args = ft_xmalloc(sizeof(char *) * (ft_lstsize(*words) + 1),
 				"expansion");
 		while (*words != NULL)
 		{

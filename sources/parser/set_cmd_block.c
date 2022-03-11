@@ -4,7 +4,7 @@ t_redirects	*set_redirect_member(t_list **words)
 {
 	t_redirects	*redir;
 
-	redir = xmalloc(sizeof(t_redirects), "parser");
+	redir = ft_xmalloc(sizeof(t_redirects), "parser");
 	redir->fd = ft_atoi((*words)->content);
 	*words = (*words)->next;
 	if (ft_strncmp((*words)->content, ">>", 2) == 0)
@@ -32,7 +32,7 @@ void	set_first_args(t_list **words, t_cmd_block *cmd, int arg_num)
 	int	i;
 
 	i = 0;
-	cmd->args = xmalloc(sizeof(char *) * (arg_num + 1), "parser");
+	cmd->args = ft_xmalloc(sizeof(char *) * (arg_num + 1), "parser");
 	while (i < arg_num)
 	{
 		cmd->args[i] = (*words)->content;
@@ -53,7 +53,7 @@ void	add_args(t_list **words, t_cmd_block *cmd, int arg_num)
 	old = cmd->args;
 	while (old[j] != NULL)
 		j++;
-	cmd->args = xmalloc(sizeof(char *) * (j + arg_num + 1), "parser");
+	cmd->args = ft_xmalloc(sizeof(char *) * (j + arg_num + 1), "parser");
 	while (old[i] != NULL)
 	{
 		cmd->args[i] = old[i];
@@ -105,10 +105,10 @@ void	set_cmd_block(t_list **words, t_cmd_block *cmd)
 		&& is_redirect((*words)->next))
 	{
 		if (cmd->redirects == NULL)
-			cmd->redirects = xlstnew(set_redirect_member(words), "parser");
+			cmd->redirects = ft_xlstnew(set_redirect_member(words), "parser");
 		else
 			ft_lstadd_back(&cmd->redirects,
-				xlstnew(set_redirect_member(words), "parser"));
+				ft_xlstnew(set_redirect_member(words), "parser"));
 		if (*words != NULL && ft_strncmp((*words)->content, "|", 1) != 0
 			&& (((*words)->next != NULL && !is_redirect((*words)->next))
 				|| (*words)->next == NULL))
