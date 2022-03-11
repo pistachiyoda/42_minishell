@@ -35,12 +35,15 @@ void	compare_command_args(t_cmd_block *cmd, t_cmd_block *exp_cmd)
 
 	i = 0;
 	STRCMP_EQUAL(exp_cmd->command, cmd->command);
-	while (exp_cmd->args[i] != NULL)
+	if (exp_cmd->args != NULL)
 	{
-		STRCMP_EQUAL(exp_cmd->args[i], cmd->args[i]);
-		i++;
+		while (exp_cmd->args[i] != NULL)
+		{
+			STRCMP_EQUAL(exp_cmd->args[i], cmd->args[i]);
+			i++;
+		}
+		STRCMP_EQUAL((char *)exp_cmd->args[i], (char *)cmd->args[i]);
 	}
-	STRCMP_EQUAL((char *)exp_cmd->args[i], (char *)cmd->args[i]);
 }
 
 void	compare_redirects(t_cmd_block *cmd, t_cmd_block *exp_cmd)
@@ -79,6 +82,7 @@ void	compare_tokens(t_list *tokens, t_list *exp_tokens)
 		tokens = tokens->next;
 		exp_tokens = exp_tokens->next;
 	}
+	STRCMP_EQUAL((char *)exp_tokens, (char *)tokens);
 }
 
 t_list	*args2(void)

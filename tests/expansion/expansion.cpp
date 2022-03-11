@@ -558,6 +558,131 @@ TEST(expansion_G, has_quote3) {
 	compare_tokens(tokens, exp_tokens);
 }
 
+t_list	*has_quote4(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = NULL;
+	exp_cmd->command = ft_strdup("cat");
+	exp_args = (char **)malloc(sizeof(char *) * 4);
+	exp_args[0] = ft_strdup("cat");
+	exp_args[1] = ft_strdup("test.txt");
+	exp_args[2] = ft_strdup("  ");
+	exp_args[3] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(expansion_G, has_quote4) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("ca't' 'test.t''x't \"  \""), env);
+	exp_tokens = has_quote4();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_quote5(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = NULL;
+	exp_cmd->command = ft_strdup("cat");
+	exp_args = (char **)malloc(sizeof(char *) * 4);
+	exp_args[0] = ft_strdup("cat");
+	exp_args[1] = ft_strdup("test.txt");
+	exp_args[2] = ft_strdup("   ");
+	exp_args[3] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(expansion_G, has_quote5) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export SPACE=\"   \""), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("ca't' 'test.t''x't \"$SPACE\""), env);
+	exp_tokens = has_quote5();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_quote6(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = NULL;
+	exp_cmd->command = ft_strdup("cat");
+	exp_args = (char **)malloc(sizeof(char *) * 4);
+	exp_args[0] = ft_strdup("cat");
+	exp_args[1] = ft_strdup("test.txt");
+	exp_args[2] = ft_strdup("$SPACE");
+	exp_args[3] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(expansion_G, has_quote6) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export SPACE=\"   \""), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("ca't' 'test.t''x't '$SPACE'"), env);
+	exp_tokens = has_quote6();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_quote7(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_cmd->redirects = NULL;
+	exp_cmd->command = ft_strdup("cat");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("cat");
+	exp_args[1] = ft_strdup("test.txt");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(expansion_G, has_quote7) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export SPACE=\"   \""), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("ca't' 'test.t''x't $SPACE"), env);
+	exp_tokens = has_quote7();
+	compare_tokens(tokens, exp_tokens);
+}
+
 t_list	*has_signle_quoted_env(void)
 {
 	t_list		*exp_tokens;
