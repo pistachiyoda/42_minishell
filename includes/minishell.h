@@ -1,6 +1,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include <unistd.h>
+# include <stdio.h>
 # include <stdbool.h>
 # include <sys/types.h>
 # include <sys/stat.h>
@@ -47,16 +48,12 @@ bool		is_directory(char *path);
 bool		is_exists(char *path);
 bool		is_executable(char *command_path);
 
-// signal/signal.c
-void		set_sigaction(void);
-void		wait_signal(void);
-
 // utils/free.c
 void		free_2d_array(char **two_d_array);
 void		ft_lstclear2(t_list **lst);
 bool		free_words_str(t_list **words, char *str);
 void		free_cmd_block(t_list **tokens);
-void		free_tokens(t_list *tokens);
+void		free_tokens(t_list **tokens);
 
 // utils/is_env_registered.c
 char		*is_env_registered(t_environ *env, char **split_ele,
