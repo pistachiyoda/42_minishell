@@ -38,13 +38,14 @@ void	concat_all(char *str, char **head, int i)
 	}
 }
 
-void	quote_removal(char *str, char **head, t_expand *data)
+void	quote_removal(char *str, char **head, t_expand *data, int type)
 {
 	if (*head == NULL)
 		*head = ft_xsubstr(str, 0, data->i, "expansion");
 	else if (ft_strnstr(&str[data->prev_q], "$", data->i - data->prev_q) == NULL
 		|| (ft_strnstr(&str[data->prev_q], "$", data->i - data->prev_q)
-			&& str[data->i] == '\'' && data->status == NONE))
+			&& str[data->i] == '\'' && data->status == NONE)
+		|| type == QUOTED_HEREDOC)
 		concat_normal_str(str, head, data);
 	else if (ft_strnstr(&str[data->prev_q], "$", data->i - data->prev_q) \
 	&& str[data->i] == '"' && data->status == NONE && data->i != data->prev_q)
