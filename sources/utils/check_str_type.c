@@ -13,7 +13,7 @@ int	check_str_type(char *str)
 	{
 		if (is_space_tab_newline(str[i]))
 		{
-			status = SPACE;
+			status = PARTIAL_SPACE;
 			count++;
 		}
 		i++;
