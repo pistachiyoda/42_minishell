@@ -21,7 +21,6 @@ CFILES =\
 	sources/tmp_parser/tmp_parse_data.c\
 	sources/runner/run_builtin_command.c\
 	sources/exec_builtin/exec_builtin_only_command.c\
-	sources/signal.c
 	sources/utils/free.c\
 	sources/utils/is_env_registered.c\
 	sources/utils/is_quote_type_switched.c\
