@@ -22,7 +22,8 @@ void	flush_heredoc(char *str, int doc_pipe_fds[2])
 	exit(0);
 }
 
-void	handle_each_input(t_environ *env, char *limiter, bool is_last, int	doc_pipe_fds[2])
+void	handle_each_input(
+		t_environ *env, char *limiter, bool is_last, int	doc_pipe_fds[2])
 {
 	char	*str;
 	char	*buf;
@@ -48,7 +49,8 @@ void	handle_each_input(t_environ *env, char *limiter, bool is_last, int	doc_pipe
 	flush_heredoc(str, doc_pipe_fds);
 }
 
-void	handle_heredoc(t_environ *env, char *limiter, bool is_last, int doc_pipe_fds[2])
+void	handle_heredoc(
+		t_environ *env, char *limiter, bool is_last, int doc_pipe_fds[2])
 {
 	int		pid;
 

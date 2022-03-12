@@ -52,7 +52,8 @@ int	wait_pids(int cmd_cnt, int pids[1000])
 // 最初の一つ目はhandle_first_blockに
 // 真ん中はhandle_middle_blockに
 // 最後の一つはhandle_last_blockに
-int	exec_command_line(t_environ *env, t_list *cmd_list, char **envp, int cmd_cnt)
+int	exec_command_line(
+		t_environ *env, t_list *cmd_list, char **envp, int cmd_cnt)
 {
 	int			pids[1000];
 	t_cmd_block	*cmd_block;
