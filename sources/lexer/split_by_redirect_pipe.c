@@ -8,7 +8,7 @@ bool	get_valid_fd_num(char *str, t_list *words, int i, int start)
 	count = 0;
 	while (i - start > count && ft_isdigit(str[start + count]) == 1)
 		count++;
-	fd = xsubstr(str, start, count, "lexer");
+	fd = ft_xsubstr(str, start, count, "lex");
 	if (i - start == count && (count > 10 || ft_atoi(fd) == -1))
 	{
 		print_error("file descriptor out of range", EMESS_LARGE_FD);
@@ -18,9 +18,9 @@ bool	get_valid_fd_num(char *str, t_list *words, int i, int start)
 	if ((count == 0 || i - start != count) && str[i] != '|')
 	{
 		if (str[i] == '>')
-			ft_lstadd_back(&words, xlstnew(xstrdup("1", "lexer"), "lexer"));
+			ft_lstadd_back(&words, ft_xlstnew(ft_xstrdup("1", "lex"), "lex"));
 		else if (str[i] == '<')
-			ft_lstadd_back(&words, xlstnew(xstrdup("0", "lexer"), "lexer"));
+			ft_lstadd_back(&words, ft_xlstnew(ft_xstrdup("0", "lex"), "lex"));
 	}
 	free(fd);
 	return (true);
@@ -59,7 +59,7 @@ int	split_by_redirect_pipe(char *str, t_list *words, int *i, int start)
 
 	if (*i != start)
 	{
-		new = xlstnew(xsubstr(str, start, *i - start, "lexer"), "lexer");
+		new = ft_xlstnew(ft_xsubstr(str, start, *i - start, "lex"), "lex");
 		ft_lstadd_back(&words, new);
 	}
 	if (!get_valid_fd_num(str, words, *i, start))
@@ -69,10 +69,10 @@ int	split_by_redirect_pipe(char *str, t_list *words, int *i, int start)
 		|| ft_strncmp(&str[*i], "<<", 2) == 0)
 	{
 		(*i)++;
-		new = xlstnew(xsubstr(str, start, 2, "lexer"), "lexer");
+		new = ft_xlstnew(ft_xsubstr(str, start, 2, "lex"), "lex");
 	}
 	else
-		new = xlstnew(xsubstr(str, start, 1, "lexer"), "lexer");
+		new = ft_xlstnew(ft_xsubstr(str, start, 1, "lex"), "lex");
 	ft_lstadd_back(&words, new);
 	if (!is_valid_redirect_pipe(str, i, start))
 		return (-1);

@@ -4,7 +4,7 @@ int	split_by_space_lex(char *str, t_list *words, int *i, int start)
 {
 	t_list	*new;
 
-	new = xlstnew(xsubstr(str, start, *i - start, "lexer"), "lexer");
+	new = ft_xlstnew(ft_xsubstr(str, start, *i - start, "lex"), "lex");
 	ft_lstadd_back(&words, new);
 	while (str[*i + 1] != '\0' && is_space_tab_newline(str[*i + 1]))
 		(*i)++;
@@ -30,7 +30,7 @@ bool	add_last_str(char *str, t_list **words, int start, int status)
 	}
 	if (start < i)
 		ft_lstadd_back(words,
-			xlstnew(xsubstr(str, start, i - start, "lexer"), "lexer"));
+			ft_xlstnew(ft_xsubstr(str, start, i - start, "lex"), "lex"));
 	next_ele = (*words)->next;
 	free(*words);
 	*words = next_ele;
@@ -45,7 +45,7 @@ bool	lexer(char *str, t_list **words)
 
 	i = 0;
 	status = NONE;
-	*words = xlstnew(NULL, "lexer");
+	*words = ft_xlstnew(NULL, "lex");
 	if (!is_character_contained(str, &i))
 		return (free_words_str(words, str));
 	start = i;

@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-t_list	*xlstnew(void *content, char *target)
+t_list	*ft_xlstnew(void *content, char *target)
 {
 	t_list	*lst;
 
@@ -13,7 +13,7 @@ t_list	*xlstnew(void *content, char *target)
 	return (lst);
 }
 
-char	*xstrdup(const char *src, char *target)
+char	*ft_xstrdup(const char *src, char *target)
 {
 	char	*ret;
 
@@ -26,7 +26,7 @@ char	*xstrdup(const char *src, char *target)
 	return (ret);
 }
 
-char	*xsubstr(char const *s, unsigned int start, size_t len, char *target)
+char	*ft_xsubstr(char const *s, unsigned int start, size_t len, char *target)
 {
 	char	*ret;
 
@@ -39,7 +39,7 @@ char	*xsubstr(char const *s, unsigned int start, size_t len, char *target)
 	return (ret);
 }
 
-void	*xmalloc(size_t len, char *target)
+void	*ft_xmalloc(size_t len, char *target)
 {
 	void	*ret;
 

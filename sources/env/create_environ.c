@@ -4,12 +4,7 @@ t_environ	*init_environ(char *target)
 {
 	t_environ	*env;
 
-	env = (t_environ *)malloc(sizeof(t_environ));
-	if (env == NULL)
-	{
-		print_error(target, EMESS_MALLOC_FAIL);
-		exit(EXIT_FAILURE);
-	}
+	env = (t_environ *)ft_xmalloc(sizeof(t_environ), target);
 	env->key = NULL;
 	env->value = NULL;
 	env->prev = env;
@@ -22,12 +17,7 @@ t_environ	*add_environ(t_environ *env, t_environ *first_ele,
 {
 	t_environ	*new_ele;
 
-	new_ele = (t_environ *)malloc(sizeof(t_environ));
-	if (new_ele == NULL)
-	{
-		print_error(target, EMESS_MALLOC_FAIL);
-		exit(EXIT_FAILURE);
-	}
+	new_ele = (t_environ *)ft_xmalloc(sizeof(t_environ), target);
 	new_ele->key = split_ele[0];
 	new_ele->value = split_ele[1];
 	new_ele->prev = env;
@@ -50,10 +40,10 @@ char	**split_by_delimiter(char *str, bool *key_only, char *target)
 	else
 	{
 		len = ft_strlen(value);
-		value = xstrdup(&value[1], target);
+		value = ft_xstrdup(&value[1], target);
 	}
-	split_ele = (char **)xmalloc(sizeof(char *) * 3, target);
-	split_ele[0] = xsubstr(str, 0, ft_strlen(str) - len, target);
+	split_ele = (char **)ft_xmalloc(sizeof(char *) * 3, target);
+	split_ele[0] = ft_xsubstr(str, 0, ft_strlen(str) - len, target);
 	split_ele[1] = value;
 	split_ele[2] = NULL;
 	return (split_ele);

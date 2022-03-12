@@ -38,16 +38,16 @@ void	param_expansion(t_environ *env, t_expand *data, char *str, char **head)
 	if (ft_strncmp(&str[data->i], "$?", 2) == 0)
 	{
 		data->i += 1;
-		param = xitoa(g_status, "expansion");
-		tmp = xstrjoin(*head, param, "expansion");
+		param = ft_xitoa(g_status, "expansion");
+		tmp = ft_xstrjoin(*head, param, "expansion");
 	}
 	else
 	{
-		param = xsubstr(str, data->i + 1,
+		param = ft_xsubstr(str, data->i + 1,
 				ft_strlen(str) - (data->i + 1) - get_left_len(str, data->i),
 				"expansion");
 		data->i += ft_strlen(param);
-		tmp = xstrjoin(*head, is_env_registered(env, &param, true, NULL),
+		tmp = ft_xstrjoin(*head, is_env_registered(env, &param, true, NULL),
 				"expansion");
 	}
 	free(param);

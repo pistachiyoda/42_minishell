@@ -70,16 +70,16 @@ void		syntax_error(char *str);
 void		print_error(char *target, char *message);
 
 // utils/malloc_check.c
-t_list		*xlstnew(void *content, char *target);
-char		*xstrdup(const char *src, char *target);
-char		*xsubstr(char const *s, unsigned int start,
+t_list		*ft_xlstnew(void *content, char *target);
+char		*ft_xstrdup(const char *src, char *target);
+char		*ft_xsubstr(char const *s, unsigned int start,
 				size_t len, char *target);
-void		*xmalloc(size_t len, char *target);
+void		*ft_xmalloc(size_t len, char *target);
 void		malloc_check(void *words, char *target);
 
 // utils/malloc_check2.c
-char		*xstrjoin(char const *s1, char const *s2, char *target);
-char		*xitoa(int val, char *target);
+char		*ft_xstrjoin(char const *s1, char const *s2, char *target);
+char		*ft_xitoa(int val, char *target);
 
 // utils/wrapper.c
 void		pipe_wrapper(int pipe_fds[2]);

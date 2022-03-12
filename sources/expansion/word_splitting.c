@@ -8,7 +8,7 @@ bool	is_space_condition(t_expand data, char **head, bool *split, int *j)
 	{
 		free(*head);
 		if (!data.end)
-			*head = xstrdup("", "expansion");
+			*head = ft_xstrdup("", "expansion");
 		return (false);
 	}
 	while ((*head)[*j] != '\0' && is_space_tab_newline((*head)[*j]))
@@ -21,11 +21,11 @@ void	split_by_space_expand(char **str, t_list **words, int *i, int start)
 	t_list	*new;
 
 	if (*words == NULL)
-		*words = xlstnew(xsubstr(*str, start, *i - start, "expansion"),
+		*words = ft_xlstnew(ft_xsubstr(*str, start, *i - start, "expansion"),
 				"expansion");
 	else
 	{
-		new = xlstnew(xsubstr(*str, start, *i - start, "expansion"),
+		new = ft_xlstnew(ft_xsubstr(*str, start, *i - start, "expansion"),
 				"expansion");
 		ft_lstadd_back(words, new);
 	}
@@ -43,9 +43,9 @@ void	get_new_head(char **head, int j, int start)
 	char	*tmp;
 
 	if (start != j)
-		tmp = xsubstr(*head, start, j - start, "expansion");
+		tmp = ft_xsubstr(*head, start, j - start, "expansion");
 	else
-		tmp = xstrdup("", "expansion");
+		tmp = ft_xstrdup("", "expansion");
 	free(*head);
 	*head = tmp;
 }
