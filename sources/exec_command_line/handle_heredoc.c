@@ -22,14 +22,119 @@ void	flush_heredoc(char *str, int doc_pipe_fds[2])
 	exit(0);
 }
 
+// testが渡ってくる
+// $~が展開できたら展開したやつを返す 
+// 展開できなかったら$~を返す　→ $test
+char	*expand_env_variables(t_environ *env, char *key)
+{
+	char *ret;
+
+	ret = get_env_val(key, t_environ_to_vector(env));
+	if (ret == NULL)
+		return (ft_strdup(""));
+	return (ret);
+}
+
+// 文字列と$の位置のindexと受け取る
+// $の次の文字から区切り文字までを取得して返す
+// 区切り文字どこまで対応すべきか調査
+// $test hogehoge -> test
+char	*get_key(char *buf, int *i)
+{
+	int		cnt;
+	char	*key;
+	int		j;
+
+	printf("+++ in get_key +++\n");
+	printf("i = %d\n", *i);
+	cnt = 0;
+	// $直後から$, スペース、改行までの文字数をカウント
+	(*i) ++;
+	while (buf[*i] != '$' && buf[*i] != ' ' && buf[*i] != '\n' && buf[*i] != '\0')
+	{
+		printf("buf[%d] = %c\n", *i, buf[*i]);
+		cnt ++;
+		(*i) ++;
+	}
+	printf("+++ end while +++\n");
+	// $直後から$, スペース、改行までの文字を*keyに入れる
+	key = (char *)malloc(sizeof(char *) * (cnt + 1)); // NULL処理、　free
+	(*i) -= cnt;
+	printf("i = %d\n", *i);
+	j = 0;
+	while (j < cnt)
+	{
+		key[j] = buf[*i];
+		j ++;
+		(*i) ++;
+	}
+	printf("i = %d\n", *i);
+	key[j] = '\0';
+	(*i) --;
+	return (key);
+}
+
+// $$PATHみたいなケース
+// 区切り文字スペース以外にももっと考慮したほうがいいかも？
+char	*expand_env_variables_in_buf(t_environ *env, char *buf)
+{
+	int		i;
+	int		j;
+	int		cnt;
+	char	*tmp_str;
+	char	*value;
+	char	*joined_str;
+	
+	i = 0;
+	joined_str = ft_strdup(""); // NULL処理
+	// todo:＄が登場しなかった場合の処理
+	cnt = 0;
+	while (buf[i])
+	{
+		printf("buf[%d] = %c\n", i, buf[i]);
+		if (buf[i] == '$')
+		{
+			// それまでの文字列を何かに入れる　1文字目〜$まで、　または環境変数後〜
+			tmp_str = (char *)malloc(sizeof(char *) * cnt); //２週目いこうの処理 // free
+			i -= cnt;
+			j = 0;
+			while (j < cnt)
+			{
+				tmp_str[j] = buf[i];
+				i ++;
+				j ++;
+			}
+			// valueの取得
+			value = expand_env_variables(env, get_key(buf, &i));
+			// valueと繋げる
+			joined_str = ft_strjoin_wrapper(joined_str, value);
+		printf("i = %d\n", i);
+			printf("joined_str = %s\n", joined_str);
+			cnt = 0;
+		}
+		else
+		{
+			tmp_str = (char *)malloc(sizeof(char *) * 2);
+			tmp_str[0] = buf[i];
+			tmp_str[1] = '\0';
+			joined_str = ft_strjoin_wrapper(joined_str, tmp_str);
+			printf("joined_str = %s\n", joined_str);
+		}
+
+		i++;
+		cnt ++;
+	}
+	printf("ret = %s\n", joined_str);
+	return (joined_str);
+}
+
 void	handle_each_input(t_environ *env, char *limiter, bool is_last, int	doc_pipe_fds[2])
 {
 	char	*str;
 	char	*buf;
+	char	*expanded_buf;
 	char	*tmp;
-	char	*head;
-	int		i;
-	int		j;
+	(void)env;
 
 	str = ft_strdup("");
 	if (str == NULL)
@@ -41,22 +146,8 @@ void	handle_each_input(t_environ *env, char *limiter, bool is_last, int	doc_pipe
 			&& ft_strncmp(buf, limiter, ft_strlen(limiter)) == 0)
 			break ;
 		tmp = str;
-
-		i = 0;
-		j = 0;
-		head = NULL;
-		while (buf[i])
-		{
-			if (buf[i] == '$')
-			{	
-				set_head_before_dollar(buf, &head, i, j);
-				param_expansion(env, buf, &head, &i);
-			}
-			i++;
-		}
-		printf("head = %s\n", head);
-		str = ft_strjoin2(str, head);
-
+		expanded_buf = expand_env_variables_in_buf(env, buf);
+		str = ft_strjoin2(str, expanded_buf);
 		free(buf);
 		free(tmp);
 	}
