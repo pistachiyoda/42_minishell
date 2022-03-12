@@ -55,7 +55,10 @@ void	assign_expanded_target(char **str, t_list **words, bool error)
 	else
 	{
 		free(*str);
-		*str = (*words)->content;
+		if (*words != NULL)
+			*str = (*words)->content;
+		else
+			*str = NULL;
 		ft_lstclear2(words);
 	}
 }

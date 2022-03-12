@@ -335,7 +335,7 @@ TEST(export_G, export_space_val7) {
 	env = create_environ(g_envp);
 	tokens = get_tokens_from_expansion(ft_strdup("export SPACE=\"   \""), env);
 	ft_export((t_cmd_block *)tokens->content, env);
-	tokens = get_tokens_from_expansion(ft_strdup("ls < a.out | echo > $SPACE | echo abc > b.out"), env);
+	tokens = get_tokens_from_expansion(ft_strdup("echo > $SPACE | ls < a.out | echo > $SPACE | echo abc > b.out"), env);
 	exp_tokens = export_space_val7();
 	compare_tokens(tokens, exp_tokens);
 }

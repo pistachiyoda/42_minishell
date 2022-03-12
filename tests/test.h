@@ -115,7 +115,7 @@ extern "C" {
 	void	ft_lstclear2(t_list **lst);
 	bool	free_words_str(t_list **words, char *str);
 	void	free_cmd_block(t_list **tokens);
-	void	free_tokens(t_list *tokens);
+	void	free_tokens(t_list **tokens);
 
 	// utils/is_env_registered.c
 	char		*is_env_registered(t_environ *env, char **split_ele, bool key_only, char *target);
@@ -244,12 +244,12 @@ extern "C" {
 	enum e_SPACE
 	{
 		SPACELESS,
-		SPACE,
+		PARTIAL_SPACE,
 		ALL_SPACE
 	};
 
 	// expansion/expansion.c
-	void		error_check(t_list **tokens, t_list **prev, bool error);
+	void		error_check(t_list **tokens, t_list **prev, t_list **head, bool error);
 	void		expansion(t_list **tokens, t_environ *env);
 
 	// expansion/expand_str.c

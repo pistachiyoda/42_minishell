@@ -12,20 +12,19 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	words = NULL;
-	cmd_list = NULL;
 	env = create_environ(envp);
 	while (1)
 	{
+		words = NULL;
 		cmd_list = NULL;
 		str = readline("minishell$ ");
 		if (ft_strlen(str) == 0)
 			continue ;
-		if (!lexer(str, &words))
-			continue ;
-		if (!parser(words, &cmd_list, str))
+		if (!lexer(str, &words) || !parser(words, &cmd_list, str))
 			continue ;
 		expansion(&cmd_list, env);
+		if (!cmd_list)
+			continue ;
 		print_cmd_lst(cmd_list);
 		if (is_fork_required(cmd_list))
 		{
