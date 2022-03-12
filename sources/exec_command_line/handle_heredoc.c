@@ -23,25 +23,26 @@ void	flush_heredoc(char *str, int doc_pipe_fds[2])
 }
 
 void	handle_each_input(
-		t_environ *env, t_redirects *redirect, bool is_last, int	doc_pipe_fds[2])
+		t_environ *env, t_redirects *redirect,
+		bool is_last, int doc_pipe_fds[2])
 {
 	char	*str;
 	char	*buf;
 	char	*expanded_buf;
 
-	str = ft_strdup("");
-	if (str == NULL)
-		exit(1);
+	str = ft_xstrdup("", "handle_each_input");
 	while (1)
 	{
 		buf = readline("> ");
 		if ((ft_strlen(buf) == ft_strlen(redirect->target))
-			&& ft_strncmp(buf, redirect->target, ft_strlen(redirect->target)) == 0)
+			&& ft_strncmp(
+				buf, redirect->target, ft_strlen(redirect->target)) == 0)
 			break ;
 		if (redirect->redirect == HEREDOC)
 		{
 			expanded_buf = expand_env_variables_in_buf(env, buf);
-			str = ft_xstrjoin2_with_free(str, expanded_buf, "handle_each_input");
+			str = ft_xstrjoin2_with_free(
+					str, expanded_buf, "handle_each_input");
 			free(buf);
 		}
 		else
@@ -53,7 +54,8 @@ void	handle_each_input(
 }
 
 void	handle_heredoc(
-		t_environ *env, t_redirects *redirect, bool is_last, int doc_pipe_fds[2])
+		t_environ *env, t_redirects *redirect,
+		bool is_last, int doc_pipe_fds[2])
 {
 	int		pid;
 
@@ -80,12 +82,11 @@ int	handle_heredoc_input(t_environ *env, t_list *cmd_list)
 		{
 			redirect = redirect_node->content;
 			if (redirect->redirect == HEREDOC
-					|| redirect->redirect == QUOTED_HEREDOC)
+				|| redirect->redirect == QUOTED_HEREDOC)
 			{
 				handle_heredoc(env, redirect,
-					is_last_fd_input_redirect(
-						redirect, cmd_block->redirects),
-					doc_pipe_fds);
+					is_last_fd_input_redirect(redirect,
+						cmd_block->redirects), doc_pipe_fds);
 				redirect->doc_fd = doc_pipe_fds[0];
 			}
 			redirect_node = redirect_node->next;
