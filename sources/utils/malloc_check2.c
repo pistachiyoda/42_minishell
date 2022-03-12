@@ -35,9 +35,13 @@ char	*ft_xstrjoin2_with_free(char *s1, char *s2, char *target)
 	size_t	len;
 	char	*str;
 	char	*ret;
+	char	*s1_start;
+	char	*s2_start;
 
 	len = ft_strlen((char *)s1) + ft_strlen((char *)s2);
 	str = ft_xmalloc(sizeof(char) * (len + 2), target);
+	s1_start = s1;
+	s2_start = s2;
 	ret = str;
 	while (*s1 != '\0')
 		*str++ = *s1++;
@@ -45,9 +49,9 @@ char	*ft_xstrjoin2_with_free(char *s1, char *s2, char *target)
 		*str++ = *s2++;
 	*str++ = '\n';
 	*str = '\0';
-	free(s1);
+	free(s1_start);
 	s1 = NULL;
-	free(s2);
+	free(s2_start);
 	s2 = NULL;
 	return (ret);
 }
