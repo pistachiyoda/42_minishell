@@ -1,9 +1,11 @@
 #include "minishell.h"
 
-void	error_check(t_list **tokens, t_list **prev, bool error)
+void	error_check(t_list **tokens, t_list **prev, t_list **head, bool error)
 {
 	if (error)
 	{
+		if (*head == *tokens)
+			*head = (*tokens)->next;
 		free_cmd_block(tokens);
 		if (*prev)
 			(*prev)->next = *tokens;
@@ -34,9 +36,7 @@ void	expansion(t_list **tokens, t_environ *env)
 			expand_redirects((t_cmd_block *)(*tokens)->content,
 				env, words, &error);
 		}
-		error_check(tokens, &prev, error);
+		error_check(tokens, &prev, &head, error);
 	}
-	if (error)
-		return ;
 	*tokens = head;
 }
