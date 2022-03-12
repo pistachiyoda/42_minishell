@@ -23,12 +23,11 @@ void	flush_heredoc(char *str, int doc_pipe_fds[2])
 }
 
 void	handle_each_input(
-		t_environ *env, char *limiter, bool is_last, int	doc_pipe_fds[2])
+		t_environ *env, t_redirects *redirect, bool is_last, int	doc_pipe_fds[2])
 {
 	char	*str;
 	char	*buf;
 	char	*expanded_buf;
-	char	*tmp;
 
 	str = ft_strdup("");
 	if (str == NULL)
@@ -36,13 +35,17 @@ void	handle_each_input(
 	while (1)
 	{
 		buf = readline("> ");
-		if ((ft_strlen(buf) == ft_strlen(limiter))
-			&& ft_strncmp(buf, limiter, ft_strlen(limiter)) == 0)
+		if ((ft_strlen(buf) == ft_strlen(redirect->target))
+			&& ft_strncmp(buf, redirect->target, ft_strlen(redirect->target)) == 0)
 			break ;
-		expanded_buf = expand_env_variables_in_buf(env, buf);
-		tmp = str;
-		str = ft_xstrjoin2_with_free(str, expanded_buf, "handle_each_input");
-		free(buf);
+		if (redirect->redirect == HEREDOC)
+		{
+			expanded_buf = expand_env_variables_in_buf(env, buf);
+			str = ft_xstrjoin2_with_free(str, expanded_buf, "handle_each_input");
+			free(buf);
+		}
+		else
+			str = ft_xstrjoin2_with_free(str, buf, "handle_each_input");
 	}
 	if (!is_last)
 		handle_unused_heredoc(str);
@@ -50,14 +53,14 @@ void	handle_each_input(
 }
 
 void	handle_heredoc(
-		t_environ *env, char *limiter, bool is_last, int doc_pipe_fds[2])
+		t_environ *env, t_redirects *redirect, bool is_last, int doc_pipe_fds[2])
 {
 	int		pid;
 
 	pipe_wrapper(doc_pipe_fds);
 	pid = fork_wrapper();
 	if (pid == 0)
-		handle_each_input(env, limiter, is_last, doc_pipe_fds);
+		handle_each_input(env, redirect, is_last, doc_pipe_fds);
 	close_wrapper(doc_pipe_fds[1]);
 	waitpid_wrapper(pid, NULL, 0);
 }
@@ -76,9 +79,10 @@ int	handle_heredoc_input(t_environ *env, t_list *cmd_list)
 		while (redirect_node)
 		{
 			redirect = redirect_node->content;
-			if (redirect->redirect == HEREDOC)
+			if (redirect->redirect == HEREDOC
+					|| redirect->redirect == QUOTED_HEREDOC)
 			{
-				handle_heredoc(env, redirect->target,
+				handle_heredoc(env, redirect,
 					is_last_fd_input_redirect(
 						redirect, cmd_block->redirects),
 					doc_pipe_fds);
