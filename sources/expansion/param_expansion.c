@@ -25,7 +25,7 @@ bool	is_space_at_end(char *str)
 	size_t	i;
 
 	i = ft_strlen(str);
-	if (is_space_tab_newline(str[i - 1]))
+	if (i == 0 || is_space_tab_newline(str[i - 1]))
 		return (true);
 	return (false);
 }
