@@ -39,7 +39,7 @@ void	free_cmd_block(t_list **tokens)
 {
 	t_list		*next;
 	t_cmd_block	*cmd;
-	t_list	*head;
+	t_list		*head;
 
 	next = (*tokens)->next;
 	cmd = (*tokens)->content;

@@ -19,7 +19,8 @@ enum e_SPACE
 };
 
 // sources/expansion/expansion.c
-void		error_check(t_list **tokens, t_list **prev, t_list **head, bool error);
+void		error_check(t_list **tokens, t_list **prev,
+				t_list **head, bool error);
 void		expansion(t_list **tokens, t_environ *env);
 
 // sources/expansion/expand_str.c
