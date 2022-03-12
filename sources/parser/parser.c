@@ -24,9 +24,9 @@ bool	is_redirect(t_list *words)
 void	set_tokens(t_list **tokens, t_cmd_block *cmd)
 {
 	if (tokens == NULL)
-		*tokens = xlstnew(cmd, "parser");
+		*tokens = ft_xlstnew(cmd, "parser");
 	else
-		ft_lstadd_back(tokens, xlstnew(cmd, "parser"));
+		ft_lstadd_back(tokens, ft_xlstnew(cmd, "parser"));
 }
 
 bool	parser(t_list *words, t_list **tokens, char *str)
@@ -39,7 +39,7 @@ bool	parser(t_list *words, t_list **tokens, char *str)
 	head = words;
 	while (words != NULL)
 	{
-		cmd = xmalloc(sizeof(t_cmd_block), "parser");
+		cmd = ft_xmalloc(sizeof(t_cmd_block), "parser");
 		set_cmd_block(&words, cmd);
 		set_tokens(tokens, cmd);
 		if (words == NULL)
