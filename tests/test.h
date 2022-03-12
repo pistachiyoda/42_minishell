@@ -147,13 +147,16 @@ extern "C" {
 	bool		is_valid_arg(char *str);
 
 	// exec_command_line/exec_command_line.c
-	int		exec_command_line(t_list *cmd_list, char **envp, int cmd_cnt);
+	int		exec_command_line(t_environ *env, t_list *cmd_list, char **envp, int cmd_cnt);
 
 	// exec_command_line/handle_file.c
 	bool		is_readable(char *file);
 	int			open_file(char *file);
 	bool		is_writable(char *file);
 	int			open_or_create_file(char *file, int open_flag);
+
+	// exec_command_line/handle_heredoc.c 
+	char	*expand_env_variables_in_buf(t_environ *env, char *buf);
 
 	// runner/run_builtin_command.c
 	bool	is_fork_required(t_list *cmd_list);
