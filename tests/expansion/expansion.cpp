@@ -844,3 +844,114 @@ TEST(expansion_G, export_env) {
 	exp_tokens = export_env();
 	compare_tokens(tokens, exp_tokens);
 }
+
+t_list	*heredoc_target(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	t_redirects	*exp_redir;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 0;
+	exp_redir->redirect = HEREDOC;
+	exp_redir->target = ft_strdup("$ABC");
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("cat");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("cat");
+	exp_args[1] = ft_strdup("abc");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(expansion_G, heredoc_target) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export ABC=abc"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("cat $ABC << $ABC"), env);
+	exp_tokens = heredoc_target();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*heredoc_target2(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	t_redirects	*exp_redir;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 0;
+	exp_redir->redirect = QUOTED_HEREDOC;
+	exp_redir->target = ft_strdup("$ABC");
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("cat");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("cat");
+	exp_args[1] = ft_strdup("abc");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(expansion_G, heredoc_target2) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export ABC=abc"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("cat \"$ABC\" << \"$ABC\""), env);
+	exp_tokens = heredoc_target2();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*heredoc_target3(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	t_redirects	*exp_redir;
+	char		**exp_args;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 0;
+	exp_redir->redirect = QUOTED_HEREDOC;
+	exp_redir->target = ft_strdup("$ABC");
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("cat");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("cat");
+	exp_args[1] = ft_strdup("$ABC");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(expansion_G, heredoc_target3) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export ABC=abc"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("cat '$ABC' << '$ABC'"), env);
+	exp_tokens = heredoc_target3();
+	compare_tokens(tokens, exp_tokens);
+}
