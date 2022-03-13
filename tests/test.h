@@ -261,7 +261,7 @@ extern "C" {
 	// expansion/set_expanded_to_words.c
 	void		add_to_words(t_list **words, char *head, char *str);
 	t_expand	init_struct(void);
-	bool		set_expanded_to_words(t_environ *env, char *str, t_list **words);
+	bool		set_expanded_to_words(t_environ *env, char *str, t_list **words, int type);
 
 	// expansion/param_expansion.c
 	size_t		get_left_len(char *str, int i);
@@ -279,7 +279,7 @@ extern "C" {
 	void		concat_normal_str(char *str, char **head, t_expand *data);
 	void		concat_expanded_and_left(char *str, char **head, t_expand *data);
 	void		concat_all(char *str, char **head, int i);
-	void		quote_removal(char *str, char **head, t_expand *data);
+	void		quote_removal(char *str, char **head, t_expand *data, int type);
 	void		set_head_before_dollar(char *str, char **head, t_expand data);
 
 	// test/parser/parser.cpp

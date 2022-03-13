@@ -35,10 +35,10 @@ void	expand_cmd_args(t_cmd_block *cmd, t_environ *env, t_list *words)
 	i = 1;
 	if (cmd->command != NULL)
 	{
-		set_expanded_to_words(env, cmd->command, &words);
+		set_expanded_to_words(env, cmd->command, &words, -1);
 		while (cmd->args[i] != NULL)
 		{
-			set_expanded_to_words(env, cmd->args[i], &words);
+			set_expanded_to_words(env, cmd->args[i], &words, -1);
 			i++;
 		}
 		assign_expanded_cmd_args(cmd, &words);
@@ -67,14 +67,19 @@ void	expand_redirects(t_cmd_block *cmd, t_environ *env,
 	t_list *words, bool *error)
 {
 	t_list		*head;
-	t_redirects	*redirect;
+	t_redirects	*redir;
+	int			qhdoc;
 
 	head = cmd->redirects;
 	while (cmd->redirects != NULL && !*error)
 	{
-		redirect = cmd->redirects->content;
-		*error = set_expanded_to_words(env, redirect->target, &words);
-		assign_expanded_target(&redirect->target, &words, *error);
+		redir = cmd->redirects->content;
+		qhdoc = redir->redirect;
+		if (redir->redirect != HEREDOC)
+		{
+			*error = set_expanded_to_words(env, redir->target, &words, qhdoc);
+			assign_expanded_target(&redir->target, &words, *error);
+		}
 		cmd->redirects = cmd->redirects->next;
 	}
 	cmd->redirects = head;
