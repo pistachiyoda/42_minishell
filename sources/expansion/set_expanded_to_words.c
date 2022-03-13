@@ -22,7 +22,8 @@ t_expand	init_struct(void)
 	return (data);
 }
 
-bool	set_expanded_to_words(t_environ *env, char *str, t_list **words)
+bool	set_expanded_to_words(t_environ *env, char *str,
+	t_list **words, int type)
 {
 	t_expand	data;
 	char		*head;
@@ -34,8 +35,9 @@ bool	set_expanded_to_words(t_environ *env, char *str, t_list **words)
 	while (str[data.i] != '\0')
 	{
 		if (is_quote_type_switched(str, data.i, &data.status))
-			quote_removal(str, &head, &data);
-		if (data.status != QUOTE && str[data.i] == '$')
+			quote_removal(str, &head, &data, type);
+		if (data.status != QUOTE && str[data.i] == '$'
+			&& type != QUOTED_HEREDOC)
 		{
 			set_head_before_dollar(str, &head, data);
 			param_expansion(env, &data, str, &head);
