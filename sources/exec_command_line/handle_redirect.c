@@ -58,7 +58,8 @@ int	handle_output(t_redirects *redirect, bool is_last)
 // WRITEの場合はファイル処理＋outpuのラストだったらredirect->fdでdup
 int	handle_redirect(t_redirects	*redirect, t_cmd_block *cmd_block)
 {
-	if (redirect->redirect == HEREDOC)
+	if (redirect->redirect == HEREDOC
+		|| redirect->redirect == QUOTED_HEREDOC)
 	{
 		if (is_last_fd_input_redirect(redirect, cmd_block->redirects))
 			dup2_wrapper(redirect->doc_fd, redirect->fd);

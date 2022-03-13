@@ -28,7 +28,7 @@ int	run_builtin_only_command(t_list *cmd_list, t_environ *env)
 
 	first_redirect = ((t_cmd_block *)cmd_list->content)->redirects;
 	fd_list = dup_builtin_redirects(first_redirect);
-	handle_heredoc_input(cmd_list);
+	handle_heredoc_input(env, cmd_list);
 	status = handle_redirects((t_cmd_block *)cmd_list->content);
 	if (status != 0)
 		return (status);

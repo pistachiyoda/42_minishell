@@ -72,16 +72,16 @@ t_list *env_pipe_grep_hoge()
 	return cmd_list;
 }
 
-TEST(builtins_G, check_env_after_export)
-{
-	t_list *cmd_lst_1;
-	t_list *cmd_lst_2;
-	t_environ *env;
+// TEST(builtins_G, check_env_after_export)
+// {
+// 	t_list *cmd_lst_1;
+// 	t_list *cmd_lst_2;
+// 	t_environ *env;
 
-	env = create_environ(envp_in_test);
+// 	env = create_environ(envp_in_test);
 
-	cmd_lst_1 = export_hoge_test();
-	cmd_lst_2 = env_pipe_grep_hoge();
+// 	cmd_lst_1 = export_hoge_test();
+// 	cmd_lst_2 = env_pipe_grep_hoge();
 	// exec_builtin_and_output_file((t_cmd_block *)cmd_lst_1->content, env);
 	// 出力なし
 	// compare_file("./builtins/expected/empty.txt");
@@ -89,8 +89,8 @@ TEST(builtins_G, check_env_after_export)
 	// hoge=testが出力される
 	// compare_file("./builtins/expected/check_env_after_export.txt");
 	// CHECK_EQUAL(0, g_status);
-	FAIL("テスト未実装");
-}
+// 	FAIL("テスト未実装");
+// }
 
 // bash-3.2$ date | export fuga=test2
 // bash-3.2$ env | grep fuga

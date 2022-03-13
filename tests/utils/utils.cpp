@@ -9,7 +9,7 @@ void exec_command_and_output_file(t_list *cmd_list)
 	int file_fd2 = open("./stderr_result/result.txt", O_RDWR | O_CREAT | O_TRUNC, S_IRWXU | S_IRWXG | S_IRWXO);
     dup2(file_fd1, 1);
 	dup2(file_fd2, 2);
-	g_status = exec_command_line(cmd_list, envp_in_test, ft_lstsize(cmd_list));
+	g_status = exec_command_line(create_environ(g_envp), cmd_list, g_envp, ft_lstsize(cmd_list));
 	close(file_fd1);
 	close(file_fd2);
 	dup2(bak_fd1, 1);
@@ -21,7 +21,7 @@ void exec_command_and_output_file(t_list *cmd_list)
 // exec_command_lineを実行する
 void exec_command_without_dup(t_list *cmd_list)
 {
-	g_status = exec_command_line(cmd_list, envp_in_test, ft_lstsize(cmd_list));
+	g_status = exec_command_line(create_environ(g_envp), cmd_list, g_envp, ft_lstsize(cmd_list));
 }
 
 void compare_file(
