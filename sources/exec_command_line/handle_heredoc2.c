@@ -7,7 +7,10 @@ char	*expand_env_variables(t_environ *env, char *key)
 	ret = get_env_val(key, t_environ_to_vector(env));
 	free(key);
 	if (ret == NULL)
+	{
+		free(ret);
 		return (ft_xstrdup("", "expand_env_variables_in_buf"));
+	}
 	return (ret);
 }
 
