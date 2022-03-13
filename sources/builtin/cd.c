@@ -15,6 +15,7 @@ int	ft_cd(t_cmd_block *cmd_block, t_environ *env)
 		path = get_env_val("HOME", envp);
 	}
 	ret = chdir(path);
+	free(path);
 	if (ret == -1)
 	{
 		e_mes = ft_strjoin_wrapper("minishell: cd: ", path);

@@ -52,7 +52,8 @@ int	wait_pids(int cmd_cnt, int pids[1000])
 // 最初の一つ目はhandle_first_blockに
 // 真ん中はhandle_middle_blockに
 // 最後の一つはhandle_last_blockに
-int	exec_command_line(t_list *cmd_list, char **envp, int cmd_cnt)
+int	exec_command_line(
+		t_environ *env, t_list *cmd_list, char **envp, int cmd_cnt)
 {
 	int			pids[1000];
 	t_cmd_block	*cmd_block;
@@ -60,7 +61,7 @@ int	exec_command_line(t_list *cmd_list, char **envp, int cmd_cnt)
 	int			pipe_b[2];
 	int			i;
 
-	handle_heredoc_input(cmd_list);
+	handle_heredoc_input(env, cmd_list);
 	cmd_block = (t_cmd_block *)cmd_list->content;
 	if (cmd_cnt == 1)
 		return (handle_single_block(cmd_block, envp));

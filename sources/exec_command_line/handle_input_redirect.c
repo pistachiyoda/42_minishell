@@ -13,7 +13,8 @@ bool	is_last_fd_input_redirect(
 	{
 		current_redirect = current_node->content;
 		if ((current_redirect->redirect == INPUT
-				|| current_redirect->redirect == HEREDOC)
+				|| current_redirect->redirect == HEREDOC
+				|| current_redirect->redirect == QUOTED_HEREDOC)
 			&& current_redirect->fd == redirect->fd)
 			last_input_node = current_node;
 		if (!current_node->next)

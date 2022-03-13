@@ -11,7 +11,8 @@ int	close_doc_pipe_fd(t_cmd_block *cmd_block)
 	while (1)
 	{
 		redirect = redirect_node->content;
-		if (redirect->redirect == HEREDOC
+		if ((redirect->redirect == HEREDOC
+				|| redirect->redirect == QUOTED_HEREDOC)
 			&& is_last_fd_input_redirect(redirect, cmd_block->redirects))
 		{
 			close_wrapper(redirect->doc_fd);
