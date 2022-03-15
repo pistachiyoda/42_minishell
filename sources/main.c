@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-unsigned char	g_status = 0;
+volatile unsigned char	g_status = 0;
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -17,9 +17,13 @@ int	main(int argc, char **argv, char **envp)
 	{
 		words = NULL;
 		cmd_list = NULL;
+		set_signal(sigint_handler, SIG_IGN);
 		str = readline("minishell$ ");
+		if (!str)
+			exit_program(g_status);
 		if (ft_strlen(str) == 0)
 			continue ;
+		add_history(str);
 		if (!lexer(str, &words) || !parser(words, &cmd_list, str))
 			continue ;
 		expansion(&cmd_list, env);
