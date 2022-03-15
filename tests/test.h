@@ -7,6 +7,9 @@
 #include <fcntl.h>
 #include <iostream>
 #include <fstream>
+# include <signal.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 extern	volatile unsigned char	g_status;
 extern	char **g_envp;

@@ -3,11 +3,11 @@ NAME = minishell_test
 CC = gcc
 C_MEMOLY_LEAK = -include /usr/local/opt/cpputest/include/CppUTest/MemoryLeakDetectorMallocMacros.h
 CXX_MEMOLY_LEAK = -include /usr/local/opt/cpputest/include/CppUTest/MemoryLeakDetectorNewMacros.h
-INCLUDES = -I../includes/ -I../libft/
+INCLUDES = -I../includes/ -I../libft/ -I$(shell brew --prefix readline)/include
 CXXFLAGS=-D_GLIBCXX_DEBUG -std=c++11 -Wall -Wextra -g -I /opt/homebrew/Cellar/cpputest/4.0/include -L /opt/homebrew/Cellar/cpputest/4.0/lib
 LDLIBS=-lCppUTest
 CFLAGS = -Wall -Wextra -Werror $(INCLUDES)
-LIBS = -L../libft/ -lft -lreadline
+LIBS = -L../libft/ -lft -lreadline -lhistory -L$(shell brew --prefix readline)/lib
 LIBFT = ../libft/libft.a
 SOURCES =\
 	../sources/exec_command/exec_command.c\
