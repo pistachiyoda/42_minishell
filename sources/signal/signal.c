@@ -1,32 +1,26 @@
 #include "minishell.h"
 
-volatile sig_atomic_t	received_signal;
-
-void	handler(int sig)
+void	sigint_handler(int sig)
 {
+	int	save_errno;
+
 	(void)sig;
-	rl_replace_line("\n", 1); //0?
-	rl_clear_history();
+	save_errno = errno;
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
 	rl_redisplay();
+	g_status = 1;
+	errno = save_errno;
 }
 
-void	set_sigaction(void)
+void	set_signal(void (*func1)(int), void (*func2)(int))
 {
-	received_signal = 0;
-	struct sigaction	act;
-	struct sigaction	act2;
-
-	act.sa_handler = handler;
-	act2.sa_handler = SIG_IGN;
-	sigemptyset(&act.sa_mask);
-	sigaction(SIGINT, &act, NULL);
-	sigaction(SIGQUIT, &act2, NULL);
-}
-
-void	wait_signal(void)
-{
-	if (received_signal == SIGINT)
+	if (signal(SIGINT, func1) == SIG_ERR
+		|| signal(SIGQUIT, func2) == SIG_ERR)
 	{
-		printf("SIGINT\n");
+		print_error("signal error", strerror(errno));
+		ft_putstr_fd("\n", 2);
+		exit(EXIT_FAILURE);
 	}
 }
