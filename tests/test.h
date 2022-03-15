@@ -8,7 +8,7 @@
 #include <iostream>
 #include <fstream>
 
-extern	unsigned char	g_status;
+extern	volatile unsigned char	g_status;
 extern	char **g_envp;
 extern	char **envp_in_test;
 
@@ -146,6 +146,9 @@ extern "C" {
 	// utils/validation.c
 	bool		is_valid_arg(char *str);
 
+	// utils/exit_program.c
+	void		exit_program(int status);
+
 	// exec_command_line/exec_command_line.c
 	int		exec_command_line(t_environ *env, t_list *cmd_list, char **envp, int cmd_cnt);
 
@@ -155,7 +158,7 @@ extern "C" {
 	bool		is_writable(char *file);
 	int			open_or_create_file(char *file, int open_flag);
 
-	// exec_command_line/handle_heredoc.c 
+	// exec_command_line/handle_heredoc.c
 	char	*expand_env_variables_in_buf(t_environ *env, char *buf);
 
 	// runner/run_builtin_command.c
@@ -164,6 +167,10 @@ extern "C" {
 
 	// exec_builtin/exec_builtin_only_command.c
 	int		run_builtin_only_command(t_list *cmd_list, t_environ *env);
+
+	// signal/signal.c
+	void		sigint_handler(int sig);
+	void		set_signal(void (*func1)(int), void (*func2)(int));
 
 	// env/create_environ.c
 	t_environ	*init_environ(char *msg);

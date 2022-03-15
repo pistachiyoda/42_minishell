@@ -6,6 +6,8 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+# include <string.h>
+# include <errno.h>
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -34,7 +36,7 @@
 
 # define FD_MAX 256
 
-extern unsigned char	g_status;
+extern volatile unsigned char	g_status;
 
 // exec_command/exec_command.c
 void		exec_command(t_cmd_block *cmd_block, char **envp);
@@ -106,6 +108,9 @@ long long	ft_atol(const char *str, bool *is_invalid);
 
 // utils/get_env_val.c
 char		*get_env_val(char *key, char **envp);
+
+// utils/exit_program.c
+void		exit_program(int status);
 
 // exec_command_line/exec_command_line.c
 int			exec_command_line(
@@ -192,6 +197,10 @@ int			ft_exit(t_cmd_block *cmd_block);
 
 // builtin/cd.c
 int			ft_cd(t_cmd_block *cmd_block, t_environ *env);
+
+// signal/signal.c
+void		sigint_handler(int sig);
+void		set_signal(void (*func1)(int), void (*func2)(int));
 
 // [後々削除]debug/debug_funcs.c
 void		print_cmd_lst(t_list *cmd_lst);
