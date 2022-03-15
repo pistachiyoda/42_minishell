@@ -21,6 +21,7 @@ CFILES =\
 	sources/tmp_parser/tmp_parse_data.c\
 	sources/runner/run_builtin_command.c\
 	sources/exec_builtin/exec_builtin_only_command.c\
+    sources/signal/signal.c\
 	sources/utils/free.c\
 	sources/utils/is_env_registered.c\
 	sources/utils/is_quote_type_switched.c\
@@ -33,6 +34,7 @@ CFILES =\
 	sources/utils/validation.c\
 	sources/utils/ft_atol.c\
 	sources/utils/get_env_val.c\
+	sources/utils/exit_program.c\
 	sources/debug/debug_funcs.c\
 	sources/debug/set_dataset.c\
 	sources/env/create_environ.c\
