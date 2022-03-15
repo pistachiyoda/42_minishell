@@ -34,9 +34,9 @@ void	handle_each_input(
 	while (1)
 	{
 		buf = readline("> ");
-		if ((ft_strlen(buf) == ft_strlen(redirect->target))
-			&& ft_strncmp(
-				buf, redirect->target, ft_strlen(redirect->target)) == 0)
+		if (!buf || ((ft_strlen(buf) == ft_strlen(redirect->target))
+				&& ft_strncmp(buf, redirect->target,
+					ft_strlen(redirect->target)) == 0))
 			break ;
 		if (redirect->redirect == HEREDOC)
 		{
@@ -53,18 +53,32 @@ void	handle_each_input(
 	flush_heredoc(str, doc_pipe_fds);
 }
 
-void	handle_heredoc(
+int	handle_heredoc(
 		t_environ *env, t_redirects *redirect,
 		bool is_last, int doc_pipe_fds[2])
 {
 	int		pid;
+	int		status;
 
 	pipe_wrapper(doc_pipe_fds);
+	set_signal(SIG_IGN, SIG_IGN);
 	pid = fork_wrapper();
 	if (pid == 0)
+	{
+		set_signal(SIG_DFL, SIG_IGN);
 		handle_each_input(env, redirect, is_last, doc_pipe_fds);
+	}
 	close_wrapper(doc_pipe_fds[1]);
-	waitpid_wrapper(pid, NULL, 0);
+	waitpid_wrapper(pid, &status, 0);
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGINT)
+			write(1, "\n", 1);
+		return (WTERMSIG(status) + 128);
+	}
+	return (1);
 }
 
 int	handle_heredoc_input(t_environ *env, t_list *cmd_list)
@@ -73,6 +87,7 @@ int	handle_heredoc_input(t_environ *env, t_list *cmd_list)
 	t_list		*redirect_node;
 	t_redirects	*redirect;
 	int			doc_pipe_fds[2];
+	int			status;
 
 	while (cmd_list)
 	{
@@ -84,9 +99,12 @@ int	handle_heredoc_input(t_environ *env, t_list *cmd_list)
 			if (redirect->redirect == HEREDOC
 				|| redirect->redirect == QUOTED_HEREDOC)
 			{
-				handle_heredoc(env, redirect,
-					is_last_fd_input_redirect(redirect,
-						cmd_block->redirects), doc_pipe_fds);
+				status = handle_heredoc(env, redirect,
+						is_last_fd_input_redirect(redirect,
+							cmd_block->redirects), doc_pipe_fds);
+				if (status > 128)
+					return (status);
+				set_signal(sigint_handler, SIG_IGN);
 				redirect->doc_fd = doc_pipe_fds[0];
 			}
 			redirect_node = redirect_node->next;

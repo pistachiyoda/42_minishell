@@ -5,9 +5,11 @@ int	handle_single_block(t_cmd_block *cmd_block, char **envp)
 	int			pid;
 	int			status;
 
+	set_signal(SIG_IGN, SIG_IGN);
 	pid = fork_wrapper();
 	if (pid == 0)
 	{
+		set_signal(SIG_DFL, SIG_DFL);
 		status = handle_redirects(cmd_block);
 		if (status != 0)
 			exit(status);
@@ -15,7 +17,11 @@ int	handle_single_block(t_cmd_block *cmd_block, char **envp)
 	}
 	close_doc_pipe_fd(cmd_block);
 	waitpid_wrapper(pid, &status, 0);
-	return (WEXITSTATUS(status));
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	if (WIFSIGNALED(status))
+		return (WTERMSIG(status) + 128);
+	return (1);
 }
 
 // choice read pipe
@@ -45,7 +51,11 @@ int	wait_pids(int cmd_cnt, int pids[1000])
 		waitpid_wrapper(pids[i], &status, 0);
 		i ++;
 	}
-	return (WEXITSTATUS(status));
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	if (WIFSIGNALED(status))
+		return (WTERMSIG(status) + 128);
+	return (1);
 }
 
 // cmd_list->nextがnullになるまでループ
@@ -60,8 +70,11 @@ int	exec_command_line(
 	int			pipe_a[2];
 	int			pipe_b[2];
 	int			i;
+	int			status;
 
-	handle_heredoc_input(env, cmd_list);
+	status = handle_heredoc_input(env, cmd_list);
+	if (status > 128)
+		return (1);
 	cmd_block = (t_cmd_block *)cmd_list->content;
 	if (cmd_cnt == 1)
 		return (handle_single_block(cmd_block, envp));

@@ -9,9 +9,11 @@ int	handle_first_block(t_cmd_block *cmd_block, char	**envp, int pipe_write[2])
 	int	status;
 
 	pipe_wrapper(pipe_write);
+	set_signal(SIG_IGN, SIG_IGN);
 	pid = fork_wrapper();
 	if (pid == 0)
 	{
+		set_signal(SIG_DFL, SIG_DFL);
 		close_wrapper(pipe_write[0]);
 		dup2_wrapper(pipe_write[1], 1);
 		close_wrapper(pipe_write[1]);
@@ -39,6 +41,7 @@ int	handle_middle_block(
 	pid = fork_wrapper();
 	if (pid == 0)
 	{
+		set_signal(SIG_DFL, SIG_DFL);
 		close_wrapper(pipe_read[1]);
 		close_wrapper(pipe_write[0]);
 		dup2_wrapper(pipe_read[0], 0);
@@ -69,6 +72,7 @@ int	handle_last_block(t_cmd_block *cmd_block, char	**envp, int pipe_read[2])
 	pid = fork_wrapper();
 	if (pid == 0)
 	{
+		set_signal(SIG_DFL, SIG_DFL);
 		close_wrapper(pipe_read[1]);
 		dup2_wrapper(pipe_read[0], 0);
 		close_wrapper(pipe_read[0]);
