@@ -11,6 +11,7 @@ CFILES =\
 	sources/exec_command/resolve_env.c\
 	sources/exec_command/utils.c\
 	sources/exec_command_line/exec_command_line.c\
+	sources/exec_command_line/exec_command_line2.c\
 	sources/exec_command_line/handle_file.c\
 	sources/exec_command_line/handle_heredoc.c\
 	sources/exec_command_line/handle_heredoc2.c\
