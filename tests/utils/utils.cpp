@@ -58,5 +58,6 @@ void exec_builtin_and_output_file(t_list *cmd_list, t_environ *env)
 // ビルトインコマンド単体のブロックを実行
 void exec_builtin_without_dup(t_list *cmd_list, t_environ *env)
 {
+	printf("");
 	g_status = run_builtin_only_command(cmd_list, env);
 }
