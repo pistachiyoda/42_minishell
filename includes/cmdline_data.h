@@ -38,7 +38,7 @@ typedef struct s_cmd_block
 	t_list	*redirects;
 }	t_cmd_block;
 
-typedef	struct	s_pipes
+typedef struct s_pipes
 {
 	int	pipe_a[2];
 	int	pipe_b[2];
