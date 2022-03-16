@@ -49,6 +49,7 @@ int	handle_output(t_redirects *redirect, bool is_last)
 		exit(1);
 	if (!is_last)
 		return (0);
+
 	dup2_wrapper(fd, redirect->fd);
 	return (0);
 }

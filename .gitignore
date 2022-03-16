@@ -3,3 +3,5 @@
 minishell
 minishell_test
 result.txt
+bash_err_out.txt
+minishell_err_out.txt
