@@ -34,6 +34,7 @@
 # define EMESS_REDIRECT "ambiguous redirect\n"
 # define EMESS_TM_ARGS "too many arguments\n"
 # define EMESS_AMBIGU "ambiguous redirect\n"
+# define EMESS_BADF "Bad file descriptor\n"
 
 # define FD_MAX 256
 

@@ -31,6 +31,7 @@ exec_test 'cat < not_exitst_file > out1 \n ls -la'
 # REDIRECTIONS with NUMBERS
 exec_test_error '1< ./hoge.txt echo hoge'
 exec_test_error '2< ./hoge.txt dog'
+exec_error_test_with_expected_text '1< ./hoge.txt cat ./fuga.txt' 'cat: stdout: Bad file descriptor'
 exec_test '2<hoge.txt cat hoge.txt'
 exec_test '0< hoge.txt'
 exec_test '1< hoge.txt'

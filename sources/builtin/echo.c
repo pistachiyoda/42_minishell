@@ -5,6 +5,12 @@ int	ft_echo(t_cmd_block *cmd_block)
 	bool	without_newline;
 	int		i;
 
+	write(1, "", 0);
+	if (errno == EBADF)
+	{
+		print_error("echo: write error", EMESS_BADF);
+		return (1);
+	}
 	without_newline = cmd_block->args[1] != NULL
 		&& ft_strlen(cmd_block->args[1]) == 2
 		&& ft_strncmp(cmd_block->args[1], "-n", 2) == 0;
