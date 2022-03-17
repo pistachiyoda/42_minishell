@@ -44,6 +44,8 @@ void	compare_command_args(t_cmd_block *cmd, t_cmd_block *exp_cmd)
 		}
 		STRCMP_EQUAL((char *)exp_cmd->args[i], (char *)cmd->args[i]);
 	}
+	else
+		STRCMP_EQUAL(NULL, (char *)cmd->args);
 }
 
 void	compare_redirects(t_cmd_block *cmd, t_cmd_block *exp_cmd)
@@ -55,6 +57,7 @@ void	compare_redirects(t_cmd_block *cmd, t_cmd_block *exp_cmd)
 	{
 		redirects = (t_redirects *)cmd->redirects->content;
 		exp_redirects = (t_redirects *)exp_cmd->redirects->content;
+		CHECK_EQUAL(exp_redirects->error, redirects->error);
 		CHECK_EQUAL(exp_redirects->redirect, redirects->redirect);
 		STRCMP_EQUAL(exp_redirects->target, redirects->target);
 		CHECK_EQUAL(exp_redirects->fd, redirects->fd);
@@ -120,6 +123,7 @@ t_list	*redirect1_args4(void)
 	t_redirects	*exp_redirects;
 
 	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects->error = false;
 	exp_redirects->redirect = WRITE;
 	exp_redirects->target = ft_strdup("b");
 	exp_redirects->fd = 1;
@@ -191,6 +195,7 @@ t_list	*redirect3_pipe2_args14(void)
 
 	// 1つ目のコマンド, 1つ目のリダイレクト
 	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects->error = false;
 	exp_redirects->redirect = WRITE;
 	exp_redirects->target = ft_strdup("'b'");
 	exp_redirects->fd = 1;
@@ -198,12 +203,14 @@ t_list	*redirect3_pipe2_args14(void)
 	exp_cmd->redirects = ft_lstnew(exp_redirects);
 	// 2つ目のリダイレクト
 	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects->error = false;
 	exp_redirects->redirect = APPEND;
 	exp_redirects->target = ft_strdup("c");
 	exp_redirects->fd = 1;
 	ft_lstadd_back(&exp_cmd->redirects, ft_lstnew(exp_redirects));
 	// 3つ目のリダイレクト
 	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects->error = false;
 	exp_redirects->redirect = INPUT;
 	exp_redirects->target = ft_strdup("d");
 	exp_redirects->fd = 0;
@@ -255,6 +262,7 @@ t_list	*append_at_beginning(void)
 	t_redirects	*exp_redirects;
 
 	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects->error = false;
 	exp_redirects->redirect = APPEND;
 	exp_redirects->target = ft_strdup("cat");
 	exp_redirects->fd = 1;
@@ -286,12 +294,14 @@ t_list	*cmd_at_middle(void)
 	t_redirects	*exp_redirects;
 
 	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects->error = false;
 	exp_redirects->redirect = WRITE;
 	exp_redirects->target = ft_strdup("cat");
 	exp_redirects->fd = 1;
 	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
 	exp_cmd->redirects = ft_lstnew(exp_redirects);
 	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects->error = false;
 	exp_redirects->redirect = INPUT;
 	exp_redirects->target = ft_strdup("b");
 	exp_redirects->fd = 0;
@@ -322,12 +332,14 @@ t_list	*cmd_at_end(void)
 	t_redirects	*exp_redirects;
 
 	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects->error = false;
 	exp_redirects->redirect = INPUT;
 	exp_redirects->target = ft_strdup("a");
 	exp_redirects->fd = 0;
 	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
 	exp_cmd->redirects = ft_lstnew(exp_redirects);
 	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects->error = false;
 	exp_redirects->redirect = APPEND;
 	exp_redirects->target = ft_strdup("b");
 	exp_redirects->fd = 1;
@@ -360,12 +372,14 @@ t_list	*multi_redirects_parser(void)
 	t_redirects	*exp_redirects2;
 
 	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects->error = false;
 	exp_redirects->redirect = INPUT;
 	exp_redirects->target = ft_strdup("in");
 	exp_redirects->fd = 0;
 	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
 	exp_cmd->redirects = ft_lstnew(exp_redirects);
 	exp_redirects2 = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects2->error = false;
 	exp_redirects2->redirect = INPUT;
 	exp_redirects2->target = ft_strdup("in2");
 	exp_redirects2->fd = 0;
@@ -398,17 +412,20 @@ t_list	*multi_redirects_parser2(void)
 	t_redirects	*exp_redirects3;
 
 	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects->error = false;
 	exp_redirects->redirect = INPUT;
 	exp_redirects->target = ft_strdup("in");
 	exp_redirects->fd = 0;
 	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
 	exp_cmd->redirects = ft_lstnew(exp_redirects);
 	exp_redirects2 = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects2->error = false;
 	exp_redirects2->redirect = INPUT;
 	exp_redirects2->target = ft_strdup("in2");
 	exp_redirects2->fd = 0;
 	ft_lstadd_back(&exp_cmd->redirects, ft_lstnew(exp_redirects2));
 	exp_redirects3 = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects3->error = false;
 	exp_redirects3->redirect = INPUT;
 	exp_redirects3->target = ft_strdup("in3");
 	exp_redirects3->fd = 0;
@@ -439,6 +456,7 @@ t_list	*fd_max(void)
 	t_redirects	*exp_redirects;
 
 	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects->error = false;
 	exp_redirects->redirect = WRITE;
 	exp_redirects->target = ft_strdup("a");
 	exp_redirects->fd = 256;
@@ -471,6 +489,7 @@ t_list	*fd_over_max(void)
 	t_redirects	*exp_redirects;
 
 	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects->error = false;
 	exp_redirects->redirect = WRITE;
 	exp_redirects->target = ft_strdup("a");
 	exp_redirects->fd = 257;
@@ -503,6 +522,7 @@ t_list	*fd_under_min(void)
 	t_redirects	*exp_redirects;
 
 	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects->error = false;
 	exp_redirects->redirect = WRITE;
 	exp_redirects->target = ft_strdup("a");
 	exp_redirects->fd = 1;
@@ -536,12 +556,14 @@ t_list	*heredoc(void)
 	t_redirects	*exp_redirects;
 
 	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects->error = false;
 	exp_redirects->redirect = HEREDOC;
 	exp_redirects->target = ft_strdup("EOT");
 	exp_redirects->fd = 0;
 	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
 	exp_cmd->redirects = ft_lstnew(exp_redirects);
 	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects->error = false;
 	exp_redirects->redirect = HEREDOC;
 	exp_redirects->target = ft_strdup("EOT2");
 	exp_redirects->fd = 0;
@@ -654,6 +676,7 @@ t_list	*quoted_heredoc(void)
 	t_redirects	*exp_redirects;
 
 	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects->error = false;
 	exp_redirects->redirect = QUOTED_HEREDOC;
 	exp_redirects->target = ft_strdup("'bb'");
 	exp_redirects->fd = 0;
@@ -686,6 +709,7 @@ t_list	*quoted_heredoc2(void)
 	t_redirects	*exp_redirects;
 
 	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects->error = false;
 	exp_redirects->redirect = QUOTED_HEREDOC;
 	exp_redirects->target = ft_strdup("b'b'");
 	exp_redirects->fd = 0;
@@ -718,6 +742,7 @@ t_list	*quoted_heredoc3(void)
 	t_redirects	*exp_redirects;
 
 	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects->error = false;
 	exp_redirects->redirect = QUOTED_HEREDOC;
 	exp_redirects->target = ft_strdup("bb\"\"");
 	exp_redirects->fd = 0;
@@ -750,6 +775,7 @@ t_list	*quoted_heredoc4(void)
 	t_redirects	*exp_redirects;
 
 	exp_redirects = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redirects->error = false;
 	exp_redirects->redirect = QUOTED_HEREDOC;
 	exp_redirects->target = ft_strdup("''bb");
 	exp_redirects->fd = 0;

@@ -66,6 +66,7 @@ t_list	*normal2(void)
 	char		**exp_args;
 
 	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redir->error = false;
 	exp_redir->fd = 1;
 	exp_redir->redirect = WRITE;
 	exp_redir->target = ft_strdup("a.out");
@@ -100,12 +101,14 @@ t_list	*normal3(void)
 	char		**exp_args;
 
 	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redir->error = false;
 	exp_redir->fd = 0;
 	exp_redir->redirect = INPUT;
 	exp_redir->target = ft_strdup("in");
 	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
 	exp_cmd->redirects = ft_lstnew(exp_redir);
 	exp_redir2 = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redir2->error = false;
 	exp_redir2->fd = 0;
 	exp_redir2->redirect = INPUT;
 	exp_redir2->target = ft_strdup("in2");
@@ -139,17 +142,20 @@ t_list	*normal4(void)
 	char		**exp_args;
 
 	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redir->error = false;
 	exp_redir->fd = 0;
 	exp_redir->redirect = INPUT;
 	exp_redir->target = ft_strdup("in");
 	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
 	exp_cmd->redirects = ft_lstnew(exp_redir);
 	exp_redir2 = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redir2->error = false;
 	exp_redir2->fd = 0;
 	exp_redir2->redirect = INPUT;
 	exp_redir2->target = ft_strdup("in2");
 	ft_lstadd_back(&exp_cmd->redirects, ft_lstnew(exp_redir2));
 	exp_redir3 = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redir3->error = false;
 	exp_redir3->fd = 0;
 	exp_redir3->redirect = INPUT;
 	exp_redir3->target = ft_strdup("in3");
@@ -209,6 +215,7 @@ t_list	*has_env(void)
 	char		**exp_args;
 
 	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redir->error = false;
 	exp_redir->fd = 1;
 	exp_redir->redirect = WRITE;
 	exp_redir->target = ft_strdup("testfile");
@@ -278,6 +285,7 @@ t_list	*has_dquoted_env(void)
 	char		**exp_args;
 
 	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redir->error = false;
 	exp_redir->fd = 1;
 	exp_redir->redirect = WRITE;
 	exp_redir->target = ft_strdup("testfile");
@@ -437,6 +445,7 @@ t_list	*has_multiple_env(void)
 	char		**exp_args;
 
 	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redir->error = false;
 	exp_redir->fd = 1;
 	exp_redir->redirect = WRITE;
 	exp_redir->target = ft_strdup("testfile");
@@ -695,9 +704,9 @@ t_list	*has_quote8(void)
 	exp_args = (char **)malloc(sizeof(char *) * 6);
 	exp_args[0] = ft_strdup("cat");
 	exp_args[1] = ft_strdup("test.txt");
-	exp_args[2] = ft_strdup("space");
-	exp_args[3] = ft_strdup("space");
-	exp_args[4] = ft_strdup("space");
+	exp_args[2] = ft_strdup("space1");
+	exp_args[3] = ft_strdup("space2");
+	exp_args[4] = ft_strdup("space3");
 	exp_args[5] = NULL;
 	exp_cmd->args = exp_args;
 	exp_tokens = ft_lstnew(exp_cmd);
@@ -710,7 +719,7 @@ TEST(expansion_G, has_quote8) {
 	t_environ	*env;
 
 	env = create_environ(g_envp);
-	tokens = get_tokens_from_expansion(ft_strdup("export SPACE=\" space    space   space  \""), env);
+	tokens = get_tokens_from_expansion(ft_strdup("export SPACE=\" space1    space2   space3  \""), env);
 	ft_export((t_cmd_block *)tokens->content, env);
 	tokens = get_tokens_from_expansion(ft_strdup("ca't' 'test.t''x't $SPACE"), env);
 	exp_tokens = has_quote8();
@@ -854,6 +863,7 @@ t_list	*heredoc_target(void)
 
 	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
 	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redir->error = false;
 	exp_redir->fd = 0;
 	exp_redir->redirect = HEREDOC;
 	exp_redir->target = ft_strdup("$ABC");
@@ -891,6 +901,7 @@ t_list	*heredoc_target2(void)
 
 	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
 	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redir->error = false;
 	exp_redir->fd = 0;
 	exp_redir->redirect = QUOTED_HEREDOC;
 	exp_redir->target = ft_strdup("$ABC");
@@ -928,6 +939,7 @@ t_list	*heredoc_target3(void)
 
 	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
 	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+    exp_redir->error = false;
 	exp_redir->fd = 0;
 	exp_redir->redirect = QUOTED_HEREDOC;
 	exp_redir->target = ft_strdup("$ABC");
