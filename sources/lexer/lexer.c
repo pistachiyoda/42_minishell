@@ -6,7 +6,7 @@ int	split_by_space_lex(char *str, t_list *words, int *i, int start)
 
 	new = ft_xlstnew(ft_xsubstr(str, start, *i - start, "lex"), "lex");
 	ft_lstadd_back(&words, new);
-	while (str[*i + 1] != '\0' && is_space_tab_newline(str[*i + 1]))
+	while (str[*i + 1] != '\0' && is_blank(str[*i + 1]))
 		(*i)++;
 	start = *i + 1;
 	return (start);
@@ -52,7 +52,7 @@ bool	lexer(char *str, t_list **words)
 	while (str[i] != '\0' && start != -1)
 	{
 		is_quote_type_switched(str, i, &status);
-		if (status == NONE && is_space_tab_newline(str[i]))
+		if (status == NONE && is_blank(str[i]))
 			start = split_by_space_lex(str, *words, &i, start);
 		else if (status == NONE
 			&& (str[i] == '>' || str[i] == '<' || str[i] == '|'))

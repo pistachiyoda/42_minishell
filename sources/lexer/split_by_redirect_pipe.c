@@ -31,7 +31,7 @@ bool	is_valid_redirect_pipe(char *str, int *i, int start)
 	int		j;
 
 	j = 1;
-	while (str[*i + 1] != '\0' && is_space_tab_newline(str[*i + 1]))
+	while (str[*i + 1] != '\0' && is_blank(str[*i + 1]))
 		(*i)++;
 	while (ft_isdigit(str[*i + j]) == 1)
 		j++;

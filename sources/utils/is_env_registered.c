@@ -31,14 +31,14 @@ char	*is_env_registered(
 
 bool	is_character_contained(char *str, int *i)
 {
-	while (str[*i] != '\0' && is_space_tab_newline(str[*i]))
+	while (str[*i] != '\0' && is_blank(str[*i]))
 		(*i)++;
 	if (str[*i] == '\0')
 		return (false);
 	return (true);
 }
 
-bool	is_space_tab_newline(char c)
+bool	is_blank(char c)
 {
 	if (c == ' ' || c == '\t' || c == '\n')
 		return (true);
