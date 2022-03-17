@@ -117,6 +117,12 @@ int			exec_command_line(
 				t_environ *env, t_list *cmd_list, char **envp, int cmd_cnt);
 void		handle_command_line(t_cmd_block *cmd_block, char **envp);
 
+// exec_command_line/exec_command_line2.c
+int			*crp(int i, int pipe_a[2], int pipe_b[2]);
+int			*cwp(int i, int pipe_a[2], int pipe_b[2]);
+int			get_child_status(int status);
+int			wait_pids(int cmd_cnt, int pids[1000]);
+
 // exec_command_line/handle_file.c
 bool		is_readable(char *file);
 int			open_file(char *file);
@@ -128,6 +134,8 @@ int			handle_heredoc_input(t_environ *env, t_list *cmd_list);
 
 // exec_command_line/handle_heredoc2.c
 char		*expand_env_variables_in_buf(t_environ *env, char *buf);
+void		handle_unused_heredoc(char *str);
+void		flush_heredoc(char *str, int doc_pipe_fds[2]);
 
 // exec_command_line/close_doc_pipe_fds.c
 int			close_doc_pipe_fd(t_cmd_block *cmd_block);

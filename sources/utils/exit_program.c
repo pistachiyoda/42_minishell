@@ -2,6 +2,6 @@
 
 void	exit_program(int status)
 {
-	ft_putstr_fd("exit\n", 2);
+	ft_putendl_fd("exit", 2);
 	exit(status);
 }

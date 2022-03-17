@@ -38,4 +38,10 @@ typedef struct s_cmd_block
 	char	**args;
 	t_list	*redirects;
 }	t_cmd_block;
+
+typedef struct s_pipes
+{
+	int	pipe_a[2];
+	int	pipe_b[2];
+}	t_pipes;
 #endif

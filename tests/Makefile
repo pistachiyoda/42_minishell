@@ -14,6 +14,7 @@ SOURCES =\
 	../sources/exec_command/resolve_env.c\
 	../sources/exec_command/utils.c\
 	../sources/exec_command_line/exec_command_line.c\
+	../sources/exec_command_line/exec_command_line2.c\
 	../sources/exec_command_line/handle_file.c\
 	../sources/exec_command_line/handle_heredoc.c\
 	../sources/exec_command_line/handle_heredoc2.c\
@@ -62,8 +63,8 @@ SOURCES =\
 OBJ = $(SOURCES:.c=.o)
 
 all: $(NAME)
-$(NAME): exec_cmdline.o lexer.o parser.o builtins.o utils.o expansion.o export.o expand_env_variables_in_buf.o $(OBJ) $(LIBFT)
-	c++ $(CXXFLAGS) $(INCLUDES) exec_cmdline.o lexer.o parser.o builtins.o utils.o expansion.o export.o expand_env_variables_in_buf.o $(OBJ) -o $(NAME) $(LIBS) $(LDLIBS)
+$(NAME): exec_cmdline.o lexer.o parser.o builtins.o utils.o expansion.o export.o expand_env_variables_in_buf.o pwd.o $(OBJ) $(LIBFT)
+	c++ $(CXXFLAGS) $(INCLUDES) exec_cmdline.o lexer.o parser.o builtins.o utils.o expansion.o export.o expand_env_variables_in_buf.o pwd.o $(OBJ) -o $(NAME) $(LIBS) $(LDLIBS)
 exec_cmdline.o: ./exec_cmdline/exec_cmdline.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./exec_cmdline/exec_cmdline.cpp $(LIBS)
 lexer.o: ./lexer/lexer.cpp
@@ -80,6 +81,8 @@ export.o: ./builtin/export.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./builtin/export.cpp $(LIBS)
 expand_env_variables_in_buf.o: ./expand_env/expand_env_variables_in_buf.cpp
 	c++ $(CXXFLAGS) $(INCLUDES) -c ./expand_env/expand_env_variables_in_buf.cpp $(LIBS)
+pwd.o: ./builtin/pwd.cpp
+	c++ $(CXXFLAGS) $(INCLUDES) -c ./builtin/pwd.cpp $(LIBS)
 $(LIBFT):
 	make -C ../libft bonus
 clean:

@@ -11,6 +11,7 @@ CFILES =\
 	sources/exec_command/resolve_env.c\
 	sources/exec_command/utils.c\
 	sources/exec_command_line/exec_command_line.c\
+	sources/exec_command_line/exec_command_line2.c\
 	sources/exec_command_line/handle_file.c\
 	sources/exec_command_line/handle_heredoc.c\
 	sources/exec_command_line/handle_heredoc2.c\
@@ -61,6 +62,7 @@ OBJ = $(CFILES:.c=.o)
 all: $(NAME)
 $(NAME): $(OBJ) $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(LIBS)
+	echo > ~/.inputrc set echo-control-characters offs
 $(LIBFT):
 	make -C ./libft bonus
 clean:
@@ -70,5 +72,4 @@ fclean: clean
 	rm -f $(NAME)
 	make -C ./libft fclean
 re: fclean all
-
 .PHONY: all clean fclean re
