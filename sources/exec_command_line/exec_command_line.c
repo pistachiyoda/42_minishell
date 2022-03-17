@@ -53,9 +53,12 @@ void	handle_multi_block(int *pids, t_list *cmd_list, char **envp)
 int	exec_command_line(
 		t_environ *env, t_list *cmd_list, char **envp, int cmd_cnt)
 {
-	int			pids[1000];
+	int			*pids;
 	int			status;
 
+	pids = malloc(sizeof(int) * cmd_cnt);
+	if (!pids)
+		return (1);
 	status = handle_heredoc_input(env, cmd_list);
 	if (status > 128)
 		return (1);
@@ -63,5 +66,7 @@ int	exec_command_line(
 		return (handle_single_block((t_cmd_block *)cmd_list->content, envp));
 	else
 		handle_multi_block(pids, cmd_list, envp);
-	return (wait_pids(cmd_cnt, pids));
+	status = wait_pids(cmd_cnt, pids);
+	free(pids);
+	return (status);
 }
