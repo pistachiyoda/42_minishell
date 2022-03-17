@@ -8,6 +8,8 @@ exec_test "echo test      tout"
 exec_test "echo -p"
 exec_test_with_expected_text "echo -n test tout" "test toutminishell$ "
 exec_test_with_expected_text "echo -n -n -n test tout" "test toutminishell$ "
+# exec_test 'echo "$$$$$$$"'
+# exec_test 'echo "?????"'
 
 # CD
 exec_test "cd \n pwd"
@@ -26,7 +28,6 @@ exec_test "cd / \n pwd"
 exec_test "cd '/////' 2>/dev/null \n pwd"
 exec_test "cd '/etc' \n pwd"
 exec_test "cd '/var' \n pwd"
-# exec_test "cd "$PWD/file_tests" \n pwd"
 exec_test_error "cd "doesntexist" \n pwd"
 exec_test "cd "doesntexist" 2>/dev/null \n pwd"
 exec_test "cd ../../.. \n pwd"
@@ -34,8 +35,9 @@ exec_test "cd "wtf" 2>/dev/null \n pwd"
 exec_test_error "cd woof\n pwd"
 exec_test_error "cd bark bark\n pwd"
 exec_test "cd '/' \n pwd"
-# exec_test "cd $PWD/file_tests \n pwd"
-exec_test "cd $OLDPWD"
+exec_test "cd $PWD \n pwd"
+exec_test 'echo "$PWD" \n pwd'
+exec_test 'cd ../ \n cd "$OLDPWD" \n pwd'
 
 # PWD
 exec_test "pwd"
@@ -70,13 +72,15 @@ exec_test 'export TEST=LOL \n echo $TEST$TEST$TEST=lol$TEST'
 exec_test "$ENV_SHOW"
 exec_test "$EXPORT_SHOW"
 exec_test_error "export TEST=\"ls       -l     - a\" \n echo \$TEST \n \$LS \n $ENV_SHOW"
+exec_test 'echo hoge > "aaa"$a \n cat aaa \n rm aaa'
+exec_test 'export a=aaa \n export b=bbb \n echo hoge > $a" "$b \n ls \n cat "aaa bbb" \n rm "aaa bbb"'
 
 # EXPORT and UNSET and ENV EXPANSIONS
 exec_test "export TEST=\"hoge\" \n unset TEST \n $ENV_SHOW"
 exec_test "unset TEST \n $ENV_SHOW"
 exec_test "unset TEST1 TEST2 TEST3 \n $ENV_SHOW"
 
-# EXIT ## ステータスコード以下確認していないので何件か手動テスト！！！！
+# EXIT ## ステータスコードのみ確認。出力結果は手動テストの必要あり！！！！
 exec_test "exit 42"
 exec_test "exit 42 53 68"
 exec_test "exit 259"

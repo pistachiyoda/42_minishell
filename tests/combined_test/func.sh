@@ -117,7 +117,6 @@ exec_test_with_expected_text () {
 	compare_result "$TEST_COMMAND" "$EXPECTED_TEXT" "$MINISHELL_OUT" $BASH_STATUS $MINISHELL_STATUS
 }
 
-
 exec_test_with_redirect () {
 	TEST_COMMAND=$1
 	FILE_NAME=$2
