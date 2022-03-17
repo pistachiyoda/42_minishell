@@ -59,7 +59,7 @@ char	*expand_env_variables_in_buf(t_environ *env, char *buf)
 			joined_str = ft_xstrjoin_with_free(joined_str, value, "expand_env");
 		}
 		else
-		{		
+		{
 			tmp_str = ft_xmalloc(sizeof(char *) * 2, "expand_env");
 			tmp_str[0] = buf[i];
 			tmp_str[1] = '\0';
