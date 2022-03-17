@@ -63,6 +63,7 @@ OBJ = $(CFILES:.c=.o)
 all: $(NAME)
 $(NAME): $(OBJ) $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(LIBS)
+	echo > ~/.inputrc set echo-control-characters offs
 $(LIBFT):
 	make -C ./libft bonus
 clean:
@@ -72,5 +73,4 @@ fclean: clean
 	rm -f $(NAME)
 	make -C ./libft fclean
 re: fclean all
-
 .PHONY: all clean fclean re
