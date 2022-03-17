@@ -56,9 +56,7 @@ int	exec_command_line(
 	int			*pids;
 	int			status;
 
-	pids = malloc(sizeof(int) * cmd_cnt);
-	if (!pids)
-		return (1);
+	pids = ft_xmalloc(sizeof(int) * cmd_cnt, "exec_command_line");
 	status = handle_heredoc_input(env, cmd_list);
 	if (status > 128)
 		return (1);
