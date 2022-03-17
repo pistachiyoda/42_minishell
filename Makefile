@@ -11,6 +11,7 @@ CFILES =\
 	sources/exec_command/resolve_env.c\
 	sources/exec_command/utils.c\
 	sources/exec_command_line/exec_command_line.c\
+	sources/exec_command_line/exec_command_line2.c\
 	sources/exec_command_line/handle_file.c\
 	sources/exec_command_line/handle_heredoc.c\
 	sources/exec_command_line/handle_heredoc2.c\
@@ -21,6 +22,7 @@ CFILES =\
 	sources/tmp_parser/tmp_parse_data.c\
 	sources/runner/run_builtin_command.c\
 	sources/exec_builtin/exec_builtin_only_command.c\
+    sources/signal/signal.c\
 	sources/utils/free.c\
 	sources/utils/is_env_registered.c\
 	sources/utils/is_quote_type_switched.c\
@@ -33,6 +35,7 @@ CFILES =\
 	sources/utils/validation.c\
 	sources/utils/ft_atol.c\
 	sources/utils/get_env_val.c\
+	sources/utils/exit_program.c\
 	sources/debug/debug_funcs.c\
 	sources/debug/set_dataset.c\
 	sources/env/create_environ.c\
@@ -60,6 +63,7 @@ OBJ = $(CFILES:.c=.o)
 all: $(NAME)
 $(NAME): $(OBJ) $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(LIBS)
+	echo > ~/.inputrc set echo-control-characters offs
 $(LIBFT):
 	make -C ./libft bonus
 clean:
@@ -69,5 +73,4 @@ fclean: clean
 	rm -f $(NAME)
 	make -C ./libft fclean
 re: fclean all
-
 .PHONY: all clean fclean re
