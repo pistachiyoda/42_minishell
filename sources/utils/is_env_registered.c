@@ -1,19 +1,21 @@
 #include "minishell.h"
 
-char	*is_env_registered(t_environ *env, char **split_ele, bool key_only,
-	char *target)
+char	*is_env_registered(
+	t_environ *env, char **split_ele, bool key_only, char *target)
 {
 	size_t	len;
+	size_t	len_env;
 	char	*value;
 
-	len = ft_strlen(split_ele[0]);
 	env = env->next;
 	value = NULL;
+	len = ft_strlen(split_ele[0]);
 	while (env->key != NULL)
 	{
-		if (ft_strlen(env->key) > len)
-			len = ft_strlen(env->key);
-		if (ft_strncmp(env->key, split_ele[0], len) == 0)
+		len_env = ft_strlen(env->key);
+		if (len_env < len)
+			len_env = len;
+		if (ft_strncmp(env->key, split_ele[0], len_env) == 0)
 		{
 			if (!key_only)
 			{
@@ -29,14 +31,14 @@ char	*is_env_registered(t_environ *env, char **split_ele, bool key_only,
 
 bool	is_character_contained(char *str, int *i)
 {
-	while (str[*i] != '\0' && is_space_tab_newline(str[*i]))
+	while (str[*i] != '\0' && is_blank(str[*i]))
 		(*i)++;
 	if (str[*i] == '\0')
 		return (false);
 	return (true);
 }
 
-bool	is_space_tab_newline(char c)
+bool	is_blank(char c)
 {
 	if (c == ' ' || c == '\t' || c == '\n')
 		return (true);

@@ -26,9 +26,14 @@ char	**t_environ_to_vector(t_environ *env)
 	env = env->next;
 	while (env->key != NULL)
 	{
-		tmp = ft_xstrjoin(env->key, "=", "env_conversion");
-		env_vec[i++] = ft_xstrjoin(tmp, env->value, "env_conversion");
-		free(tmp);
+		if (env->value)
+		{
+			tmp = ft_xstrjoin(env->key, "=", "env_conversion");
+			env_vec[i++] = ft_xstrjoin(tmp, env->value, "env_conversion");
+			free(tmp);
+		}
+		else
+			env_vec[i++] = env->key;
 		env = env->next;
 	}
 	env_vec[i] = NULL;

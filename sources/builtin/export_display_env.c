@@ -65,27 +65,36 @@ void	display_min_env(t_environ *min, int min_i, char *flags, int f_len)
 	}
 }
 
+size_t	get_len(char *str1, char *str2)
+{
+	size_t	len1;
+	size_t	len2;
+
+	len1 = ft_strlen(str1);
+	len2 = ft_strlen(str2);
+	if (len1 >= len2)
+		return (len1);
+	else
+		return (len2);
+}
+
 void	display_sorted_env(t_environ *env, int min_i, char *flags, int f_len)
 {
 	int			i;
-	size_t		len;
 	t_environ	*min;
 
 	min = env;
 	min = get_tmp_min(env, &min_i, flags, f_len);
-	len = ft_strlen(min->key);
 	flags[min_i] = '1';
 	i = 0;
 	while (env->key != NULL)
 	{
-		if (ft_strlen(env->key) > len)
-			len = ft_strlen(env->key);
-		if ((ft_strncmp(min->key, env->key, len) > 0) && (flags[i] == '0'))
+		if (ft_strncmp(min->key, env->key, get_len(min->key, env->key)) > 0
+			&& flags[i] == '0')
 		{
 			flags[min_i] = '0';
 			min = env;
 			min_i = i;
-			len = ft_strlen(min->key);
 			flags[min_i] = '1';
 		}
 		env = env->next;

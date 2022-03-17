@@ -24,6 +24,7 @@ t_redirects	*set_redirect_member(t_list **words)
 	*words = (*words)->next;
 	redir->target = (*words)->content;
 	*words = (*words)->next;
+	redir->error = false;
 	return (redir);
 }
 
