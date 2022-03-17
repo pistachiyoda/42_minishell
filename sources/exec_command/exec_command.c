@@ -35,6 +35,8 @@ void	exec_command(t_cmd_block *cmd_block, char **envp)
 	char	*path_val;
 	char	*real_command_path;
 
+	if (cmd_block->command == NULL)
+		exit (0);
 	if (is_relative_or_absolute(cmd_block->command))
 		exec_relative_or_absolute(cmd_block->command, cmd_block->args, envp);
 	if (is_builtin_command(cmd_block))

@@ -6,6 +6,8 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+# include <string.h>
+# include <errno.h>
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -34,7 +36,7 @@
 
 # define FD_MAX 256
 
-extern unsigned char	g_status;
+extern volatile unsigned char	g_status;
 
 // exec_command/exec_command.c
 void		exec_command(t_cmd_block *cmd_block, char **envp);
@@ -107,10 +109,19 @@ long long	ft_atol(const char *str, bool *is_invalid);
 // utils/get_env_val.c
 char		*get_env_val(char *key, char **envp);
 
+// utils/exit_program.c
+void		exit_program(int status);
+
 // exec_command_line/exec_command_line.c
 int			exec_command_line(
 				t_environ *env, t_list *cmd_list, char **envp, int cmd_cnt);
 void		handle_command_line(t_cmd_block *cmd_block, char **envp);
+
+// exec_command_line/exec_command_line2.c
+int			*crp(int i, int pipe_a[2], int pipe_b[2]);
+int			*cwp(int i, int pipe_a[2], int pipe_b[2]);
+int			get_child_status(int status);
+int			wait_pids(int cmd_cnt, int pids[1000]);
 
 // exec_command_line/handle_file.c
 bool		is_readable(char *file);
@@ -123,6 +134,8 @@ int			handle_heredoc_input(t_environ *env, t_list *cmd_list);
 
 // exec_command_line/handle_heredoc2.c
 char		*expand_env_variables_in_buf(t_environ *env, char *buf);
+void		handle_unused_heredoc(char *str);
+void		flush_heredoc(char *str, int doc_pipe_fds[2]);
 
 // exec_command_line/close_doc_pipe_fds.c
 int			close_doc_pipe_fd(t_cmd_block *cmd_block);
@@ -192,6 +205,10 @@ int			ft_exit(t_cmd_block *cmd_block);
 
 // builtin/cd.c
 int			ft_cd(t_cmd_block *cmd_block, t_environ *env);
+
+// signal/signal.c
+void		sigint_handler(int sig);
+void		set_signal(void (*func1)(int), void (*func2)(int));
 
 // [後々削除]debug/debug_funcs.c
 void		print_cmd_lst(t_list *cmd_lst);

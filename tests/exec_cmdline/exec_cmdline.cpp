@@ -1,7 +1,7 @@
 #include "../test.h"
 
 char			**g_envp = NULL;
-unsigned char	g_status = 0;
+volatile unsigned char	g_status = 0;
 char			**envp_in_test;
 
 TEST_GROUP(exec_command_line_G)

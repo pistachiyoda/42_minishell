@@ -59,7 +59,7 @@ char	*expand_env_variables_in_buf(t_environ *env, char *buf)
 			joined_str = ft_xstrjoin_with_free(joined_str, value, "expand_env");
 		}
 		else
-		{		
+		{
 			tmp_str = ft_xmalloc(sizeof(char *) * 2, "expand_env");
 			tmp_str[0] = buf[i];
 			tmp_str[1] = '\0';
@@ -69,4 +69,26 @@ char	*expand_env_variables_in_buf(t_environ *env, char *buf)
 		i++;
 	}
 	return (joined_str);
+}
+
+void	handle_unused_heredoc(char *str)
+{
+	free(str);
+	exit(0);
+}
+
+void	flush_heredoc(char *str, int doc_pipe_fds[2])
+{
+	char	*tmp;
+
+	tmp = str;
+	close_wrapper(doc_pipe_fds[0]);
+	if (write(doc_pipe_fds[1], str, ft_strlen(str)) == -1)
+	{
+		perror("write()");
+		exit(1);
+	}
+	close_wrapper(doc_pipe_fds[1]);
+	free(tmp);
+	exit(0);
 }
