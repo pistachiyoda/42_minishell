@@ -53,7 +53,7 @@ int	handle_heredoc(
 	if (WIFSIGNALED(status))
 	{
 		if (WTERMSIG(status) == SIGINT)
-			write(1, "\n", 1);
+			write(2, "\n", 1);
 		return (WTERMSIG(status) + 128);
 	}
 	return (1);
