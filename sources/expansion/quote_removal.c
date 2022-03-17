@@ -40,7 +40,7 @@ void	concat_all(char *str, char **head, int i)
 
 void	quote_removal(char *str, char **head, t_expand *data, int type)
 {
-	if (*head == NULL)
+	if (*head == NULL && data->i != 0)
 		*head = ft_xsubstr(str, 0, data->i, "expansion");
 	else if (ft_strnstr(&str[data->prev_q], "$", data->i - data->prev_q) == NULL
 		|| (ft_strnstr(&str[data->prev_q], "$", data->i - data->prev_q)
@@ -59,8 +59,8 @@ void	set_head_before_dollar(char *str, char **head, t_expand data)
 	char	*front;
 	char	*add;
 
-	if (*head == NULL)
-		*head = ft_xsubstr(str, 0, data.i, "expansion");
+	if (*head == NULL && data.i != 0 && data.i != data.prev_q)
+		*head = ft_xsubstr(str, data.prev_q, data.i - data.prev_q, "expansion");
 	else if (data.prev_q != 0 && data.prev_q != data.i)
 	{
 		add = ft_xsubstr(str, data.prev_q, data.i - data.prev_q, "expansion");

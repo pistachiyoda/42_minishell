@@ -11,7 +11,7 @@ int	check_str_type(char *str)
 	count = 0;
 	while (str[i] != '\0')
 	{
-		if (is_space_tab_newline(str[i]))
+		if (is_blank(str[i]))
 		{
 			status = PARTIAL_SPACE;
 			count++;

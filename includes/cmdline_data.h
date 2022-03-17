@@ -29,6 +29,7 @@ typedef struct s_redirects
 	char				*target;
 	int					fd;
 	int					doc_fd;
+	bool				error;
 }	t_redirects;
 
 typedef struct s_cmd_block
