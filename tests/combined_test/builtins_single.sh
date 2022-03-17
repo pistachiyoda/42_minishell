@@ -1,0 +1,89 @@
+## BUILTINS SINGLE
+
+# ECHO
+exec_test "echo test"
+exec_test "echo           test" 
+exec_test "echo test tout"
+exec_test "echo test      tout"
+exec_test "echo -p"
+exec_test_with_expected_text "echo -n test tout" "test toutminishell$ "
+exec_test_with_expected_text "echo -n -n -n test tout" "test toutminishell$ "
+
+# CD
+exec_test "cd \n pwd"
+exec_test "cd . \n pwd"
+exec_test "cd .. \n pwd"
+exec_test_error "cd ... \n pwd"
+exec_test "cd ../\n pwd"
+exec_test "cd ../ \n pwd"
+exec_test "cd ../../ \n pwd"
+exec_test "cd /Users \n pwd"
+exec_test "cd // \n pwd"
+exec_test "cd '//' \n pwd"
+exec_test "cd ////// \n pwd"
+exec_test "cd ./././ \n pwd"
+exec_test "cd / \n pwd"
+exec_test "cd '/////' 2>/dev/null \n pwd"
+exec_test "cd '/etc' \n pwd"
+exec_test "cd '/var' \n pwd"
+# exec_test "cd "$PWD/file_tests" \n pwd"
+exec_test_error "cd "doesntexist" \n pwd"
+exec_test "cd "doesntexist" 2>/dev/null \n pwd"
+exec_test "cd ../../.. \n pwd"
+exec_test "cd "wtf" 2>/dev/null \n pwd"
+exec_test_error "cd woof\n pwd"
+exec_test_error "cd bark bark\n pwd"
+exec_test "cd '/' \n pwd"
+# exec_test "cd $PWD/file_tests \n pwd"
+exec_test "cd $OLDPWD"
+
+# PWD
+exec_test "pwd"
+exec_test "pwd test"
+
+# ENV EXPANSIONS
+exec_test 'echo $TEST'
+exec_test 'echo "$TEST"'
+exec_test "echo '$TEST'"
+exec_test 'echo "$TEST$TEST$TEST"' # 対応した方が良さそう
+exec_test 'echo "$TEST$TEST=lol$TEST"' # ダブルクオート内で未定義変数が複数回出現した場合のハンドリングがうまくできてなさそう
+exec_test 'echo "   $TEST lol $TEST"' # これも同じく
+exec_test 'echo $TEST$TEST$TEST'
+exec_test 'echo    $TEST lol $TEST'
+exec_test 'echo test "" test "" test'
+exec_test 'echo "$"' # 対応してもいいかも
+exec_test 'echo "$?TEST"'
+exec_test 'echo $TEST $TEST'
+exec_test 'echo "$1TEST"' # 対応してもいいかも
+exec_test 'echo "$T1TEST"'
+
+# EXPORT and ENV EXPANSIONS
+ENV_SHOW="env | sort | grep -v SHLVL | grep -v _= | grep -v OLDPWD"
+EXPORT_SHOW="export | sort | grep -v SHLVL | grep -v _= | grep -v OLDPWD"
+exec_test_error 'export ='
+exec_test_error "export 1TEST= \n $ENV_SHOW"
+exec_test "export TEST \n $EXPORT_SHOW"
+exec_test_error "export \"\"=\"\" \n $ENV_SHOW"
+exec_test "export TES=T=\"\" \n $ENV_SHOW"
+exec_test "export TEST=LOL \n echo \$TEST \n $ENV_SHOW"
+exec_test 'export TEST=LOL \n echo $TEST$TEST$TEST=lol$TEST'
+exec_test "$ENV_SHOW"
+exec_test "$EXPORT_SHOW"
+exec_test_error "export TEST=\"ls       -l     - a\" \n echo \$TEST \n \$LS \n $ENV_SHOW"
+
+# EXPORT and UNSET and ENV EXPANSIONS
+exec_test "export TEST=\"hoge\" \n unset TEST \n $ENV_SHOW"
+exec_test "unset TEST \n $ENV_SHOW"
+exec_test "unset TEST1 TEST2 TEST3 \n $ENV_SHOW"
+
+# EXIT ## ステータスコード以下確認していないので何件か手動テスト！！！！
+exec_test "exit 42"
+exec_test "exit 42 53 68"
+exec_test "exit 259"
+exec_test "exit 9223372036854775807"
+exec_test "exit -9223372036854775808"
+exec_test "exit 9223372036854775808"
+exec_test "exit -9223372036854775810"
+exec_test "exit -4"
+exec_test "exit wrong"
+exec_test "exit wrong_command"
