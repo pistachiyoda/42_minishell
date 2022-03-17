@@ -30,6 +30,11 @@ int	handle_input(t_redirects *redirect, bool is_last)
 {
 	int	fd;
 
+	if (redirect->error)
+	{
+		print_error(redirect->target, EMESS_AMBIGU);
+		return (1);
+	}
 	if (!(is_exists(redirect->target)))
 	{
 		print_error(redirect->target, EMESS_NO_FILE_DIR);

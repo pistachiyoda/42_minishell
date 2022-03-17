@@ -23,12 +23,13 @@ bool	is_last_fd_output_redirect(
 	return (last_output_node->content == redirect);
 }
 
-// >, >>の処理
-// @todo:exitはreturnに変更
-int	handle_output(t_redirects *redirect, bool is_last)
+int	handle_output_error(t_redirects *redirect)
 {
-	int	fd;
-
+	if (redirect->error)
+	{
+		print_error(redirect->target, EMESS_AMBIGU);
+		return (1);
+	}
 	if (is_exists(redirect->target) && is_directory(redirect->target))
 	{
 		print_error(redirect->target, EMESS_IS_DIR2);
@@ -39,6 +40,17 @@ int	handle_output(t_redirects *redirect, bool is_last)
 		print_error(redirect->target, EMESS_NO_PERM);
 		return (1);
 	}
+	return (0);
+}
+
+// >, >>の処理
+// @todo:exitはreturnに変更
+int	handle_output(t_redirects *redirect, bool is_last)
+{
+	int	fd;
+
+	if (handle_output_error(redirect) != 0)
+		return (1);
 	if (redirect->redirect == WRITE)
 		fd = open_or_create_file(
 				redirect->target, O_WRONLY | O_CREAT | O_TRUNC);

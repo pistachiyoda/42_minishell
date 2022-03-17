@@ -33,6 +33,7 @@
 # define EMESS_LARGE_FD "Bad file descriptor\n"
 # define EMESS_REDIRECT "ambiguous redirect\n"
 # define EMESS_TM_ARGS "too many arguments\n"
+# define EMESS_AMBIGU "ambiguous redirect\n"
 
 # define FD_MAX 256
 
