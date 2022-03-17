@@ -1,42 +1,102 @@
 #include "minishell.h"
 
-void	error_check(t_list **tokens, t_list **prev, t_list **head, bool error)
+void	assign_expanded_cmd_args(t_cmd_block *cmd, t_list **words)
 {
-	if (error)
+	int	i;
+
+	i = 0;
+	if (*words != NULL)
 	{
-		if (*head == *tokens)
-			*head = (*tokens)->next;
-		free_cmd_block(tokens);
-		if (*prev)
-			(*prev)->next = *tokens;
+		free_2d_array(cmd->args);
+		cmd->command = (*words)->content;
+		cmd->args = ft_xmalloc(sizeof(char *) * (ft_lstsize(*words) + 1),
+				"expansion");
+		while (*words != NULL)
+		{
+			cmd->args[i] = (*words)->content;
+			*words = (*words)->next;
+			i++;
+		}
+		cmd->args[i] = NULL;
+		ft_lstclear2(words);
 	}
 	else
 	{
-		*prev = *tokens;
-		*tokens = (*tokens)->next;
+		free_2d_array(cmd->args);
+		cmd->command = NULL;
+		cmd->args = NULL;
 	}
+}
+
+void	expand_cmd_args(t_cmd_block *cmd, t_environ *env, t_list *words)
+{
+	int		i;
+
+	i = 1;
+	if (cmd->command != NULL)
+	{
+		set_expanded_to_words(env, cmd->command, &words, -1);
+		while (cmd->args[i] != NULL)
+		{
+			set_expanded_to_words(env, cmd->args[i], &words, -1);
+			i++;
+		}
+		assign_expanded_cmd_args(cmd, &words);
+	}
+}
+
+void	assign_expanded_target(t_redirects *redir, t_list **words)
+{
+	if (!redir->error)
+	{
+		free(redir->target);
+		if (*words != NULL)
+			redir->target = (*words)->content;
+		else
+			redir->target = NULL;
+		ft_lstclear2(words);
+	}
+	else
+		ft_lstclear(words, free);
+}
+
+void	expand_redirects(t_cmd_block *cmd, t_environ *env, t_list *words)
+{
+	t_list		*head;
+	t_redirects	*redir;
+	int			qhdoc;
+
+	head = cmd->redirects;
+	while (cmd->redirects != NULL)
+	{
+		redir = cmd->redirects->content;
+		qhdoc = redir->redirect;
+		if (redir->redirect != HEREDOC)
+		{
+			redir->error = set_expanded_to_words(
+					env, redir->target, &words, qhdoc);
+			assign_expanded_target(redir, &words);
+		}
+		cmd->redirects = cmd->redirects->next;
+	}
+	cmd->redirects = head;
 }
 
 void	expansion(t_list **tokens, t_environ *env)
 {
 	t_list		*words;
 	t_list		*head;
-	t_list		*prev;
-	bool		error;
 
 	words = NULL;
 	head = *tokens;
-	prev = NULL;
 	while (*tokens != NULL)
 	{
-		error = false;
 		if ((*tokens)->content != NULL)
 		{
 			expand_cmd_args((t_cmd_block *)(*tokens)->content, env, words);
-			expand_redirects((t_cmd_block *)(*tokens)->content,
-				env, words, &error);
+			expand_redirects((t_cmd_block *)(*tokens)->content, env, words);
 		}
-		error_check(tokens, &prev, &head, error);
+		*tokens = (*tokens)->next;
 	}
 	*tokens = head;
 }
