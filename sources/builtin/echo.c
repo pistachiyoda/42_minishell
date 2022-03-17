@@ -9,7 +9,11 @@ int	ft_echo(t_cmd_block *cmd_block)
 		&& ft_strlen(cmd_block->args[1]) == 2
 		&& ft_strncmp(cmd_block->args[1], "-n", 2) == 0;
 	if (without_newline)
+	{
 		i = 2;
+		while (ft_strncmp(cmd_block->args[i], "-n", 2) == 0)
+			i ++;
+	}
 	else
 		i = 1;
 	while (cmd_block->args[i])
