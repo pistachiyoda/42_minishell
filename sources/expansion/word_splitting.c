@@ -1,41 +1,37 @@
 #include "minishell.h"
 
-bool	is_space_condition(t_expand data, char **head, bool *split, int *j)
+bool	is_allspace_or_null(t_expand *data, char **head, int *j)
 {
-	if (check_str_type(*head) != SPACELESS)
-		*split = true;
-	if (check_str_type(*head) == ALL_SPACE)
+	int	i;
+
+	i = 0;
+	if (*head == NULL)
+		return (true);
+	if (check_str_type(*head) == ALL_SPACE && data->status == NONE && data->end
+		&& data->h_len == 0)
 	{
 		free(*head);
-		if (!data.end)
-			*head = ft_xstrdup("", "expansion");
-		return (false);
+		return (true);
 	}
-	while ((*head)[*j] != '\0' && is_space_tab_newline((*head)[*j]))
+	*j = data->h_len;
+	while ((*head)[*j] != '\0' && is_blank((*head)[*j]))
 		(*j)++;
-	return (true);
+	return (false);
 }
 
-void	split_by_space_expand(char **str, t_list **words, int *i, int start)
+void	split_by_space_expand(char **str, t_list **words, int i, int start)
 {
 	t_list	*new;
 
 	if (*words == NULL)
-		*words = ft_xlstnew(ft_xsubstr(*str, start, *i - start, "expansion"),
+		*words = ft_xlstnew(ft_xsubstr(*str, start, i - start, "expansion"),
 				"expansion");
 	else
 	{
-		new = ft_xlstnew(ft_xsubstr(*str, start, *i - start, "expansion"),
+		new = ft_xlstnew(ft_xsubstr(*str, start, i - start, "expansion"),
 				"expansion");
 		ft_lstadd_back(words, new);
 	}
-}
-
-int	skip_blank(char *str, int *i)
-{
-	while (str[*i + 1] != '\0' && is_space_tab_newline(str[*i + 1]))
-		(*i)++;
-	return (*i);
 }
 
 void	get_new_head(char **head, int j, int start)
@@ -50,28 +46,38 @@ void	get_new_head(char **head, int j, int start)
 	*head = tmp;
 }
 
-void	word_splitting(t_list **words, t_expand data, char **head, bool *split)
+int	split_before_expanded(t_list **words, t_expand *data, char **head, int j)
+{
+	if (j > 0 && data->h_len > 0 && j != data->h_len)
+		split_by_space_expand(head, words, data->h_len, 0);
+	if (j != data->h_len)
+		return (j);
+	else
+		return (0);
+}
+
+void	word_splitting(t_list **words, t_expand *data, char **head)
 {
 	int		j;
 	int		start;
 
 	j = 0;
-	if (data.status == NONE)
+	if (data->status == NONE && !is_allspace_or_null(data, head, &j))
 	{
-		if (!is_space_condition(data, head, split, &j))
-			return ;
-		start = j;
+		start = split_before_expanded(words, data, head, j);
 		while ((*head)[j] != '\0')
 		{
-			if (is_space_tab_newline((*head)[j]))
+			if (is_blank((*head)[j]))
 			{
-				split_by_space_expand(head, words, &j, start);
-				if (data.end && check_str_type(*head) == ALL_SPACE)
+				split_by_space_expand(head, words, j, start);
+				if (data->end && check_str_type(&(*head)[j]) == ALL_SPACE)
 				{
 					free(*head);
 					return ;
 				}
-				start = skip_blank(*head, &j) + 1;
+				while ((*head)[j + 1] != '\0' && is_blank((*head)[j + 1]))
+					j++;
+				start = j + 1;
 			}
 			j++;
 		}
