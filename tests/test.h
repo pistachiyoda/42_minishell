@@ -155,6 +155,9 @@ extern "C" {
 	// exec_command_line/exec_command_line.c
 	int		exec_command_line(t_environ *env, t_list *cmd_list, char **envp, int cmd_cnt);
 
+	// exec_command_line/exec_command_line2.c
+	int			get_child_status(int status);
+
 	// exec_command_line/handle_file.c
 	bool		is_readable(char *file);
 	int			open_file(char *file);

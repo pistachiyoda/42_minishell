@@ -17,14 +17,7 @@ int	handle_single_block(t_cmd_block *cmd_block, char **envp)
 	}
 	close_doc_pipe_fd(cmd_block);
 	waitpid_wrapper(pid, &status, 0);
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	if (WIFSIGNALED(status))
-	{
-		write(1, "\n", 1);
-		return (WTERMSIG(status) + 128);
-	}
-	return (1);
+	return (get_child_status(status));
 }
 
 void	handle_multi_block(int *pids, t_list *cmd_list, char **envp)
