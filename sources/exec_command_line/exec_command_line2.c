@@ -30,6 +30,9 @@ int	wait_pids(int cmd_cnt, int pids[1000])
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	if (WIFSIGNALED(status))
+	{
+		write(1, "\n", 1);
 		return (WTERMSIG(status) + 128);
+	}
 	return (1);
 }

@@ -20,7 +20,10 @@ int	handle_single_block(t_cmd_block *cmd_block, char **envp)
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	if (WIFSIGNALED(status))
+	{
+		write(1, "\n", 1);
 		return (WTERMSIG(status) + 128);
+	}
 	return (1);
 }
 
