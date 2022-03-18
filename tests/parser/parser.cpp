@@ -587,33 +587,12 @@ TEST(parser_G, heredoc) {
 	compare_tokens(tokens, exp_tokens);
 }
 
-t_list	*pipe_at_end(void)
-{
-	t_list		*exp_tokens;
-	t_cmd_block	*exp_cmd;
-	char		**exp_args;
-
-	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
-	exp_cmd->redirects = NULL;
-	exp_cmd->command = ft_strdup("echo");
-	exp_args = (char **)malloc(sizeof(char *) * 3);
-	exp_args[0] = ft_strdup("echo");
-	exp_args[1] = ft_strdup("a");
-	exp_args[2] = NULL;
-	exp_cmd->args = exp_args;
-	exp_tokens = ft_lstnew(exp_cmd);
-	exp_cmd = NULL;
-	ft_lstadd_back(&exp_tokens, ft_lstnew(exp_cmd));
-	return (exp_tokens);
-}
-
+//syntax error
 TEST(parser_G, pipe_at_end) {
 	t_list		*tokens;
-	t_list		*exp_tokens;
 
 	tokens = get_tokens_from_parser(ft_strdup("echo a|"));
-	exp_tokens = pipe_at_end();
-	compare_tokens(tokens, exp_tokens);
+	compare_tokens(tokens, NULL);
 }
 
 t_list	*only_1command(void)
