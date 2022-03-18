@@ -39,7 +39,10 @@ bool	parser(t_list *words, t_list **tokens, char *str)
 	t_list		*head;
 
 	if (!is_valid_words(words, str))
+	{
+		g_status = 258;
 		return (false);
+	}
 	head = words;
 	while (words != NULL)
 	{
