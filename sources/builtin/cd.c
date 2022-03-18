@@ -2,7 +2,8 @@
 
 bool	is_double_slash(char *command_path)
 {
-	if (ft_strncmp(command_path, "//", 2) == 0 && ft_strncmp(command_path, "///", 3) != 0)
+	if (ft_strncmp(command_path, "//", 2) == 0
+		&& ft_strncmp(command_path, "///", 3) != 0)
 		return (true);
 	return (false);
 }
@@ -14,8 +15,7 @@ bool	is_absolute(char *command_path)
 	return (false);
 }
 
-// // export key=path(絶対パスに変換されたもの)を実行するためのcmd_blockを作る
-t_cmd_block *update_block_data(char *key, char *path)
+t_cmd_block	*update_block_data(char *key, char *path)
 {
 	t_cmd_block	*update_block;
 	char		*tmp_str;
@@ -35,20 +35,24 @@ t_cmd_block *update_block_data(char *key, char *path)
 
 void	update_pwd(char *path, t_environ *env)
 {
-	t_cmd_block *update_pwd_block;
-	t_cmd_block *update_oldpwd_block;
+	t_cmd_block	*update_pwd_block;
+	t_cmd_block	*update_oldpwd_block;
 	char		*old_wd;
 	char		*current_wd;
 
 	old_wd = get_env_val("PWD", t_environ_to_vector(env));
 	if (old_wd == NULL)
 		old_wd = getcwd(NULL, 1024);
-	update_oldpwd_block = update_block_data(ft_xstrdup("OLDPWD", "ft_cd"), old_wd);
+	update_oldpwd_block = update_block_data(
+			ft_xstrdup("OLDPWD", "ft_cd"), old_wd);
 	ft_export(update_oldpwd_block, env);
 	current_wd = getcwd(NULL, 1024);
-	if (is_double_slash(path) || (is_double_slash(old_wd) && !is_absolute(path)))
-		current_wd = ft_xstrjoin_with_free(ft_xstrdup("/", "ft_cd"), current_wd, "ft_cd");
-	update_pwd_block = update_block_data(ft_xstrdup("PWD", "ft_cd"), current_wd);
+	if (is_double_slash(path)
+		|| (is_double_slash(old_wd) && !is_absolute(path)))
+		current_wd = ft_xstrjoin_with_free(
+				ft_xstrdup("/", "ft_cd"), current_wd, "ft_cd");
+	update_pwd_block = update_block_data(
+			ft_xstrdup("PWD", "ft_cd"), current_wd);
 	ft_export(update_pwd_block, env);
 	free(current_wd);
 }
