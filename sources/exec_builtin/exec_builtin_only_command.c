@@ -64,7 +64,10 @@ int	run_builtin_only_command(t_list *cmd_list, t_environ *env)
 		return (status);
 	status = run_builtin_command((t_cmd_block *)cmd_list->content, env);
 	if (status != 0)
+	{
+		reset_dup(first_redirect, fd_list);
 		return (status);
+	}
 	status = reset_dup(first_redirect, fd_list);
 	if (status != 0)
 		return (status);

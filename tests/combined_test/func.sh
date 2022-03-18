@@ -77,7 +77,6 @@ exec_test_error () {
 
 	# 標準出力、エラー出力、終了ステータスが同じであれば緑色でテストコマンドが出力される
 	compare_result "$@" "$TRIMMED_BASH_ERR_OUT" "$TRIMMED_MINISHELL_ERR_OUT" $BASH_STATUS $MINISHELL_STATUS
-
 }
 
 exec_test_error_single_line () {
@@ -111,6 +110,22 @@ exec_test_with_expected_text () {
 
 	# minishellでコマンド実行
 	MINISHELL_OUT=$(echo -e "$TEST_COMMAND" | ../../minishell 2> /dev/null | grep -v "^minishell$ " ) 
+	echo -e "$TEST_COMMAND \n" | ../../minishell > /dev/null 2>&1
+	MINISHELL_STATUS=$(echo $?)
+
+	compare_result "$TEST_COMMAND" "$EXPECTED_TEXT" "$MINISHELL_OUT" $BASH_STATUS $MINISHELL_STATUS
+}
+
+exec_error_test_with_expected_text () {
+	TEST_COMMAND=$1
+	EXPECTED_TEXT=$2
+
+	# bashでコマンド実行
+	echo -e "$TEST_COMMAND" | bash 2> /dev/null
+	BASH_STATUS=$(echo $?)
+
+	# minishellでコマンド実行
+	MINISHELL_OUT=$(echo -e "$TEST_COMMAND" | ../../minishell 2>&1 | grep -v "^minishell$ " ) 
 	echo -e "$TEST_COMMAND \n" | ../../minishell > /dev/null 2>&1
 	MINISHELL_STATUS=$(echo $?)
 

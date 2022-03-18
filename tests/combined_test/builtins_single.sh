@@ -8,6 +8,9 @@ exec_test "echo test      tout"
 exec_test "echo -p"
 exec_test_with_expected_text "echo -n test tout" "test toutminishell$ "
 exec_test_with_expected_text "echo -n -n -n test tout" "test toutminishell$ "
+exec_test_with_expected_text "echo -n -n -n -n   -n     -n -n-n test tout" "test toutminishell$ "
+exec_test_with_expected_text "echo -n -x -n test tout" "-x -n test toutminishell$ "
+exec_test_with_expected_text "echo -x -n test tout" "-x -n test tout"
 # exec_test 'echo "$$$$$$$"'
 # exec_test 'echo "?????"'
 
