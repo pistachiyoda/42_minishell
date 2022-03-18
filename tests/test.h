@@ -11,7 +11,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-extern	volatile unsigned char	g_status;
+extern	volatile int	g_status;
 extern	char **g_envp;
 extern	char **envp_in_test;
 
@@ -217,6 +217,14 @@ extern "C" {
 
 	/////////////////////////////////////////////////////////////////////////////////////
 	// lexer.h
+	typedef struct s_lex
+	{
+		int		i;
+		int		start;
+		int		status;
+		bool	error;
+	}	t_lex;
+
 	enum e_STATUS
 	{
 		QUOTE,
@@ -225,13 +233,11 @@ extern "C" {
 	};
 
 	// lexer/split_by_redirect_pipe.c
-	bool		get_valid_fd_num(char *str, t_list *words, int i, int start);
-	bool		is_valid_redirect_pipe(char *str, int *i, int start);
-	int			split_by_redirect_pipe(char *str, t_list *words, int *i, int start);
+	bool		split_by_redirect_pipe(char *str, t_list *words, t_lex *info);
 
 	// lexer/lexer.c
-	int			split_by_space_lex(char *str, t_list *words, int *i, int start);
-	bool		add_last_str(char *str, t_list **words, int start, int status);
+	void		split_by_space_lex(char *str, t_list *words, t_lex *info);
+	bool		add_last_str(char *str, t_list **words, t_lex info);
 	bool		lexer(char *str, t_list **words);
 
 	// parser/set_cmd_block.c
