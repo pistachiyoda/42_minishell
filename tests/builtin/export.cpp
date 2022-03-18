@@ -1270,6 +1270,40 @@ TEST(export_G, has_double_dollar6) {
 	compare_tokens(tokens, exp_tokens);
 }
 
+t_list	*has_double_dollar7(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("$$");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 2);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_dollar7) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo > $gyu$$$hhj"), env);
+	exp_tokens = has_double_dollar7();
+	compare_tokens(tokens, exp_tokens);
+}
+
 t_list	*export_equal_signs_val(void)
 {
 	t_list		*exp_tokens;
