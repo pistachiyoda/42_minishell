@@ -43,7 +43,7 @@ int	run_builtin_command(t_cmd_block *cmd_block, t_environ *env)
 	if (is_builtin(cmd_block->command, "cd"))
 		return (ft_cd(cmd_block, env));
 	if (is_builtin(cmd_block->command, "pwd"))
-		return (ft_pwd());
+		return (ft_pwd(env));
 	if (ft_strncmp(cmd_block->command, "export", 6) == 0)
 		return (ft_export(cmd_block, env));
 	if (ft_strncmp(cmd_block->command, "unset", 5) == 0)
