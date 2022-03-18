@@ -78,7 +78,15 @@ void	param_expansion(t_environ *env, t_expand *data, char *str, char **head)
 	value = NULL;
 	if (*head)
 		data->h_len = ft_strlen(*head);
-	if (ft_strncmp(&str[data->i], "$?", 2) == 0)
+	if (ft_strncmp(&str[data->i], "$$", 2) == 0)
+	{
+		data->i += 1;
+		value = *head;
+		*head = ft_xstrjoin(value, "$$", "expansion");
+		free(value);
+		value = NULL;
+	}
+	else if (ft_strncmp(&str[data->i], "$?", 2) == 0)
 		expand_exit_status(data, head);
 	else
 		value = expand_env(env, data, str, head);
