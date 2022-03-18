@@ -64,6 +64,7 @@ t_list *cat_with_input_redirect()
 	input_redirect->redirect = INPUT;
 	input_redirect->target = ft_strdup("./exec_cmdline/in.txt");
 	input_redirect->fd = 0;
+	input_redirect->error = false;
 	cmd_block_1->redirects = ft_lstnew(input_redirect);
 	return ft_lstnew(cmd_block_1);
 }
@@ -89,6 +90,7 @@ t_list *cat_with_write_redirect()
 	write_redirect->redirect = WRITE;
 	write_redirect->target = ft_strdup("./exec_cmdline/out.txt");
 	write_redirect->fd = 1;
+	write_redirect->error = false;
 	cmd_block_1->redirects = ft_lstnew(write_redirect);
 	return ft_lstnew(cmd_block_1);
 }
@@ -115,6 +117,7 @@ t_list *cat_with_append_redirect()
 	append_redirect->redirect = APPEND;
 	append_redirect->target = ft_strdup("./exec_cmdline/out.txt");
 	append_redirect->fd = 1;
+	append_redirect->error = false;
 	cmd_block_1->redirects = ft_lstnew(append_redirect);
 	return ft_lstnew(cmd_block_1);
 }
@@ -143,11 +146,13 @@ t_list *cat_with_input_write_redirect_data()
 	input_redirect->redirect = INPUT;
 	input_redirect->target = ft_strdup("./exec_cmdline/in.txt");
 	input_redirect->fd = 0;
+	input_redirect->error = false;
 	cmd_block_1->redirects = ft_lstnew(input_redirect);
 	write_redirect = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect->redirect = WRITE;
 	write_redirect->target = ft_strdup("./exec_cmdline/out.txt");
 	write_redirect->fd = 1;
+	write_redirect->error = false;
 	ft_lstadd_back(&cmd_block_1->redirects, ft_lstnew(write_redirect));
 	return ft_lstnew(cmd_block_1);
 }
@@ -173,12 +178,14 @@ t_list *cat_with_write_input_redirect_data()
 	write_redirect = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect->redirect = WRITE;
 	write_redirect->fd = 1;
+	write_redirect->error = false;
 	write_redirect->target = ft_strdup("./exec_cmdline/out.txt");
 	cmd_block_1->redirects = ft_lstnew(write_redirect);
 	input_redirect = (t_redirects *)malloc(sizeof(t_redirects));
 	input_redirect->redirect = INPUT;
 	input_redirect->target = ft_strdup("./exec_cmdline/in.txt");
 	input_redirect->fd = 0;
+	input_redirect->error = false;
 	ft_lstadd_back(&cmd_block_1->redirects, ft_lstnew(input_redirect));
 	return ft_lstnew(cmd_block_1);
 }
@@ -205,11 +212,13 @@ t_list *cat_with_input_append_redirect_data()
 	input_redirect->redirect = INPUT;
 	input_redirect->target = ft_strdup("./exec_cmdline/in.txt");
 	input_redirect->fd = 0;
+	input_redirect->error = false;
 	cmd_block_1->redirects = ft_lstnew(input_redirect);
 	append_redirect = (t_redirects *)malloc(sizeof(t_redirects));
 	append_redirect->redirect = APPEND;
 	append_redirect->target = ft_strdup("./exec_cmdline/out.txt");
 	append_redirect->fd = 1;
+	append_redirect->error = false;
 	ft_lstadd_back(&cmd_block_1->redirects, ft_lstnew(append_redirect));
 	return ft_lstnew(cmd_block_1);
 }
@@ -237,11 +246,13 @@ t_list *cat_with_append_input_redirect_data()
 	append_redirect->redirect = APPEND;
 	append_redirect->target = ft_strdup("./exec_cmdline/out.txt");
 	append_redirect->fd = 1;
+	append_redirect->error = false;
 	cmd_block_1->redirects = ft_lstnew(append_redirect);
 	input_redirect = (t_redirects *)malloc(sizeof(t_redirects));
 	input_redirect->redirect = INPUT;
 	input_redirect->target = ft_strdup("./exec_cmdline/in.txt");
 	input_redirect->fd = 0;
+	input_redirect->error = false;
 	ft_lstadd_back(&cmd_block_1->redirects, ft_lstnew(input_redirect));
 	return ft_lstnew(cmd_block_1);
 }
@@ -269,11 +280,13 @@ t_list *cat_with_2append_1_redirect_data()
 	append_redirect1->redirect = APPEND;
 	append_redirect1->target = ft_strdup("./exec_cmdline/out.txt");
 	append_redirect1->fd = 1;
+	append_redirect1->error = false;
 	cmd_block_1->redirects = ft_lstnew(append_redirect1);
 	append_redirect2 = (t_redirects *)malloc(sizeof(t_redirects));
 	append_redirect2->redirect = APPEND;
 	append_redirect2->target = ft_strdup("./exec_cmdline/out2.txt");
 	append_redirect2->fd = 1;
+	append_redirect2->error = false;
 	ft_lstadd_back(&cmd_block_1->redirects, ft_lstnew(append_redirect2));
 	return ft_lstnew(cmd_block_1);
 }
@@ -303,11 +316,13 @@ t_list *cat_with_2append_2_redirect_data()
 	append_redirect1->redirect = APPEND;
 	append_redirect1->target = ft_strdup("./exec_cmdline/out.txt");
 	append_redirect1->fd = 1;
+	append_redirect1->error = false;
 	cmd_block_1->redirects = ft_lstnew(append_redirect1);
 	append_redirect2 = (t_redirects *)malloc(sizeof(t_redirects));
 	append_redirect2->redirect = APPEND;
 	append_redirect2->target = ft_strdup("./exec_cmdline/out.txt");
 	append_redirect2->fd = 1;
+	append_redirect2->error = false;
 	ft_lstadd_back(&cmd_block_1->redirects, ft_lstnew(append_redirect2));
 	return ft_lstnew(cmd_block_1);
 }
@@ -338,24 +353,28 @@ t_list *cat_with_multi_redirect1_data()
 	write_redirect->redirect = WRITE;
 	write_redirect->target = ft_strdup("./exec_cmdline/out.txt");
 	write_redirect->fd = 1;
+	write_redirect->error = false;
 	cmd_block->redirects = ft_lstnew(write_redirect);
 
 	input_redirect = (t_redirects *)malloc(sizeof(t_redirects));
 	input_redirect->redirect = INPUT;
 	input_redirect->target = ft_strdup("./exec_cmdline/in.txt");
 	input_redirect->fd = 0;
+	input_redirect->error = false;
 	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(input_redirect));
 
 	write_redirect2 = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect2->redirect = WRITE;
 	write_redirect2->target = ft_strdup("./exec_cmdline/out2.txt");
 	write_redirect2->fd = 1;
+	write_redirect2->error = false;
 	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect2));
 
 	input_redirect2 = (t_redirects *)malloc(sizeof(t_redirects));
 	input_redirect2->redirect = INPUT;
 	input_redirect2->target = ft_strdup("./exec_cmdline/in2.txt");
 	input_redirect2->fd = 0;
+	input_redirect2->error = false;
 	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(input_redirect2));
 	return ft_lstnew(cmd_block);
 }
@@ -387,24 +406,28 @@ t_list *cat_with_multi_redirect2_data()
 	write_redirect1->redirect = WRITE;
 	write_redirect1->target = ft_strdup("./exec_cmdline/out.txt");
 	write_redirect1->fd = 1;
+	write_redirect1->error = false;
 	cmd_block->redirects = ft_lstnew(write_redirect1);
 
 	write_redirect2 = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect2->redirect = WRITE;
 	write_redirect2->target = ft_strdup("./exec_cmdline/out2.txt");
 	write_redirect2->fd = 1;
+	write_redirect2->error = false;
 	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect2));
 
 	write_redirect3 = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect3->redirect = WRITE;
 	write_redirect3->target = ft_strdup("./exec_cmdline/out3.txt");
 	write_redirect3->fd = 1;
+	write_redirect3->error = false;
 	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect3));
 
 	write_redirect4 = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect4->redirect = WRITE;
 	write_redirect4->target = ft_strdup("./exec_cmdline/out4.txt");
 	write_redirect4->fd = 1;
+	write_redirect4->error = false;
 	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect4));
 	return ft_lstnew(cmd_block);
 }
@@ -435,6 +458,7 @@ t_list	*fd_redirect_and_file_only_data()
 	write_redirect->redirect = WRITE;
 	write_redirect->target = ft_strdup("./exec_cmdline/out.txt");
 	write_redirect->fd = 2;
+	write_redirect->error = false;
 	cmd_block->redirects = ft_lstnew(write_redirect);
 	return ft_lstnew(cmd_block);
 }
@@ -462,6 +486,7 @@ t_list	*unrelated_fd_redirect_data()
 	input_redirect->redirect = INPUT;
 	input_redirect->target = ft_strdup("./exec_cmdline/in.txt");
 	input_redirect->fd = 100;
+	input_redirect->error = false;
 	cmd_block->redirects = ft_lstnew(input_redirect);
 	return ft_lstnew(cmd_block);
 }
@@ -489,6 +514,7 @@ t_list	*unrelated_fd_redirect_with_cat_data()
 	write_redirect->redirect = WRITE;
 	write_redirect->target = ft_strdup("./exec_cmdline/out.txt");
 	write_redirect->fd = 100;
+	write_redirect->error = false;
 	cmd_block->redirects = ft_lstnew(write_redirect);
 	return ft_lstnew(cmd_block);
 }
@@ -518,6 +544,7 @@ t_list	*unrelated_fd_redirect_with_echo_data()
 	write_redirect->redirect = WRITE;
 	write_redirect->target = ft_strdup("./exec_cmdline/out.txt");
 	write_redirect->fd = 100;
+	write_redirect->error = false;
 	cmd_block->redirects = ft_lstnew(write_redirect);
 	return ft_lstnew(cmd_block);
 }
@@ -549,12 +576,14 @@ t_list	*two_unrelated_fd_write_redirect_with_echo_data()
 	write_redirect1->redirect = WRITE;
 	write_redirect1->target = ft_strdup("./exec_cmdline/out1.txt");
 	write_redirect1->fd = 100;
+	write_redirect1->error = false;
 	cmd_block->redirects = ft_lstnew(write_redirect1);
 
 	write_redirect2 = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect2->redirect = WRITE;
 	write_redirect2->target = ft_strdup("./exec_cmdline/out2.txt");
 	write_redirect2->fd = 101;
+	write_redirect2->error = false;
 	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect2));
 
 	return ft_lstnew(cmd_block);
@@ -590,18 +619,21 @@ t_list	*two_unrelated_fd_and_1_write_with_echo_data()
 	write_redirect1->redirect = WRITE;
 	write_redirect1->target = ft_strdup("./exec_cmdline/out1.txt");
 	write_redirect1->fd = 100;
+	write_redirect1->error = false;
 	cmd_block->redirects = ft_lstnew(write_redirect1);
 
 	write_redirect2 = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect2->redirect = WRITE;
 	write_redirect2->target = ft_strdup("./exec_cmdline/out2.txt");
 	write_redirect2->fd = 101;
+	write_redirect2->error = false;
 	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect2));
 
 	write_redirect3 = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect3->redirect = WRITE;
 	write_redirect3->target = ft_strdup("./exec_cmdline/out3.txt");
 	write_redirect3->fd = 1;
+	write_redirect3->error = false;
 	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect3));
 
 	return ft_lstnew(cmd_block);
@@ -636,12 +668,14 @@ t_list *two_fd_write_redirect_with_echo_date()
 	write_redirect1->redirect = WRITE;
 	write_redirect1->target = ft_strdup("./exec_cmdline/out1.txt");
 	write_redirect1->fd = 1;
+	write_redirect1->error = false;
 	cmd_block->redirects = ft_lstnew(write_redirect1);
 
 	write_redirect2 = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect2->redirect = WRITE;
 	write_redirect2->target = ft_strdup("./exec_cmdline/out2.txt");
 	write_redirect2->fd = 2;
+	write_redirect2->error = false;
 	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect2));
 
 	return ft_lstnew(cmd_block);
@@ -674,12 +708,14 @@ t_list *two_fd_write_redirect_with_echo2_date()
 	write_redirect1->redirect = WRITE;
 	write_redirect1->target = ft_strdup("./exec_cmdline/out1.txt");
 	write_redirect1->fd = 2;
+	write_redirect1->error = false;
 	cmd_block->redirects = ft_lstnew(write_redirect1);
 
 	write_redirect2 = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect2->redirect = WRITE;
 	write_redirect2->target = ft_strdup("./exec_cmdline/out2.txt");
 	write_redirect2->fd = 1;
+	write_redirect2->error = false;
 	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect2));
 
 	return ft_lstnew(cmd_block);
@@ -713,18 +749,21 @@ t_list *three_fd_write_redirect_with_echo_date()
 	write_redirect1->redirect = WRITE;
 	write_redirect1->target = ft_strdup("./exec_cmdline/out1.txt");
 	write_redirect1->fd = 1;
+	write_redirect1->error = false;
 	cmd_block->redirects = ft_lstnew(write_redirect1);
 
 	write_redirect2 = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect2->redirect = WRITE;
 	write_redirect2->target = ft_strdup("./exec_cmdline/out2.txt");
 	write_redirect2->fd = 2;
+	write_redirect2->error = false;
 	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect2));
 
 	write_redirect3 = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect3->redirect = WRITE;
 	write_redirect3->target = ft_strdup("./exec_cmdline/out3.txt");
 	write_redirect3->fd = 1;
+	write_redirect3->error = false;
 	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect2));
 
 	cmd_block->redirects = ft_lstnew(write_redirect3);
@@ -767,12 +806,14 @@ t_list *two_fd_write_redirect_with_dog_date()
 	write_redirect1->redirect = WRITE;
 	write_redirect1->target = ft_strdup("./exec_cmdline/out1.txt");
 	write_redirect1->fd = 1;
+	write_redirect1->error = false;
 	cmd_block->redirects = ft_lstnew(write_redirect1);
 
 	write_redirect2 = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect2->redirect = WRITE;
 	write_redirect2->target = ft_strdup("./exec_cmdline/out2.txt");
 	write_redirect2->fd = 2;
+	write_redirect2->error = false;
 	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect2));
 
 	return ft_lstnew(cmd_block);
@@ -806,18 +847,21 @@ t_list *three_fd_write_redirect_with_dog_date()
 	write_redirect1->redirect = WRITE;
 	write_redirect1->target = ft_strdup("./exec_cmdline/out1.txt");
 	write_redirect1->fd = 2;
+	write_redirect1->error = false;
 	cmd_block->redirects = ft_lstnew(write_redirect1);
 
 	write_redirect2 = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect2->redirect = WRITE;
 	write_redirect2->target = ft_strdup("./exec_cmdline/out2.txt");
 	write_redirect2->fd = 1;
+	write_redirect2->error = false;
 	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect2));
 
 	write_redirect3 = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect3->redirect = WRITE;
 	write_redirect3->target = ft_strdup("./exec_cmdline/out3.txt");
 	write_redirect3->fd = 2;
+	write_redirect3->error = false;
 	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect2));
 
 	cmd_block->redirects = ft_lstnew(write_redirect3);
@@ -854,12 +898,14 @@ t_list *zero_100_input_redirect_with_cat_date()
 	input_redirect1->redirect = INPUT;
 	input_redirect1->target = ft_strdup("./exec_cmdline/in.txt");
 	input_redirect1->fd = 0;
+	input_redirect1->error = false;
 	cmd_block->redirects = ft_lstnew(input_redirect1);
 
 	input_redirect2 = (t_redirects *)malloc(sizeof(t_redirects));
 	input_redirect2->redirect = INPUT;
 	input_redirect2->target = ft_strdup("./exec_cmdline/in2.txt");
 	input_redirect2->fd = 100;
+	input_redirect2->error = false;
 	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(input_redirect2));
 
 	return ft_lstnew(cmd_block);
@@ -890,12 +936,14 @@ t_list *two_fd_input_redirect_with_cat_date()
 	input_redirect1->redirect = INPUT;
 	input_redirect1->target = ft_strdup("./exec_cmdline/in.txt");
 	input_redirect1->fd = 0;
+	input_redirect1->error = false;
 	cmd_block->redirects = ft_lstnew(input_redirect1);
 
 	input_redirect2 = (t_redirects *)malloc(sizeof(t_redirects));
 	input_redirect2->redirect = INPUT;
 	input_redirect2->target = ft_strdup("./exec_cmdline/in2.txt");
 	input_redirect2->fd = 0;
+	input_redirect2->error = false;
 	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(input_redirect2));
 
 	return ft_lstnew(cmd_block);
@@ -924,12 +972,14 @@ t_list	*invalid_stdout_redirect_input_data()
 	write_redirect = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect->redirect = WRITE;
 	write_redirect->fd = 2;
+	write_redirect->error = false;
 	write_redirect->target = ft_strdup("./exec_cmdline/out.txt");
 	cmd_block_1->redirects = ft_lstnew(write_redirect);
 	input_redirect = (t_redirects *)malloc(sizeof(t_redirects));
 	input_redirect->redirect = INPUT;
 	input_redirect->target = ft_strdup("./exec_cmdline/in.txt");
 	input_redirect->fd = 1;
+	input_redirect->error = false;
 	ft_lstadd_back(&cmd_block_1->redirects, ft_lstnew(input_redirect));
 	return ft_lstnew(cmd_block_1);
 }
@@ -987,6 +1037,7 @@ t_list	*no_read_permission_data()
 	input_redirect->redirect = INPUT;
 	input_redirect->target = ft_strdup("./exec_cmdline/no_read_permission.txt");
 	input_redirect->fd = 0;
+	input_redirect->error = false;
 	cmd_block->redirects = ft_lstnew(input_redirect);
 	return ft_lstnew(cmd_block);
 }
@@ -1017,6 +1068,7 @@ t_list	*no_write_permission_data()
 	write_redirect->redirect = WRITE;
 	write_redirect->target = ft_strdup("./exec_cmdline/no_write_permission.txt");
 	write_redirect->fd = 1;
+	write_redirect->error = false;
 	cmd_block->redirects = ft_lstnew(write_redirect);
 	return ft_lstnew(cmd_block);
 }
@@ -1094,6 +1146,7 @@ t_list	*input_redirect_directory_data()
 	input_redirect->redirect = INPUT;
 	input_redirect->target = ft_strdup("./exec_cmdline");
 	input_redirect->fd = 0;
+	input_redirect->error = false;
 	cmd_block->redirects = ft_lstnew(input_redirect);
 	return ft_lstnew(cmd_block);
 }
@@ -1122,6 +1175,7 @@ t_list	*write_redirect_directory_data()
 	write_redirect->redirect = WRITE;
 	write_redirect->target = ft_strdup("./exec_cmdline");
 	write_redirect->fd = 1;
+	write_redirect->error = false;
 	cmd_block->redirects = ft_lstnew(write_redirect);
 	return ft_lstnew(cmd_block);
 }
@@ -1174,6 +1228,7 @@ t_list	*no_such_file_redirect_data()
 	input_redirect->redirect = INPUT;
 	input_redirect->target = ft_strdup("hoge");
 	input_redirect->fd = 1;
+	input_redirect->error = false;
 	cmd_block->redirects = ft_lstnew(input_redirect);
 	return ft_lstnew(cmd_block);
 }
@@ -1204,6 +1259,7 @@ t_list	*no_permission_file_in_middle()
 	write_redirect1 = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect1->redirect = WRITE;
 	write_redirect1->fd = 1;
+	write_redirect1->error = false;
 	write_redirect1->target = ft_strdup("./exec_cmdline/out.txt");
 	cmd_block->redirects = ft_lstnew(write_redirect1);
 
@@ -1211,12 +1267,14 @@ t_list	*no_permission_file_in_middle()
 	write_redirect2->redirect = WRITE;
 	write_redirect2->target = ft_strdup("./exec_cmdline/no_write_permission.txt");
 	write_redirect2->fd = 1;
+	write_redirect2->error = false;
 	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect2));
 
 	write_redirect3 = (t_redirects *)malloc(sizeof(t_redirects));
 	write_redirect3->redirect = WRITE;
 	write_redirect3->target = ft_strdup("./exec_cmdline/out2.txt");
 	write_redirect3->fd = 1;
+	write_redirect3->error = false;
 	ft_lstadd_back(&cmd_block->redirects, ft_lstnew(write_redirect3));
 	return ft_lstnew(cmd_block);
 }
@@ -1249,6 +1307,7 @@ t_list *input_redirect_with_exist_dir()
 	input_redirect->redirect = INPUT;
 	input_redirect->target = ft_strdup("./exec_cmdline");
 	input_redirect->fd = 0;
+	input_redirect->error = false;
 	cmd_block->redirects = ft_lstnew(input_redirect);
 	return ft_lstnew(cmd_block);
 }
@@ -1274,6 +1333,7 @@ t_list *write_redirect_with_exist_dir()
 	write_redirect->redirect = WRITE;
 	write_redirect->target = ft_strdup("./exec_cmdline");
 	write_redirect->fd = 0;
+	write_redirect->error = false;
 	cmd_block->redirects = ft_lstnew(write_redirect);
 	return ft_lstnew(cmd_block);
 }
@@ -1343,6 +1403,7 @@ t_list *redirect_in_cat_and_redirect_out_grep_data()
 	input_redirect->redirect = INPUT;
 	input_redirect->target = ft_strdup("./exec_cmdline/in.txt");
 	input_redirect->fd = 0;
+	input_redirect->error = false;
 	cmd_block_1->redirects = ft_lstnew(input_redirect);
 
 	// grep hoge > ./exec_cmdline/out.txt
@@ -1352,6 +1413,7 @@ t_list *redirect_in_cat_and_redirect_out_grep_data()
 	write_redirect->redirect = WRITE;
 	write_redirect->target = ft_strdup("./exec_cmdline/out.txt");
 	write_redirect->fd = 1;
+	write_redirect->error = false;
 	cmd_block_2->redirects = ft_lstnew(write_redirect);
 
 	cmd_list = ft_lstnew(cmd_block_1);
@@ -1424,6 +1486,7 @@ t_list *err_with_2block_data()
 	input_redirect->redirect = INPUT;
 	input_redirect->target = ft_strdup("./exec_cmdline/no_read_permission.txt");
 	input_redirect->fd = 0;
+	input_redirect->error = false;
 	cmd_block_2->redirects = ft_lstnew(input_redirect);
 	cmd_list = ft_lstnew(cmd_block_1);
 	ft_lstadd_back(&cmd_list, ft_lstnew(cmd_block_2));
@@ -1453,6 +1516,7 @@ t_list *err_with_3blocks_data()
 	write_redirect->redirect = WRITE;
 	write_redirect->target = ft_strdup("./exec_cmdline/out.txt");
 	write_redirect->fd = 1;
+	write_redirect->error = false;
 	cmd_block_1->redirects = ft_lstnew(write_redirect);
 
 	cmd_block_2 = (t_cmd_block *)malloc(sizeof(t_cmd_block));

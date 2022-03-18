@@ -1070,15 +1070,15 @@ t_list	*has_double_dollar(void)
 	exp_redir->error = false;
 	exp_cmd->redirects = ft_lstnew(exp_redir);
 	exp_cmd->command = ft_strdup("echo");
-	exp_args = (char **)malloc(sizeof(char *) * 2);
+	exp_args = (char **)malloc(sizeof(char *) * 3);
 	exp_args[0] = ft_strdup("echo");
-	exp_args[1] = NULL;
+	exp_args[1] = ft_strdup("$$");
+	exp_args[2] = NULL;
 	exp_cmd->args = exp_args;
 	exp_tokens = ft_lstnew(exp_cmd);
 	return (exp_tokens);
 }
 
-// 未対応
 TEST(export_G, has_double_dollar) {
 	t_list		*tokens;
 	t_list		*exp_tokens;
@@ -1087,6 +1087,811 @@ TEST(export_G, has_double_dollar) {
 	env = create_environ(g_envp);
 	tokens = get_tokens_from_expansion(ft_strdup("  echo $$ > test"), env);
 	exp_tokens = has_double_dollar();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_double_dollar2(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("test");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("aa$$AA");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_dollar2) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export a=AA"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo aa$$$a > test"), env);
+	exp_tokens = has_double_dollar2();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_double_dollar3(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("$$");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 2);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_dollar3) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo > $$"), env);
+	exp_tokens = has_double_dollar3();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_double_dollar4(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("$$AA");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 2);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_dollar4) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export a=AA"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo > $$$a"), env);
+	exp_tokens = has_double_dollar4();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_double_dollar5(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("AA");
+	exp_redir->target = ft_strdup("$$AA$$");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 2);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_dollar5) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export a=AA"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo > $$$a$$"), env);
+	exp_tokens = has_double_dollar5();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_double_dollar6(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("AA$$");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 2);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_dollar6) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export a=AA"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo > $a$$ "), env);
+	exp_tokens = has_double_dollar6();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_double_dollar7(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("$$");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("$$");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_dollar7) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo \"$gyu$$$hhj\"> $gyu$$$hhj"), env);
+	exp_tokens = has_double_dollar7();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_double_quote(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("aaa");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("aaa");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_quote) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo \"aaa\"> \"aaa\""), env);
+	exp_tokens = has_double_quote();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_double_quote2(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("aa");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("aa");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_quote2) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export AA=aa"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo \"$AA\"> \"$AA\""), env);
+	exp_tokens = has_double_quote2();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_double_quote3(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("aaa");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_quote3) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export AA=aa"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo \"$A\"> \"aaa\""), env);
+	exp_tokens = has_double_quote3();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_double_quote4(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("aa");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_quote4) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export AA=aa"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo \"$AA\"> \"$A\""), env);
+	exp_tokens = has_double_quote4();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_double_quote5(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("aaa");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("a");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_quote5) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export AA=aa"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo \"a$A\"> \"aaa\""), env);
+	exp_tokens = has_double_quote5();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_double_quote6(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("aaa");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("'a'");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_quote6) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export AA=aa"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo \"$A'a'\"> \"aaa\""), env);
+	exp_tokens = has_double_quote6();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_double_quote7(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("aaa");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_quote7) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export AA"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo \"$AA\"> \"aaa\""), env);
+	exp_tokens = has_double_quote7();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_double_quote8(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_quote8) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export AA"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo \"$A\"> \"$A\""), env);
+	exp_tokens = has_double_quote8();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_double_quote9(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("a");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("a");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_quote9) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export AA"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo \"a$AA\"> \"a$AA\""), env);
+	exp_tokens = has_double_quote9();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_double_quote10(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("'a'");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("'a'");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_quote10) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export AA"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo \"$AA'a'\"> \"$AA'a'\""), env);
+	exp_tokens = has_double_quote10();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_double_quote11(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("  a  ");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("    ");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_quote11) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export AA"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo \"  $AA  \"> \"  a  \""), env);
+	exp_tokens = has_double_quote11();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_double_quote12(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("  a  ");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_quote12) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export AA"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo \"$AA$AA\"> \"  a  \""), env);
+	exp_tokens = has_double_quote12();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_double_quote13(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("      ");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("   ");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_quote13) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export AA"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo \" $AA $AA \"> \"  $AA  $AA  \""), env);
+	exp_tokens = has_double_quote13();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_double_quote14(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("      ");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("    ");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_quote14) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export B=b"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo \" $AA $AA $AA \"> \"  $BA  $BA  \""), env);
+	exp_tokens = has_double_quote14();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_double_quote15(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("  bb    ");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup(" bb bb bb ");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_double_quote15) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export B=bb"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo \" $B $B $B \"> \"  $B  $BA  \""), env);
+	exp_tokens = has_double_quote15();
+	compare_tokens(tokens, exp_tokens);
+}
+
+t_list	*has_invalid_envs(void)
+{
+	t_list		*exp_tokens;
+	t_cmd_block	*exp_cmd;
+	char		**exp_args;
+	t_redirects	*exp_redir;
+
+	exp_cmd = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+	exp_redir = (t_redirects *)malloc(sizeof(t_redirects));
+	exp_redir->fd = 1;
+	exp_redir->redirect = WRITE;
+	exp_redir->target = ft_strdup("bb");
+	exp_redir->error = false;
+	exp_cmd->redirects = ft_lstnew(exp_redir);
+	exp_cmd->command = ft_strdup("echo");
+	exp_args = (char **)malloc(sizeof(char *) * 3);
+	exp_args[0] = ft_strdup("echo");
+	exp_args[1] = ft_strdup("bb");
+	exp_args[2] = NULL;
+	exp_cmd->args = exp_args;
+	exp_tokens = ft_lstnew(exp_cmd);
+	return (exp_tokens);
+}
+
+TEST(export_G, has_invalid_envs) {
+	t_list		*tokens;
+	t_list		*exp_tokens;
+	t_environ	*env;
+
+	env = create_environ(g_envp);
+	tokens = get_tokens_from_expansion(ft_strdup("export B=bb"), env);
+	ft_export((t_cmd_block *)tokens->content, env);
+	tokens = get_tokens_from_expansion(ft_strdup("  echo $BB$BB$B> \"$BB$BB$B\""), env);
+	exp_tokens = has_invalid_envs();
 	compare_tokens(tokens, exp_tokens);
 }
 
