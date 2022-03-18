@@ -33,7 +33,7 @@ char	**t_environ_to_vector(t_environ *env)
 			free(tmp);
 		}
 		else
-			env_vec[i++] = env->key;
+			env_vec[i++] = ft_xstrdup(env->key, "env_conversion");
 		env = env->next;
 	}
 	env_vec[i] = NULL;
