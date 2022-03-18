@@ -2,7 +2,11 @@
 
 bool	is_valid_words(t_list *head, char *str)
 {
-	if (ft_strncmp(head->content, "|", 1) == 0)
+	t_list	*tail;
+
+	tail = ft_lstlast(head);
+	if (ft_strncmp(head->content, "|", 1) == 0
+		|| ft_strncmp(tail->content, "|", 1) == 0)
 	{
 		syntax_error("|");
 		free_words_str(&head, str);
@@ -35,7 +39,10 @@ bool	parser(t_list *words, t_list **tokens, char *str)
 	t_list		*head;
 
 	if (!is_valid_words(words, str))
+	{
+		g_status = 258;
 		return (false);
+	}
 	head = words;
 	while (words != NULL)
 	{

@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-volatile unsigned char	g_status = 0;
+volatile int	g_status = 0;
 
 int	main(int argc, char **argv, char **envp)
 {

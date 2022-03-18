@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-bool	get_valid_fd_num(char *str, t_list *words, int i, int start)
+static bool	get_valid_fd_num(char *str, t_list *words, int i, int start)
 {
 	int		count;
 	char	*fd;
@@ -12,6 +12,7 @@ bool	get_valid_fd_num(char *str, t_list *words, int i, int start)
 	if (i - start == count && (count > 10 || ft_atoi(fd) == -1))
 	{
 		print_error("file descriptor out of range", EMESS_LARGE_FD);
+		g_status = 1;
 		free(fd);
 		return (false);
 	}
@@ -26,7 +27,7 @@ bool	get_valid_fd_num(char *str, t_list *words, int i, int start)
 	return (true);
 }
 
-bool	is_valid_redirect_pipe(char *str, int *i, int start)
+static bool	is_valid_redirect_pipe(char *str, int *i, int start)
 {
 	int		j;
 
@@ -48,33 +49,36 @@ bool	is_valid_redirect_pipe(char *str, int *i, int start)
 		else
 			str[*i + j + 1] = '\0';
 		syntax_error(&str[*i + 1]);
+		g_status = 258;
 		return (false);
 	}
 	return (true);
 }
 
-int	split_by_redirect_pipe(char *str, t_list *words, int *i, int start)
+bool	split_by_redirect_pipe(char *str, t_list *words, t_lex *info)
 {
 	t_list	*new;
 
-	if (*i != start)
+	if (info->i != info->start)
 	{
-		new = ft_xlstnew(ft_xsubstr(str, start, *i - start, "lex"), "lex");
+		new = ft_xlstnew(ft_xsubstr(
+					str, info->start, info->i - info->start, "lex"), "lex");
 		ft_lstadd_back(&words, new);
 	}
-	if (!get_valid_fd_num(str, words, *i, start))
-		return (-1);
-	start = *i;
-	if (ft_strncmp(&str[*i], ">>", 2) == 0
-		|| ft_strncmp(&str[*i], "<<", 2) == 0)
+	if (!get_valid_fd_num(str, words, info->i, info->start))
+		return (info->error = true);
+	info->start = info->i;
+	if (ft_strncmp(&str[info->i], ">>", 2) == 0
+		|| ft_strncmp(&str[info->i], "<<", 2) == 0)
 	{
-		(*i)++;
-		new = ft_xlstnew(ft_xsubstr(str, start, 2, "lex"), "lex");
+		info->i += 1;
+		new = ft_xlstnew(ft_xsubstr(str, info->start, 2, "lex"), "lex");
 	}
 	else
-		new = ft_xlstnew(ft_xsubstr(str, start, 1, "lex"), "lex");
+		new = ft_xlstnew(ft_xsubstr(str, info->start, 1, "lex"), "lex");
 	ft_lstadd_back(&words, new);
-	if (!is_valid_redirect_pipe(str, i, start))
-		return (-1);
-	return (start = *i + 1);
+	if (!is_valid_redirect_pipe(str, &info->i, info->start))
+		return (info->error = true);
+	info->start = info->i + 1;
+	return (false);
 }

@@ -11,13 +11,13 @@
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/syslimits.h>
+# include <limits.h>
 # include "libft.h"
 # include "cmdline_data.h"
 # include "lexer.h"
 # include "parser.h"
-# include <sys/syslimits.h>
 # include "expansion.h"
-# include "limits.h"
 
 # define EMESS_NO_FILE_DIR "No such file or directory\n"
 # define EMESS_IS_DIR "is a directory\n"
@@ -25,9 +25,7 @@
 # define EMESS_NO_CMD "command not found\n"
 # define EMESS_NO_PERM "Permission denied\n"
 # define EMESS_REQUIRE_ARGS "Require argument\n"
-# define EMESS_INVALID_ARGS "Invalid argument\n"
 # define EMESS_MALLOC_FAIL "Memory allocation failure\n"
-# define EMESS_UNCLOSED_QUOAT "Unclosed quoat detected\n"
 # define EMESS_INVALID_ID "not a valid identifier\n"
 # define EMESS_SYNTAX "syntax error near unexpected token"
 # define EMESS_LARGE_FD "Bad file descriptor\n"
@@ -38,7 +36,7 @@
 
 # define FD_MAX 256
 
-extern volatile unsigned char	g_status;
+extern volatile int	g_status;
 
 // exec_command/exec_command.c
 void		exec_command(t_cmd_block *cmd_block, char **envp);
