@@ -39,7 +39,6 @@ TEST(signal_G, exit_status_after_signal) {
 	t_list		*tokens;
 	t_list		*exp_tokens;
 
-	// g_status = ;
 	tokens = get_tokens_from_expansion(ft_strdup("echo $?"), create_environ(g_envp));
 	exp_tokens = exit_status_after_signal();
 	compare_tokens(tokens, exp_tokens);
