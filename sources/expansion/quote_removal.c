@@ -61,9 +61,15 @@ void	set_head_before_dollar(char *str, char **head, t_expand data)
 
 	if (*head == NULL && data.i != 0 && data.i != data.prev_q)
 		*head = ft_xsubstr(str, data.prev_q, data.i - data.prev_q, "expansion");
-	else if (data.prev_q != 0 && data.prev_q != data.i)
+	else if (data.prev_q != 0 && data.prev_q != data.i
+		&& data.managed_i < data.i)
 	{
-		add = ft_xsubstr(str, data.prev_q, data.i - data.prev_q, "expansion");
+		if (data.prev_q > data.managed_i)
+			add = ft_xsubstr(
+					str, data.prev_q, data.i - data.prev_q, "expansion");
+		else
+			add = ft_xsubstr(
+					str, data.managed_i, data.i - data.managed_i, "expansion");
 		front = ft_xstrjoin(*head, add, "expansion");
 		free(add);
 		free(*head);
