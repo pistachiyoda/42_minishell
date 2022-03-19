@@ -3,17 +3,23 @@
 void	update_environ(char *str, t_environ *env, int *status)
 {
 	char	**split_ele;
+	char	*value;
 	bool	key_only;
 
 	key_only = false;
+	value = NULL;
 	split_ele = split_by_delimiter(str, &key_only, "export");
 	if (!is_valid_arg(split_ele[0], str, "export"))
 	{
 		*status = 1;
 		free_2d_array(split_ele);
 	}
-	else if (is_env_registered(env, split_ele, key_only, "export"))
+	else if (is_env_registered(env, split_ele, &value))
+	{
+		if (!key_only)
+			update_value(env, split_ele, "export");
 		free_2d_array(split_ele);
+	}
 	else
 	{
 		env = add_environ(env->prev, env, split_ele, "export");
