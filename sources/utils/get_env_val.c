@@ -64,6 +64,7 @@ char	*get_env_val(char *key, char **envp)
 			free_2d_array(data);
 			return (env_val);
 		}
+		free_2d_array(data);
 		i++;
 	}
 	return (NULL);
