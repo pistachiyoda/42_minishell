@@ -56,10 +56,6 @@ bool		free_words_str(t_list **words, char *str);
 void		free_cmd_block(t_list **tokens);
 void		free_tokens(t_list **tokens);
 
-// utils/is_env_registered.c
-char		*is_env_registered(t_environ *env, char **split_ele,
-				bool key_only, char *target);
-
 // utils/check_str_type.c
 int			check_str_type(char *str);
 bool		is_quote_type_switched(char *str, int i, int *status);
@@ -174,6 +170,10 @@ t_environ	*create_environ(char **envp);
 // env/t_environ_to_vector.c
 int			count_environ_ele(t_environ *env);
 char		**t_environ_to_vector(t_environ *env);
+
+// env/is_env_registered.c
+void		update_value(t_environ *env, char **split_ele, char *target);
+bool		is_env_registered(t_environ *env, char **split_ele, char **value);
 
 // builtin/env.c
 int			ft_env(t_environ *env);

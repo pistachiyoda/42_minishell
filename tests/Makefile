@@ -27,7 +27,6 @@ SOURCES =\
 	../sources/exec_builtin/exec_builtin_only_command.c\
     ../sources/signal/signal.c\
 	../sources/utils/free.c\
-	../sources/utils/is_env_registered.c\
 	../sources/utils/check_str_type.c\
 	../sources/utils/print_error.c\
 	../sources/utils/malloc_check.c\
@@ -42,6 +41,7 @@ SOURCES =\
 	../sources/debug/set_dataset.c\
 	../sources/env/create_environ.c\
     ../sources/env/t_environ_to_vector.c\
+	../sources/env/is_env_registered.c\
     ../sources/builtin/env.c\
     ../sources/builtin/export.c\
 	../sources/builtin/export_display_env.c\
