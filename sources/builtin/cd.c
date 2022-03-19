@@ -39,13 +39,18 @@ void	update_pwd(char *path, t_environ *env)
 	t_cmd_block	*update_oldpwd_block;
 	char		*old_wd;
 	char		*current_wd;
+	char		**envp;
 
-	old_wd = get_env_val("PWD", t_environ_to_vector(env));
+	envp = t_environ_to_vector(env);
+	old_wd = get_env_val("PWD", envp);
+	free_2d_array(envp);
 	if (old_wd == NULL)
 		old_wd = getcwd(NULL, 1024);
 	update_oldpwd_block = update_block_data(
 			ft_xstrdup("OLDPWD", "ft_cd"), old_wd);
 	ft_export(update_oldpwd_block, env);
+	free(update_oldpwd_block->command);
+	free_cmd_block_after_exec(update_oldpwd_block);
 	current_wd = getcwd(NULL, 1024);
 	if (is_double_slash(path)
 		|| (is_double_slash(old_wd) && !is_absolute(path)))
@@ -54,6 +59,9 @@ void	update_pwd(char *path, t_environ *env)
 	update_pwd_block = update_block_data(
 			ft_xstrdup("PWD", "ft_cd"), current_wd);
 	ft_export(update_pwd_block, env);
+	free(update_pwd_block->command);
+	free_cmd_block_after_exec(update_pwd_block);
+	free(old_wd);
 	free(current_wd);
 }
 
@@ -80,5 +88,10 @@ int	ft_cd(t_cmd_block *cmd_block, t_environ *env)
 		return (1);
 	}
 	update_pwd(path, env);
+	if (!cmd_block->args[1])
+	{
+		free(path);
+		free_2d_array(envp);
+	}
 	return (0);
 }
