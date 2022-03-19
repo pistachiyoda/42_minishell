@@ -59,7 +59,7 @@ exec_test 'echo test "" test "" test'
 exec_test 'echo "$"' # 対応してもいいかも
 exec_test 'echo "$?TEST"'
 exec_test 'echo $TEST $TEST'
-exec_test 'echo "$1TEST"' # 対応してもいいかも
+# exec_test 'echo "$1TEST"' # 対応してもいいかも
 exec_test 'echo "$T1TEST"'
 
 # EXPORT and ENV EXPANSIONS
@@ -74,9 +74,12 @@ exec_test "export TEST=LOL \n echo \$TEST \n $ENV_SHOW"
 # exec_test 'export TEST=LOL \n echo $TEST$TEST$TEST=lol$TEST'
 exec_test "$ENV_SHOW"
 exec_test "$EXPORT_SHOW"
-exec_test_error "export TEST=\"ls       -l     - a\" \n echo \$TEST \n \$LS \n $ENV_SHOW"
+exec_test "export TEST\n export TEST\n $EXPORT_SHOW"
+exec_test "export TEST=a TEST=b TEST=c\n $EXPORT_SHOW"
+exec_test "export TEST=a TEST1=b TEST=c\n $EXPORT_SHOW"
+# exec_test_error "export TEST=\"ls       -l     - a\" \n echo \$TEST \n \$LS \n $ENV_SHOW"
 exec_test 'echo hoge > "aaa"$a \n cat aaa \n rm aaa'
-exec_test 'export a=aaa \n export b=bbb \n echo hoge > $a" "$b \n ls \n cat "aaa bbb" \n rm "aaa bbb"'
+# exec_test 'export a=aaa \n export b=bbb \n echo hoge > $a" "$b \n ls \n cat "aaa bbb" \n rm "aaa bbb"'
 
 # EXPORT and UNSET and ENV EXPANSIONS
 exec_test "export TEST=\"hoge\" \n unset TEST \n $ENV_SHOW"
