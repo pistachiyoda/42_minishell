@@ -43,8 +43,6 @@ int	handle_output_error(t_redirects *redirect)
 	return (0);
 }
 
-// >, >>の処理
-// @todo:exitはreturnに変更
 int	handle_output(t_redirects *redirect, bool is_last)
 {
 	int	fd;
@@ -65,9 +63,6 @@ int	handle_output(t_redirects *redirect, bool is_last)
 	return (0);
 }
 
-// HEREDOCの場合は、inputのラストだったらパイプに書き込まれた内容をdup
-// INPUTの場合はファイル処理＋inputのラストだったらredirect->fdでdup
-// WRITEの場合はファイル処理＋outpuのラストだったらredirect->fdでdup
 int	handle_redirect(t_redirects	*redirect, t_cmd_block *cmd_block)
 {
 	if (redirect->redirect == HEREDOC

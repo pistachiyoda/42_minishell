@@ -24,8 +24,6 @@ bool	is_last_fd_input_redirect(
 	return (last_input_node->content == redirect);
 }
 
-// <の処理
-// @todo エラー時のexit処理
 int	handle_input(t_redirects *redirect, bool is_last)
 {
 	int	fd;

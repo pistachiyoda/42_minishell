@@ -46,10 +46,6 @@ void	handle_multi_block(int *pids, t_list *cmd_list, char **envp)
 	free(pipes);
 }
 
-// cmd_list->nextがnullになるまでループ
-// 最初の一つ目はhandle_first_blockに
-// 真ん中はhandle_middle_blockに
-// 最後の一つはhandle_last_blockに
 int	exec_command_line(
 		t_environ *env, t_list *cmd_list, char **envp, int cmd_cnt)
 {
