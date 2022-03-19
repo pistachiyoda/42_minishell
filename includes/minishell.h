@@ -59,17 +59,17 @@ void		free_tokens(t_list **tokens);
 // utils/is_env_registered.c
 char		*is_env_registered(t_environ *env, char **split_ele,
 				bool key_only, char *target);
-bool		is_character_contained(char *str, int *i);
-bool		is_blank(char c);
-
-// utils/is_quote_type_switched.c
-bool		is_quote_type_switched(char *str, int i, int *status);
 
 // utils/check_str_type.c
 int			check_str_type(char *str);
+bool		is_quote_type_switched(char *str, int i, int *status);
+bool		is_character_contained(char *str, int *i);
+bool		is_blank(char c);
+bool		is_space_at_end(char *str);
 
 // utils/print_error.c
 void		syntax_error(char *str);
+void		invalid_id_error(char *str, char *cmd);
 void		print_error(char *target, char *message);
 
 // utils/malloc_check.c
@@ -100,7 +100,7 @@ void		execve_wrapper(
 void		dup2_wrapper(int oldfd, int newfd);
 
 // utils/validation.c
-bool		is_valid_arg(char *str);
+bool		is_valid_arg(char *str, char *original, char *cmd);
 
 // utils/ft_atol.c
 long long	ft_atol(const char *str, bool *is_invalid);
