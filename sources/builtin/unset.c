@@ -32,7 +32,7 @@ int	ft_unset(t_cmd_block *cmd_block, t_environ *env)
 	while (cmd_block->args[i] != NULL)
 	{
 		env = env->next;
-		if (is_valid_arg(cmd_block->args[i]))
+		if (is_valid_arg(cmd_block->args[i], cmd_block->args[i], "unset"))
 			unset_env(cmd_block->args[i], env, ft_strlen(cmd_block->args[i]));
 		else
 			status = 1;

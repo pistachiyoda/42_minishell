@@ -124,16 +124,17 @@ extern "C" {
 
 	// utils/is_env_registered.c
 	char		*is_env_registered(t_environ *env, char **split_ele, bool key_only, char *target);
-	bool		is_character_contained(char *str, int *i);
-	bool		is_blank(char c);
-
-	// utils/is_quote_type_switched.c
-	bool		is_quote_type_switched(char *str, int i, int *status);
 
 	// utils/check_str_type.c
 	int			check_str_type(char *str);
+	bool		is_quote_type_switched(char *str, int i, int *status);
+	bool		is_character_contained(char *str, int *i);
+	bool		is_blank(char c);
+	bool		is_space_at_end(char *str);
 
 	// utils/print_error.c
+	void		syntax_error(char *str);
+	void		invalid_id_error(char *str, char *cmd);
 	void		print_error(char *target, char *message);
 
 	// utils/malloc_check.c
@@ -149,7 +150,7 @@ extern "C" {
 	char		*ft_xitoa(int val, char *target);
 
 	// utils/validation.c
-	bool		is_valid_arg(char *str);
+	bool		is_valid_arg(char *str, char *original, char *cmd);
 
 	// utils/exit_program.c
 	void		exit_program(int status);
@@ -285,8 +286,8 @@ extern "C" {
 
 	// expansion/param_expansion.c
 	size_t		get_left_len(char *str, int i);
-	bool		is_space_at_end(char *str);
 	void		expand_exit_status(t_expand *data, char **head);
+	void		add_dollar_mark(char **head, char *str);
 	char		*expand_env(t_environ *env, t_expand *data, char *str, char **head);
 	void		param_expansion(t_environ *env, t_expand *data, char *str, char **head);
 

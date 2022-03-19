@@ -28,7 +28,6 @@ SOURCES =\
     ../sources/signal/signal.c\
 	../sources/utils/free.c\
 	../sources/utils/is_env_registered.c\
-	../sources/utils/is_quote_type_switched.c\
 	../sources/utils/check_str_type.c\
 	../sources/utils/print_error.c\
 	../sources/utils/malloc_check.c\
