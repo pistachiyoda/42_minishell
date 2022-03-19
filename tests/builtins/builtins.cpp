@@ -36,41 +36,41 @@ TEST_GROUP(builtins_G)
 // hoge=test
 
 // export hoge=test
-t_list *export_hoge_test()
-{
-	t_cmd_block *cmd_block;
+// t_list *export_hoge_test()
+// {
+// 	t_cmd_block *cmd_block;
 
-	cmd_block = (t_cmd_block *)malloc(sizeof(t_cmd_block));
-	cmd_block->command = ft_strdup("export");
-	cmd_block->args = ft_split("export hoge=test", ' ');
-	cmd_block->redirects = NULL;
-	return ft_lstnew(cmd_block);
-}
+// 	cmd_block = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+// 	cmd_block->command = ft_strdup("export");
+// 	cmd_block->args = ft_split("export hoge=test", ' ');
+// 	cmd_block->redirects = NULL;
+// 	return ft_lstnew(cmd_block);
+// }
 
 // env | grep hoge
-t_list *env_pipe_grep_hoge()
-{
-	t_list		*cmd_list;
-	t_cmd_block *cmd_block_1;
-	t_cmd_block *cmd_block_2;
+// t_list *env_pipe_grep_hoge()
+// {
+// 	t_list		*cmd_list;
+// 	t_cmd_block *cmd_block_1;
+// 	t_cmd_block *cmd_block_2;
 
-	cmd_block_1 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
-	cmd_block_2 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+// 	cmd_block_1 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
+// 	cmd_block_2 = (t_cmd_block *)malloc(sizeof(t_cmd_block));
 
-	// env
-	cmd_block_1->command = ft_strdup("env");
-	cmd_block_1->args = ft_split("env", ' ');
-	cmd_block_1->redirects = NULL;
+// 	// env
+// 	cmd_block_1->command = ft_strdup("env");
+// 	cmd_block_1->args = ft_split("env", ' ');
+// 	cmd_block_1->redirects = NULL;
 
-	// grep hoge
-	cmd_block_2->command = ft_strdup("grep");
-	cmd_block_2->args = ft_split("grep hoge", ' ');
-	cmd_block_2->redirects = NULL;
+// 	// grep hoge
+// 	cmd_block_2->command = ft_strdup("grep");
+// 	cmd_block_2->args = ft_split("grep hoge", ' ');
+// 	cmd_block_2->redirects = NULL;
 
-	cmd_list = ft_lstnew(cmd_block_1);
-	ft_lstadd_back(&cmd_list, ft_lstnew(cmd_block_2));
-	return cmd_list;
-}
+// 	cmd_list = ft_lstnew(cmd_block_1);
+// 	ft_lstadd_back(&cmd_list, ft_lstnew(cmd_block_2));
+// 	return cmd_list;
+// }
 
 // TEST(builtins_G, check_env_after_export)
 // {

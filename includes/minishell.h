@@ -194,7 +194,7 @@ void		unset_env(char *str, t_environ *env, size_t len);
 int			ft_unset(t_cmd_block *cmd_block, t_environ *env);
 
 // builtin/pwd.c
-int			ft_pwd(void);
+int			ft_pwd(t_environ *env);
 
 // builtin/echo.c
 int			ft_echo(t_cmd_block *cmd_block);
