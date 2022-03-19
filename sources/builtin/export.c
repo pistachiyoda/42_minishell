@@ -7,7 +7,7 @@ void	update_environ(char *str, t_environ *env, int *status)
 
 	key_only = false;
 	split_ele = split_by_delimiter(str, &key_only, "export");
-	if (!is_valid_arg(split_ele[0]))
+	if (!is_valid_arg(split_ele[0], str, "export"))
 	{
 		*status = 1;
 		free_2d_array(split_ele);

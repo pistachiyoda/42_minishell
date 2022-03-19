@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-bool	is_valid_arg(char *str)
+bool	is_valid_arg(char *str, char *original, char *cmd)
 {
 	int	j;
 
@@ -13,9 +13,9 @@ bool	is_valid_arg(char *str)
 			break ;
 		j++;
 	}
-	if (str[j] != '\0')
+	if (str[j] != '\0' || ft_strlen(str) == 0)
 	{
-		print_error(str, EMESS_INVALID_ID);
+		invalid_id_error(original, cmd);
 		return (false);
 	}
 	return (true);
