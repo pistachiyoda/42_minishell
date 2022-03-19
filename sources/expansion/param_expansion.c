@@ -20,16 +20,6 @@ size_t	get_left_len(char *str, int i)
 	return (0);
 }
 
-bool	is_space_at_end(char *str)
-{
-	size_t	i;
-
-	i = ft_strlen(str);
-	if (i == 0 || is_blank(str[i - 1]))
-		return (true);
-	return (false);
-}
-
 void	expand_exit_status(t_expand *data, char **head)
 {
 	char	*param;
@@ -41,6 +31,15 @@ void	expand_exit_status(t_expand *data, char **head)
 	free(param);
 	free(*head);
 	*head = tmp;
+}
+
+void	add_dollar_mark(char **head, char *str)
+{
+	char	*tmp;
+
+	tmp = *head;
+	*head = ft_xstrjoin(tmp, str, "expansion");
+	free(tmp);
 }
 
 char	*expand_env(t_environ *env, t_expand *data, char *str, char **head)
@@ -78,16 +77,17 @@ void	param_expansion(t_environ *env, t_expand *data, char *str, char **head)
 	value = NULL;
 	if (*head)
 		data->h_len = ft_strlen(*head);
-	if (ft_strncmp(&str[data->i], "$$", 2) == 0)
+	if (ft_strncmp(&str[data->i], "$?", 2) == 0)
+		expand_exit_status(data, head);
+	else if (ft_strncmp(&str[data->i], "$$", 2) == 0)
 	{
 		data->i += 1;
-		value = *head;
-		*head = ft_xstrjoin(value, "$$", "expansion");
-		free(value);
-		value = NULL;
+		add_dollar_mark(head, "$$");
 	}
-	else if (ft_strncmp(&str[data->i], "$?", 2) == 0)
-		expand_exit_status(data, head);
+	else if ((data->status == DQUOTE && (is_blank(str[data->i + 1])
+				|| str[data->i + 1] == '"' || str[data->i + 1] == '\''))
+		|| str[data->i + 1] == '\0')
+		add_dollar_mark(head, "$");
 	else
 		value = expand_env(env, data, str, head);
 	data->managed_i = data->i + 1;

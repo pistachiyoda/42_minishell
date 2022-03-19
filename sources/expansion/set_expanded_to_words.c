@@ -37,7 +37,7 @@ bool	set_expanded_to_words(
 		if (is_quote_type_switched(str, data.i, &data.status))
 			quote_removal(str, &head, &data, type);
 		if (data.status != QUOTE && str[data.i] == '$'
-			&& str[data.i + 1] != '\0' && type != QUOTED_HEREDOC)
+			&& type != QUOTED_HEREDOC)
 		{
 			set_head_before_dollar(str, &head, data);
 			param_expansion(env, &data, str, &head);

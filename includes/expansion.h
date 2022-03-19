@@ -35,8 +35,8 @@ bool		set_expanded_to_words(
 
 // sources/expansion/param_expansion.c
 size_t		get_left_len(char *str, int i);
-bool		is_space_at_end(char *str);
 void		expand_exit_status(t_expand *data, char **head);
+void		add_dollar_mark(char **head, char *str);
 char		*expand_env(t_environ *env, t_expand *data, char *str, char **head);
 void		param_expansion(
 				t_environ *env, t_expand *data, char *str, char **head);
