@@ -50,12 +50,13 @@ char	*expand_env(t_environ *env, t_expand *data, char *str, char **head)
 	int		i;
 
 	tmp = NULL;
+	value = NULL;
 	i = 0;
 	param = ft_xsubstr(str, data->i + 1,
 			ft_strlen(str) - (data->i + 1) - get_left_len(str, data->i),
 			"expansion");
 	data->i += ft_strlen(param);
-	value = is_env_registered(env, &param, true, NULL);
+	is_env_registered(env, &param, &value);
 	if (value && data->status == NONE
 		&& (ft_strlen(value) == 0 || check_str_type(value) != SPACELESS))
 		data->rdr_error = true;
