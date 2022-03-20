@@ -26,28 +26,29 @@ bool	is_redirect(t_list *words)
 	return (false);
 }
 
-void	set_cmd_block(t_list **words, t_cmd_block *cmd, t_list **prev)
+// void	set_cmd_block(t_list **words, t_cmd_block *cmd, t_list **prev)
+void	set_cmd_block(t_list **words, t_cmd_block *cmd)
 {
 	cmd->command = NULL;
 	cmd->args = NULL;
 	cmd->redirects = NULL;
 	if (!is_redirect((*words)->next) || (*words)->next == NULL)
-		cmd->command = (*words)->content;
+		cmd->command = ft_xstrdup((*words)->content, "parser");
 	if (cmd->command != NULL)
-		set_args(words, cmd, prev);
+		set_args(words, cmd);
 	while (*words != NULL && is_redirect((*words)->next))
 	{
 		if (cmd->redirects == NULL)
-			cmd->redirects = ft_xlstnew(set_redirect(words, prev), "parser");
+			cmd->redirects = ft_xlstnew(set_redirect(words), "parser");
 		else
 			ft_lstadd_back(&cmd->redirects,
-				ft_xlstnew(set_redirect(words, prev), "parser"));
+				ft_xlstnew(set_redirect(words), "parser"));
 		if (*words != NULL && ft_strncmp((*words)->content, "|", 1) != 0
 			&& (!is_redirect((*words)->next) || (*words)->next == NULL))
 		{
 			if (cmd->command == NULL)
-				cmd->command = (*words)->content;
-			set_args(words, cmd, prev);
+				cmd->command = ft_xstrdup((*words)->content, "parser");
+			set_args(words, cmd);
 		}
 	}
 }
@@ -64,8 +65,8 @@ bool	parser(t_list *words, t_list **tokens, char *str)
 {
 	t_cmd_block	*cmd;
 	t_list		*head;
-	t_list		*prev;
-	t_list		*next;
+	// t_list		*prev;
+	// t_list		*next;
 
 	if (!is_valid_words(words, str))
 	{
@@ -76,15 +77,17 @@ bool	parser(t_list *words, t_list **tokens, char *str)
 	while (words != NULL)
 	{
 		cmd = ft_xmalloc(sizeof(t_cmd_block), "parser");
-		set_cmd_block(&words, cmd, &prev);
+		set_cmd_block(&words, cmd);
 		set_tokens(tokens, cmd);
 		if (words == NULL)
 			break ;
-		next = words->next;
-		ft_lstdelone(words, free);
-		prev->next = next;
-		words = next;
+		// next = words->next;
+		// ft_lstdelone(words, free);
+		// prev->next = next;
+		// words = next;
+		words = words->next;
 	}
-	ft_lstclear2(&head);
+	// ft_lstclear2(&head);
+	ft_lstclear(&head, free);
 	return (true);
 }

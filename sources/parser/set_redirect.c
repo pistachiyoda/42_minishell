@@ -18,25 +18,27 @@ void	set_redirect_type(t_list **words, t_redirects *redir)
 		redir->redirect = INPUT;
 }
 
-t_redirects	*set_redirect(t_list **words, t_list **prev)
+// t_redirects	*set_redirect(t_list **words, t_list **prev)
+t_redirects	*set_redirect(t_list **words)
 {
 	t_redirects	*redir;
-	t_list		*prev_redir;
-	t_list		*next;
+	// t_list		*prev_redir;
+	// t_list		*next;
 
 	redir = ft_xmalloc(sizeof(t_redirects), "parser");
-	redir->fd = ft_atoi((*words)->content);
-	prev_redir = *words;
+	redir->fd = ft_atoi((*words)->content); //これもfree必要！
+	// prev_redir = *words;
 	*words = (*words)->next;
 	set_redirect_type(words, redir);
-	next = (*words)->next;
-	ft_lstdelone(*words, free);
-	*words = next;
-	prev_redir->next = *words;
-	if ((*words)->next != NULL
-		&& ft_strncmp((*words)->next->content, "|", 1) == 0)
-		*prev = *words;
-	redir->target = (*words)->content;
+	// next = (*words)->next;
+	// ft_lstdelone(*words, free);
+	// *words = next;
+	// prev_redir->next = *words;
+	// if ((*words)->next != NULL
+	// 	&& ft_strncmp((*words)->next->content, "|", 1) == 0)
+	// 	*prev = *words;
+	*words = (*words)->next;
+	redir->target = ft_xstrdup((*words)->content, "parser");
 	*words = (*words)->next;
 	redir->error = false;
 	return (redir);

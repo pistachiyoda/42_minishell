@@ -21,7 +21,8 @@ int	get_args_malloc(t_cmd_block *cmd, int arg_num)
 	return (j);
 }
 
-void	add_args(t_list **words, t_cmd_block *cmd, int arg_num, t_list **prev)
+// void	add_args(t_list **words, t_cmd_block *cmd, int arg_num, t_list **prev)
+void	add_args(t_list **words, t_cmd_block *cmd, int arg_num)
 {
 	int	i;
 	int	j;
@@ -30,17 +31,18 @@ void	add_args(t_list **words, t_cmd_block *cmd, int arg_num, t_list **prev)
 	j = get_args_malloc(cmd, arg_num);
 	while (i < arg_num)
 	{
-		cmd->args[j + i] = (*words)->content;
-		if ((*words)->next != NULL
-			&& ft_strncmp((*words)->next->content, "|", 1) == 0)
-			*prev = *words;
+		cmd->args[j + i] = ft_xstrdup((*words)->content, "parser");
+		// if ((*words)->next != NULL
+		// 	&& ft_strncmp((*words)->next->content, "|", 1) == 0)
+		// 	*prev = *words;
 		*words = (*words)->next;
 		i++;
 	}
 	cmd->args[j + i] = NULL;
 }
 
-void	set_args(t_list **words, t_cmd_block *cmd, t_list **prev)
+// void	set_args(t_list **words, t_cmd_block *cmd, t_list **prev)
+void	set_args(t_list **words, t_cmd_block *cmd)
 {
 	t_list	*tmp;
 	int		arg_num;
@@ -55,5 +57,5 @@ void	set_args(t_list **words, t_cmd_block *cmd, t_list **prev)
 	}
 	if (tmp->next == NULL || ft_strncmp(tmp->next->content, "|", 1) == 0)
 		arg_num++;
-	add_args(words, cmd, arg_num, prev);
+	add_args(words, cmd, arg_num);
 }
