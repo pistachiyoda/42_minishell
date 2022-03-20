@@ -2,6 +2,11 @@
 
 volatile int	g_status = 0;
 
+// __attribute__((destructor))
+// static void destructor() {
+//     system("leaks -q minishell");
+// }
+
 int	main(int argc, char **argv, char **envp)
 {
 	char		*str;
@@ -28,6 +33,8 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		expansion(&cmd_list, env);
 		// print_cmd_lst(cmd_list);
+		if (!cmd_list)
+			continue ;
 		if (is_fork_required(cmd_list))
 		{
 			minishell_envp = t_environ_to_vector(env);
