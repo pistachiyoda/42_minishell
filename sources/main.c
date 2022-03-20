@@ -34,10 +34,11 @@ int	main(int argc, char **argv, char **envp)
 		{
 			minishell_envp = t_environ_to_vector(env);
 			g_status = exec_command_line(env, cmd_list, minishell_envp, ft_lstsize(cmd_list));
-			// printf("g_status = %d\n", g_status);
+			free_2d_array(minishell_envp);
 		}
 		else
 			g_status = run_builtin_only_command(cmd_list, env);
+		free_cmd_list_after_exec(cmd_list);
 		free(str);
 	}
 }

@@ -57,7 +57,11 @@ int	exec_command_line(
 	if (status > 128)
 		return (1);
 	if (cmd_cnt == 1)
-		return (handle_single_block((t_cmd_block *)cmd_list->content, envp));
+	{
+		status = (handle_single_block((t_cmd_block *)cmd_list->content, envp));
+		free(pids);
+		return (status);
+	}
 	else
 		handle_multi_block(pids, cmd_list, envp);
 	status = wait_pids(cmd_cnt, pids);
