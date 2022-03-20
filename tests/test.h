@@ -242,18 +242,21 @@ extern "C" {
 	bool		add_last_str(char *str, t_list **words, t_lex info);
 	bool		lexer(char *str, t_list **words);
 
-	// parser/set_cmd_block.c
-	t_redirects	*set_redirect_member(t_list **words);
-	void		set_first_args(t_list **words, t_cmd_block *cmd, int arg_num);
-	void		add_args(t_list **words, t_cmd_block *cmd, int arg_num);
-	void		set_args(t_list **words, t_cmd_block *cmd);
-	void		set_cmd_block(t_list **words, t_cmd_block *cmd);
-
 	// parser/parser.c
 	bool		is_valid_words(t_list *words, char *str);
 	bool		is_redirect(t_list *words);
+	void		set_cmd_block(t_list **words, t_cmd_block *cmd);
 	void		set_tokens(t_list **tokens, t_cmd_block *cmd);
 	bool		parser(t_list *words, t_list **tokens, char *str);
+
+	// parser/set_args.c
+	int			get_args_malloc(t_cmd_block *cmd, int arg_num);
+	void		add_args(t_list **words, t_cmd_block *cmd, int arg_num);
+	void		set_args(t_list **words, t_cmd_block *cmd);
+
+	// parser/set_redirect.c
+	void		set_redirect_type(t_list **words, t_redirects *redir);
+	t_redirects	*set_redirect(t_list **words);
 
 	typedef struct s_expand
 	{
@@ -275,9 +278,9 @@ extern "C" {
 
 	// expansion/expansion.c
 	void		assign_expanded_cmd_args(t_cmd_block *cmd, t_list **words);
-	void		expand_cmd_args(t_cmd_block *cmd, t_environ *env, t_list *words);
+	void		expand_cmd_args(t_cmd_block *cmd, t_environ *env);
 	void		assign_expanded_target(char **str, t_list **words);
-	void		expand_redirects(t_cmd_block *cmd, t_environ *env, t_list *words);
+	void		expand_redirects(t_cmd_block *cmd, t_environ *env);
 	void		expansion(t_list **tokens, t_environ *env);
 
 	// expansion/set_expanded_to_words.c

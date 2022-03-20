@@ -22,9 +22,9 @@ enum e_SPACE
 
 // sources/expansion/expansion.c
 void		assign_expanded_cmd_args(t_cmd_block *cmd, t_list **words);
-void		expand_cmd_args(t_cmd_block *cmd, t_environ *env, t_list *words);
+void		expand_cmd_args(t_cmd_block *cmd, t_environ *env);
 void		assign_expanded_target(t_redirects *redir, t_list **words);
-void		expand_redirects(t_cmd_block *cmd, t_environ *env, t_list *words);
+void		expand_redirects(t_cmd_block *cmd, t_environ *env);
 void		expansion(t_list **tokens, t_environ *env);
 
 // sources/expansion/set_expanded_to_words.c
