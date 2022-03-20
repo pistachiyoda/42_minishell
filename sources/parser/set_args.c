@@ -21,7 +21,6 @@ int	get_args_malloc(t_cmd_block *cmd, int arg_num)
 	return (j);
 }
 
-// void	add_args(t_list **words, t_cmd_block *cmd, int arg_num, t_list **prev)
 void	add_args(t_list **words, t_cmd_block *cmd, int arg_num)
 {
 	int	i;
@@ -32,16 +31,12 @@ void	add_args(t_list **words, t_cmd_block *cmd, int arg_num)
 	while (i < arg_num)
 	{
 		cmd->args[j + i] = ft_xstrdup((*words)->content, "parser");
-		// if ((*words)->next != NULL
-		// 	&& ft_strncmp((*words)->next->content, "|", 1) == 0)
-		// 	*prev = *words;
 		*words = (*words)->next;
 		i++;
 	}
 	cmd->args[j + i] = NULL;
 }
 
-// void	set_args(t_list **words, t_cmd_block *cmd, t_list **prev)
 void	set_args(t_list **words, t_cmd_block *cmd)
 {
 	t_list	*tmp;

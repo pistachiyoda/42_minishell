@@ -26,7 +26,6 @@ bool	is_redirect(t_list *words)
 	return (false);
 }
 
-// void	set_cmd_block(t_list **words, t_cmd_block *cmd, t_list **prev)
 void	set_cmd_block(t_list **words, t_cmd_block *cmd)
 {
 	cmd->command = NULL;
@@ -65,8 +64,6 @@ bool	parser(t_list *words, t_list **tokens, char *str)
 {
 	t_cmd_block	*cmd;
 	t_list		*head;
-	// t_list		*prev;
-	// t_list		*next;
 
 	if (!is_valid_words(words, str))
 	{
@@ -81,13 +78,8 @@ bool	parser(t_list *words, t_list **tokens, char *str)
 		set_tokens(tokens, cmd);
 		if (words == NULL)
 			break ;
-		// next = words->next;
-		// ft_lstdelone(words, free);
-		// prev->next = next;
-		// words = next;
 		words = words->next;
 	}
-	// ft_lstclear2(&head);
 	ft_lstclear(&head, free);
 	return (true);
 }
