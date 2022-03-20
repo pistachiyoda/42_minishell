@@ -27,8 +27,6 @@ int	main(int argc, char **argv, char **envp)
 		if (!lexer(str, &words) || !parser(words, &cmd_list, str))
 			continue ;
 		expansion(&cmd_list, env);
-		if (!cmd_list)
-			continue ;
 		// print_cmd_lst(cmd_list);
 		if (is_fork_required(cmd_list))
 		{

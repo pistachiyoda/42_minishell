@@ -55,7 +55,8 @@ SOURCES =\
 	../sources/lexer/lexer.c\
 	../sources/lexer/split_by_redirect_pipe.c\
 	../sources/parser/parser.c\
-	../sources/parser/set_cmd_block.c\
+	../sources/parser/set_args.c\
+	../sources/parser/set_redirect.c\
 	../sources/expansion/expansion.c\
 	../sources/expansion/set_expanded_to_words.c\
 	../sources/expansion/param_expansion.c\
