@@ -10,11 +10,11 @@ char	**set_data(char	*str, int key_cnt, int val_cnt)
 	data[2] = NULL;
 	ft_memcpy(data[0], str, key_cnt);
 	str += key_cnt;
-	*str = '\0';
+	data[0][key_cnt] = '\0';
 	str ++;
 	ft_memcpy(data[1], str, val_cnt);
 	str += val_cnt;
-	*str = '\0';
+	data[1][val_cnt] = '\0';
 	return (data);
 }
 
