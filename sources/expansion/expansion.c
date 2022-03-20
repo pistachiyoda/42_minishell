@@ -20,11 +20,13 @@ void	assign_expanded_cmd_args(t_cmd_block *cmd, t_list **words)
 	ft_lstclear2(&head);
 }
 
-void	expand_cmd_args(t_cmd_block *cmd, t_environ *env, t_list *words)
+void	expand_cmd_args(t_cmd_block *cmd, t_environ *env)
 {
 	int		i;
+	t_list	*words;
 
 	i = 1;
+	words = NULL;
 	if (cmd->command != NULL)
 	{
 		set_expanded_to_words(env, cmd->command, &words, -1);
@@ -59,8 +61,9 @@ void	assign_expanded_target(t_redirects *redir, t_list **words)
 		ft_lstclear(words, free);
 }
 
-void	expand_redirects(t_cmd_block *cmd, t_environ *env, t_list *words)
+void	expand_redirects(t_cmd_block *cmd, t_environ *env)
 {
+	t_list		*words;
 	t_list		*head;
 	t_redirects	*redir;
 	int			qhdoc;
@@ -68,6 +71,7 @@ void	expand_redirects(t_cmd_block *cmd, t_environ *env, t_list *words)
 	head = cmd->redirects;
 	while (cmd->redirects != NULL)
 	{
+		words = NULL;
 		redir = cmd->redirects->content;
 		qhdoc = redir->redirect;
 		if (redir->redirect != HEREDOC)
@@ -83,17 +87,15 @@ void	expand_redirects(t_cmd_block *cmd, t_environ *env, t_list *words)
 
 void	expansion(t_list **tokens, t_environ *env)
 {
-	t_list		*words;
 	t_list		*head;
 
 	head = *tokens;
 	while (*tokens != NULL)
 	{
-		words = NULL;
 		if ((*tokens)->content != NULL)
 		{
-			expand_cmd_args((t_cmd_block *)(*tokens)->content, env, words);
-			expand_redirects((t_cmd_block *)(*tokens)->content, env, words);
+			expand_cmd_args((t_cmd_block *)(*tokens)->content, env);
+			expand_redirects((t_cmd_block *)(*tokens)->content, env);
 		}
 		*tokens = (*tokens)->next;
 	}
