@@ -31,6 +31,8 @@ void	add_args(t_list **words, t_cmd_block *cmd, int arg_num)
 	while (i < arg_num)
 	{
 		cmd->args[j + i] = ft_xstrdup((*words)->content, "parser");
+		if (cmd->command == NULL)
+			cmd->command = cmd->args[j + i];
 		*words = (*words)->next;
 		i++;
 	}

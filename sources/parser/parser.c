@@ -32,8 +32,6 @@ void	set_cmd_block(t_list **words, t_cmd_block *cmd)
 	cmd->args = NULL;
 	cmd->redirects = NULL;
 	if (!is_redirect((*words)->next) || (*words)->next == NULL)
-		cmd->command = ft_xstrdup((*words)->content, "parser");
-	if (cmd->command != NULL)
 		set_args(words, cmd);
 	while (*words != NULL && is_redirect((*words)->next))
 	{
