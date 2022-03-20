@@ -51,6 +51,7 @@ SOURCES =\
 	../sources/builtin/echo.c\
 	../sources/builtin/exit.c\
 	../sources/builtin/cd.c\
+	../sources/builtin/cd2.c\
 	../sources/lexer/lexer.c\
 	../sources/lexer/split_by_redirect_pipe.c\
 	../sources/parser/parser.c\

@@ -210,6 +210,10 @@ int			ft_exit(t_cmd_block *cmd_block);
 // builtin/cd.c
 int			ft_cd(t_cmd_block *cmd_block, t_environ *env);
 
+// builtin/cd2.c
+bool		is_double_slash(char *command_path);
+bool		is_absolute(char *command_path);
+
 // signal/signal.c
 void		sigint_handler(int sig);
 void		set_signal(void (*func1)(int), void (*func2)(int));
@@ -217,6 +221,7 @@ void		set_signal(void (*func1)(int), void (*func2)(int));
 // [後々削除]debug/debug_funcs.c
 void		print_cmd_lst(t_list *cmd_lst);
 t_list		*set_dataset(char *str);
+void		print_leaks(const char *text);
 // [後々削除]tmp_parser/tmp_parse_data.c
 void		tmp_parse_data(t_list **cmd_lst, char *str);
 #endif
