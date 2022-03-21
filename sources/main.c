@@ -2,10 +2,28 @@
 
 volatile int	g_status = 0;
 
-int	main(int argc, char **argv, char **envp)
+bool	is_valid_cmd_list(t_list **cmd_list, t_environ *env)
 {
 	char		*str;
 	t_list		*words;
+
+	words = NULL;
+	set_signal(sigint_handler, SIG_IGN);
+	str = readline("minishell$ ");
+	if (!str)
+		exit_program(g_status);
+	if (ft_strlen(str) == 0)
+		return (false);
+	add_history(str);
+	if (!lexer(str, &words) || !parser(words, cmd_list, str))
+		return (false);
+	expansion(cmd_list, env);
+	free(str);
+	return (true);
+}
+
+int	main(int argc, char **argv, char **envp)
+{
 	t_list		*cmd_list;
 	t_environ	*env;
 	char		**minishell_envp;
@@ -15,27 +33,18 @@ int	main(int argc, char **argv, char **envp)
 	env = create_environ(envp);
 	while (1)
 	{
-		words = NULL;
 		cmd_list = NULL;
-		set_signal(sigint_handler, SIG_IGN);
-		str = readline("minishell$ ");
-		if (!str)
-			exit_program(g_status);
-		if (ft_strlen(str) == 0)
+		if (!is_valid_cmd_list(&cmd_list, env))
 			continue ;
-		add_history(str);
-		if (!lexer(str, &words) || !parser(words, &cmd_list, str))
-			continue ;
-		expansion(&cmd_list, env);
 		// print_cmd_lst(cmd_list);
 		if (is_fork_required(cmd_list))
 		{
 			minishell_envp = t_environ_to_vector(env);
-			g_status = exec_command_line(env, cmd_list, minishell_envp, ft_lstsize(cmd_list));
+			g_status = exec_command_line(
+					env, cmd_list, minishell_envp, ft_lstsize(cmd_list));
 			// printf("g_status = %d\n", g_status);
 		}
 		else
 			g_status = run_builtin_only_command(cmd_list, env);
-		free(str);
 	}
 }

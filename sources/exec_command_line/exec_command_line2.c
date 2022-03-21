@@ -16,31 +16,37 @@ int	*cwp(int i, int pipe_a[2], int pipe_b[2])
 	return (pipe_b);
 }
 
-int	get_child_status(int status)
+int	get_child_status(int status, bool sigint)
 {
+	int	res;
+
 	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
+		res = WEXITSTATUS(status);
 	if (WIFSIGNALED(status))
 	{
-		if (WTERMSIG(status) == SIGINT)
-			write(2, "\n", 1);
-		else if (WTERMSIG(status) == SIGQUIT)
+		if (WTERMSIG(status) == SIGQUIT)
 			ft_putendl_fd("Quit: 3", 2);
-		return (WTERMSIG(status) + 128);
+		res = WTERMSIG(status) + 128;
 	}
-	return (1);
+	if (sigint)
+		ft_putstr_fd("\n", 2);
+	return (res);
 }
 
 int	wait_pids(int cmd_cnt, int pids[1000])
 {
-	int	i;
-	int	status;
+	int		i;
+	int		status;
+	bool	sigint;
 
 	i = 0;
+	sigint = false;
 	while (i < cmd_cnt)
 	{
 		waitpid_wrapper(pids[i], &status, 0);
+		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+			sigint = true;
 		i ++;
 	}
-	return (get_child_status(status));
+	return (get_child_status(status, sigint));
 }
