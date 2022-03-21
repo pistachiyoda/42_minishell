@@ -41,22 +41,12 @@ void	update_pwd(char *path, t_environ *env)
 	if (old_wd == NULL)
 		old_wd = getcwd(NULL, 1024);
 	update_pwd_envs("OLDPWD", old_wd, env);
-	// update_oldpwd_block = update_block_data(
-	// 		ft_xstrdup("OLDPWD", "ft_cd"), old_wd);
-	// ft_export(update_oldpwd_block, env);
-	// free(update_oldpwd_block->command);
-	// free_cmd_block_after_exec(update_oldpwd_block);
 	current_wd = getcwd(NULL, 1024);
 	if (is_double_slash(path)
 		|| (is_double_slash(old_wd) && !is_absolute(path)))
 		current_wd = ft_xstrjoin_with_free(
 				ft_xstrdup("/", "ft_cd"), current_wd, "ft_cd");
 	update_pwd_envs("PWD", current_wd, env);
-	// update_pwd_block = update_block_data(
-	// 		ft_xstrdup("PWD", "ft_cd"), current_wd);
-	// ft_export(update_pwd_block, env);
-	// free(update_pwd_block->command);
-	// free_cmd_block_after_exec(update_pwd_block);
 	free(old_wd);
 	free(current_wd);
 }
@@ -91,14 +81,6 @@ int	ft_cd(t_cmd_block *cmd_block, t_environ *env)
 	}
 	if (chdir_wrapper(path) == -1)
 		return (1);
-	// ret = chdir(path);
-	// if (ret == -1)
-	// {
-	// 	e_mes = ft_strjoin_wrapper("minishell: cd: ", path);
-	// 	perror(e_mes);
-	// 	free(e_mes);
-	// 	return (1);
-	// }
 	update_pwd(path, env);
 	if (!cmd_block->args[1])
 	{
