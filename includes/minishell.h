@@ -53,8 +53,7 @@ bool		is_executable(char *command_path);
 void		free_2d_array(char **two_d_array);
 void		ft_lstclear2(t_list **lst);
 bool		free_words_str(t_list **words, char *str);
-void		free_cmd_list(t_list *cmd_list);
-void		free_cmd_block(t_list **tokens);
+void		free_env(t_environ *env);
 void		free_tokens(t_list **tokens);
 
 // utils/free2.c
