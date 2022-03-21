@@ -37,8 +37,6 @@ int	main(int argc, char **argv, char **envp)
 		if (!is_valid_cmd_list(&cmd_list, env))
 			continue ;
 		// print_cmd_lst(cmd_list);
-		if (!cmd_list)
-			continue ;
 		if (is_fork_required(cmd_list))
 		{
 			minishell_envp = t_environ_to_vector(env);
