@@ -2,7 +2,7 @@
 NAME = minishell
 CC = gcc
 INCLUDES = -I./includes/ -I./libft/ -I$(shell brew --prefix readline)/include
-CFLAGS = -Wall -Wextra -Werror $(INCLUDES) -g
+CFLAGS = -Wall -Wextra -Werror $(INCLUDES)
 LIBS = -L./libft/ -lft -lreadline -lhistory -L$(shell brew --prefix readline)/lib
 LIBFT = ./libft/libft.a
 CFILES =\
