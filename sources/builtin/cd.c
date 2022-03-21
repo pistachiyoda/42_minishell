@@ -1,20 +1,5 @@
 #include "minishell.h"
 
-bool	is_double_slash(char *command_path)
-{
-	if (ft_strncmp(command_path, "//", 2) == 0
-		&& ft_strncmp(command_path, "///", 3) != 0)
-		return (true);
-	return (false);
-}
-
-bool	is_absolute(char *command_path)
-{
-	if (ft_strncmp(command_path, "/", 1) == 0)
-		return (true);
-	return (false);
-}
-
 t_cmd_block	*update_block_data(char *key, char *path)
 {
 	t_cmd_block	*update_block;
@@ -33,44 +18,44 @@ t_cmd_block	*update_block_data(char *key, char *path)
 	return (update_block);
 }
 
+void	update_pwd_envs(char *key, char *wd, t_environ *env)
+{
+	t_cmd_block	*update_cmd_data;
+
+	update_cmd_data = update_block_data(
+			ft_xstrdup(key, "ft_cd"), wd);
+	ft_export(update_cmd_data, env);
+	free(update_cmd_data->command);
+	free_cmd_block_after_exec(update_cmd_data);
+}
+
 void	update_pwd(char *path, t_environ *env)
 {
-	t_cmd_block	*update_pwd_block;
-	t_cmd_block	*update_oldpwd_block;
 	char		*old_wd;
 	char		*current_wd;
+	char		**envp;
 
-	old_wd = get_env_val("PWD", t_environ_to_vector(env));
+	envp = t_environ_to_vector(env);
+	old_wd = get_env_val("PWD", envp);
+	free_2d_array(envp);
 	if (old_wd == NULL)
 		old_wd = getcwd(NULL, 1024);
-	update_oldpwd_block = update_block_data(
-			ft_xstrdup("OLDPWD", "ft_cd"), old_wd);
-	ft_export(update_oldpwd_block, env);
+	update_pwd_envs("OLDPWD", old_wd, env);
 	current_wd = getcwd(NULL, 1024);
 	if (is_double_slash(path)
 		|| (is_double_slash(old_wd) && !is_absolute(path)))
 		current_wd = ft_xstrjoin_with_free(
 				ft_xstrdup("/", "ft_cd"), current_wd, "ft_cd");
-	update_pwd_block = update_block_data(
-			ft_xstrdup("PWD", "ft_cd"), current_wd);
-	ft_export(update_pwd_block, env);
+	update_pwd_envs("PWD", current_wd, env);
+	free(old_wd);
 	free(current_wd);
 }
 
-int	ft_cd(t_cmd_block *cmd_block, t_environ *env)
+int	chdir_wrapper(char *path)
 {
-	char		*path;
-	char		**envp;
-	int			ret;
 	char		*e_mes;
+	int			ret;
 
-	if (cmd_block->args[1])
-		path = cmd_block->args[1];
-	else
-	{
-		envp = t_environ_to_vector(env);
-		path = get_env_val("HOME", envp);
-	}
 	ret = chdir(path);
 	if (ret == -1)
 	{
@@ -79,6 +64,28 @@ int	ft_cd(t_cmd_block *cmd_block, t_environ *env)
 		free(e_mes);
 		return (1);
 	}
+	return (0);
+}
+
+int	ft_cd(t_cmd_block *cmd_block, t_environ *env)
+{
+	char		*path;
+	char		**envp;
+
+	if (cmd_block->args[1])
+		path = cmd_block->args[1];
+	else
+	{
+		envp = t_environ_to_vector(env);
+		path = get_env_val("HOME", envp);
+	}
+	if (chdir_wrapper(path) == -1)
+		return (1);
 	update_pwd(path, env);
+	if (!cmd_block->args[1])
+	{
+		free(path);
+		free_2d_array(envp);
+	}
 	return (0);
 }

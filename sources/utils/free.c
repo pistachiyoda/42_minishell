@@ -35,25 +35,20 @@ bool	free_words_str(t_list **words, char *str)
 	return (false);
 }
 
-void	free_cmd_block(t_list **tokens)
+void	free_env(t_environ *env)
 {
-	t_list		*next;
-	t_cmd_block	*cmd;
-	t_list		*head;
+	t_environ	*next;
 
-	next = (*tokens)->next;
-	cmd = (*tokens)->content;
-	if (cmd->command != NULL)
-		free_2d_array(cmd->args);
-	head = cmd->redirects;
-	while (cmd->redirects != NULL)
+	env = env->next;
+	while (env->key != NULL)
 	{
-		free(((t_redirects *)cmd->redirects->content)->target);
-		cmd->redirects = cmd->redirects->next;
+		next = env->next;
+		free(env->key);
+		free(env->value);
+		free(env);
+		env = next;
 	}
-	ft_lstclear(&head, free);
-	ft_lstdelone(*tokens, free);
-	*tokens = next;
+	free(env);
 }
 
 void	free_tokens(t_list **tokens)

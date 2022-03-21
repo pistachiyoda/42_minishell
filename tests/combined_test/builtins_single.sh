@@ -1,6 +1,7 @@
 ## BUILTINS SINGLE
 
 # ECHO
+exec_test_error "echo -n $USE"
 exec_test "echo test"
 exec_test "echo           test"
 exec_test "echo test tout"
@@ -8,7 +9,7 @@ exec_test "echo test      tout"
 exec_test "echo -p"
 exec_test_with_expected_text "echo -n test tout" "test toutminishell$ "
 exec_test_with_expected_text "echo -n -n -n test tout" "test toutminishell$ "
-exec_test_with_expected_text "echo -n -n -n -n   -n     -n -n-n test tout" "test toutminishell$ "
+exec_test_with_expected_text "echo -n -n -n -n   -n     -n -n-n test tout" "-n-n test toutminishell$ "
 exec_test_with_expected_text "echo -n -x -n test tout" "-x -n test toutminishell$ "
 exec_test_with_expected_text "echo -x -n test tout" "-x -n test tout"
 # exec_test 'echo "$$$$$$$"'
@@ -50,16 +51,15 @@ exec_test "pwd test"
 exec_test 'echo $TEST'
 exec_test 'echo "$TEST"'
 exec_test "echo '$TEST'"
-exec_test 'echo "$TEST$TEST$TEST"' # 対応した方が良さそう
-# exec_test 'echo "$TEST$TEST=lol$TEST"' # ダブルクオート内で未定義変数が複数回出現した場合のハンドリングがうまくできてなさそう
-exec_test 'echo "   $TEST lol $TEST"' # これも同じく
+exec_test 'echo "$TEST$TEST$TEST"' 
+# exec_test 'echo "$TEST$TEST=lol$TEST"'
+exec_test 'echo "   $TEST lol $TEST"'
 exec_test 'echo $TEST$TEST$TEST'
 exec_test 'echo    $TEST lol $TEST'
 exec_test 'echo test "" test "" test'
-exec_test 'echo "$"' # 対応してもいいかも
+exec_test 'echo "$"'
 exec_test 'echo "$?TEST"'
 exec_test 'echo $TEST $TEST'
-# exec_test 'echo "$1TEST"' # 対応してもいいかも
 exec_test 'echo "$T1TEST"'
 
 # EXPORT and ENV EXPANSIONS

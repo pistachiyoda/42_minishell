@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-// fileが存在しているか、読み取り権限があるかを確認する
 bool	is_readable(char *file)
 {
 	if (access(file, R_OK) == -1)
@@ -8,8 +7,6 @@ bool	is_readable(char *file)
 	return (true);
 }
 
-// ファイルを読み込みできる状態で開く
-// @todo エラー時のexit処理
 int	open_file(char *file)
 {
 	int	file_fd;
@@ -23,7 +20,6 @@ int	open_file(char *file)
 	return (file_fd);
 }
 
-// fileが存在する場合、書き込み権限があるかを確認する(fileが存在しない場合はopen_or_create_fileで新規作成する)
 bool	is_writable(char *file)
 {
 	if (access(file, F_OK) == 0)
@@ -32,7 +28,6 @@ bool	is_writable(char *file)
 	return (true);
 }
 
-// ファイルを読み込み、書き込みができる状態で開く。ファイルが存在しない場合はopen_flagに従った権限を与えた状態でファイルを新規作成する。
 int	open_or_create_file(char *file, int open_flag)
 {
 	int	file_fd;

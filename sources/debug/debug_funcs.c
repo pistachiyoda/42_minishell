@@ -67,3 +67,9 @@ void	print_cmd_lst(t_list *cmd_lst)
 		i++;
 	}
 }
+
+void	print_leaks(const char *text)
+{
+	printf("========%s===========\n", text);
+	system("leaks -q minishell 2>&1 | grep 'leaks for'");
+}

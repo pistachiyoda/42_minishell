@@ -79,9 +79,6 @@ void	handle_unused_heredoc(char *str)
 
 void	flush_heredoc(char *str, int doc_pipe_fds[2])
 {
-	char	*tmp;
-
-	tmp = str;
 	close_wrapper(doc_pipe_fds[0]);
 	if (write(doc_pipe_fds[1], str, ft_strlen(str)) == -1)
 	{
@@ -89,6 +86,6 @@ void	flush_heredoc(char *str, int doc_pipe_fds[2])
 		exit(1);
 	}
 	close_wrapper(doc_pipe_fds[1]);
-	free(tmp);
+	free(str);
 	exit(0);
 }
