@@ -7,6 +7,11 @@ char	*resolve_path(char	*command, char *path_val)
 	char	*full_path;
 	int		i;
 
+	if (path_val == NULL)
+	{
+		print_error(command, EMESS_NO_FILE_DIR);
+		exit(127);
+	}
 	paths = ft_split_wrapper(path_val, ':');
 	i = 0;
 	while (paths[i] != NULL)

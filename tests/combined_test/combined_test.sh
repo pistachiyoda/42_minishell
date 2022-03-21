@@ -12,3 +12,5 @@ source ./pipe.sh
 source ./redirect.sh
 ## SYNTAX
 source ./syntax.sh
+## OTHERS
+source ./others.sh
