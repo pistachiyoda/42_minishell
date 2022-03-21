@@ -45,7 +45,7 @@ void	exec_command(t_cmd_block *cmd_block, char **envp)
 	{
 		env = create_environ(envp);
 		result = run_builtin_command(cmd_block, env);
-		free(env);
+		free_env(env);
 		exit(result);
 	}
 	path_val = get_env_val("PATH", envp);
