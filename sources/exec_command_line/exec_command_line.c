@@ -4,7 +4,9 @@ int	handle_single_block(t_cmd_block *cmd_block, char **envp)
 {
 	int			pid;
 	int			status;
+	bool		sigint;
 
+	sigint = false;
 	set_signal(SIG_IGN, SIG_IGN);
 	pid = fork_wrapper();
 	if (pid == 0)
@@ -17,7 +19,9 @@ int	handle_single_block(t_cmd_block *cmd_block, char **envp)
 	}
 	close_doc_pipe_fd(cmd_block);
 	waitpid_wrapper(pid, &status, 0);
-	return (get_child_status(status));
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		sigint = true;
+	return (get_child_status(status, sigint));
 }
 
 void	handle_multi_block(int *pids, t_list *cmd_list, char **envp)

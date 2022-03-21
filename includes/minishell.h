@@ -120,7 +120,7 @@ void		handle_command_line(t_cmd_block *cmd_block, char **envp);
 // exec_command_line/exec_command_line2.c
 int			*crp(int i, int pipe_a[2], int pipe_b[2]);
 int			*cwp(int i, int pipe_a[2], int pipe_b[2]);
-int			get_child_status(int status);
+int			get_child_status(int status, bool sigint);
 int			wait_pids(int cmd_cnt, int pids[1000]);
 
 // exec_command_line/handle_file.c
