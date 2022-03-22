@@ -10,10 +10,7 @@ char	*expand_env_variables(t_environ *env, char *key)
 	free(key);
 	free_2d_array(envp);
 	if (ret == NULL)
-	{
-		free(ret);
 		return (ft_xstrdup("", "expand_env_variables_in_buf"));
-	}
 	return (ret);
 }
 
