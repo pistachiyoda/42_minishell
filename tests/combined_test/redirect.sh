@@ -55,7 +55,6 @@ rm dd
 exec_test_error 'cat a 11111111>dd'
 rm dd
 exec_test_error 'echo 111111111111111111111111111111>a'
-rm dd
 rm a
 # exec_test '1> out1.txt 2> out2.txt echo hoge \n cat out1.txt \n rm out1.txt out2.txt' # minishell上ではうまくexpected通りに動いている
 # exec_test '1> out1.txt 2> out2.txt echo hoge \n cat out2.txt \n rm out1.txt out2.txt' # minishell上ではうまくexpected通りに動いている
