@@ -23,28 +23,29 @@ void	execve_wrapper(
 	}
 }
 
-void	dup2_wrapper(int oldfd, int newfd)
+int	dup2_wrapper(int oldfd, int newfd)
 {
 	char	*ascii_oldfd;
 	char	*ascii_newfd;
 
 	if (oldfd > FD_MAX)
 	{
-		ascii_oldfd = ft_itoa(oldfd);
+		ascii_oldfd = ft_xitoa(oldfd, "dup2_wrapper");
 		print_error(ascii_oldfd, EMESS_BADF);
 		free(ascii_oldfd);
-		exit(1);
+		return (1);
 	}
 	if (newfd > FD_MAX)
 	{
-		ascii_newfd = ft_itoa(newfd);
+		ascii_newfd = ft_xitoa(newfd, "dup2_wrapper");
 		print_error(ascii_newfd, EMESS_BADF);
 		free(ascii_newfd);
-		exit(1);
+		return (1);
 	}
 	if (dup2(oldfd, newfd) == -1)
 	{
 		perror("dup2()");
 		exit(1);
 	}
+	return (0);
 }

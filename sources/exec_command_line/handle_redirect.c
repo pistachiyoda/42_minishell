@@ -59,7 +59,8 @@ int	handle_output(t_redirects *redirect, bool is_last)
 		exit(1);
 	if (!is_last)
 		return (0);
-	dup2_wrapper(fd, redirect->fd);
+	if (dup2_wrapper(fd, redirect->fd) != 0)
+		return (1);
 	return (0);
 }
 
@@ -69,7 +70,10 @@ int	handle_redirect(t_redirects	*redirect, t_cmd_block *cmd_block)
 		|| redirect->redirect == QUOTED_HEREDOC)
 	{
 		if (is_last_fd_input_redirect(redirect, cmd_block->redirects))
-			dup2_wrapper(redirect->doc_fd, redirect->fd);
+		{
+			if (dup2_wrapper(redirect->doc_fd, redirect->fd) != 0)
+				return (1);
+		}
 		close_wrapper(redirect->doc_fd);
 	}
 	if (redirect->redirect == INPUT)

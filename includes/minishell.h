@@ -97,7 +97,7 @@ char		**ft_split_wrapper(char const *s, char c);
 char		*ft_strjoin_wrapper(char const *s1, char const *s2);
 void		execve_wrapper(
 				const char *pathname, char *const argv[], char *const envp[]);
-void		dup2_wrapper(int oldfd, int newfd);
+int			dup2_wrapper(int oldfd, int newfd);
 
 // utils/validation.c
 bool		is_valid_arg(char *str, char *original, char *cmd);
