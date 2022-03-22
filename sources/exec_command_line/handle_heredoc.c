@@ -1,5 +1,24 @@
 #include "minishell.h"
 
+bool	is_end_heredoc(char *buf, char *target)
+{
+	int		buf_len;
+	int		target_len;
+	bool	is_same_text;
+
+	if (!buf)
+		return (true);
+	buf_len = ft_strlen(buf);
+	target_len = ft_strlen(target);
+	is_same_text = ft_strncmp(buf, target, target_len) == 0;
+	if (buf_len == target_len && is_same_text)
+	{
+		free(buf);
+		return (true);
+	}
+	return (false);
+}
+
 void	handle_each_input(
 		t_environ *env, t_redirects *redirect,
 		bool is_last, int doc_pipe_fds[2])
@@ -12,9 +31,7 @@ void	handle_each_input(
 	while (1)
 	{
 		buf = readline("> ");
-		if (!buf || ((ft_strlen(buf) == ft_strlen(redirect->target))
-				&& ft_strncmp(buf, redirect->target,
-					ft_strlen(redirect->target)) == 0))
+		if (is_end_heredoc(buf, redirect->target))
 			break ;
 		if (redirect->redirect == HEREDOC)
 		{
