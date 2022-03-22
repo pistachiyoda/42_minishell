@@ -30,14 +30,14 @@ int	dup2_wrapper(int oldfd, int newfd)
 
 	if (oldfd > FD_MAX)
 	{
-		ascii_oldfd = ft_itoa(oldfd);
+		ascii_oldfd = ft_xitoa(oldfd, "dup2_wrapper");
 		print_error(ascii_oldfd, EMESS_BADF);
 		free(ascii_oldfd);
 		return (1);
 	}
 	if (newfd > FD_MAX)
 	{
-		ascii_newfd = ft_itoa(newfd);
+		ascii_newfd = ft_xitoa(newfd, "dup2_wrapper");
 		print_error(ascii_newfd, EMESS_BADF);
 		free(ascii_newfd);
 		return (1);
