@@ -25,14 +25,21 @@ void	execve_wrapper(
 
 void	dup2_wrapper(int oldfd, int newfd)
 {
+	char	*ascii_oldfd;
+	char	*ascii_newfd;
+
 	if (oldfd > FD_MAX)
 	{
-		print_error(ft_itoa(oldfd), EMESS_BADF);
+		ascii_oldfd = ft_itoa(oldfd);
+		print_error(ascii_oldfd, EMESS_BADF);
+		free(ascii_oldfd);
 		exit(1);
 	}
 	if (newfd > FD_MAX)
 	{
-		print_error(ft_itoa(newfd), EMESS_BADF);
+		ascii_newfd = ft_itoa(newfd);
+		print_error(ascii_newfd, EMESS_BADF);
+		free(ascii_newfd);
 		exit(1);
 	}
 	if (dup2(oldfd, newfd) == -1)
