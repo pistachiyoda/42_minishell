@@ -3,9 +3,12 @@
 char	*expand_env_variables(t_environ *env, char *key)
 {
 	char	*ret;
+	char	**envp;
 
-	ret = get_env_val(key, t_environ_to_vector(env));
+	envp = t_environ_to_vector(env);
+	ret = get_env_val(key, envp);
 	free(key);
+	free_2d_array(envp);
 	if (ret == NULL)
 	{
 		free(ret);
