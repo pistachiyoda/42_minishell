@@ -33,7 +33,7 @@
 # define EMESS_AMBIGU "ambiguous redirect\n"
 # define EMESS_BADF "Bad file descriptor\n"
 
-# define FD_MAX 256
+# define FD_MAX 255
 
 extern volatile int	g_status;
 

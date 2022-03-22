@@ -2,8 +2,10 @@
 
 int	handle_write_error(void)
 {
-	write(1, "", 0);
-	if (errno == EBADF)
+	int	ret;
+
+	ret = write(1, "", 0);
+	if (ret == -1)
 	{
 		print_error("echo: write error", EMESS_BADF);
 		return (1);

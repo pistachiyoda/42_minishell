@@ -25,6 +25,16 @@ void	execve_wrapper(
 
 void	dup2_wrapper(int oldfd, int newfd)
 {
+	if (oldfd > FD_MAX)
+	{
+		print_error(ft_itoa(oldfd), EMESS_BADF);
+		exit(1);
+	}
+	if (newfd > FD_MAX)
+	{
+		print_error(ft_itoa(newfd), EMESS_BADF);
+		exit(1);
+	}
 	if (dup2(oldfd, newfd) == -1)
 	{
 		perror("dup2()");
