@@ -24,6 +24,7 @@ t_environ	*add_environ(t_environ *env, t_environ *first_ele,
 	new_ele->next = first_ele;
 	first_ele->prev = new_ele;
 	env->next = new_ele;
+	free(split_ele);
 	return (env = env->next);
 }
 
