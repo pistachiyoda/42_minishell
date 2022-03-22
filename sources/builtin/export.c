@@ -24,7 +24,6 @@ void	update_environ(char *str, t_environ *env, int *status)
 	{
 		env = add_environ(env->prev, env, split_ele, "export");
 		env = env->next;
-		free(split_ele);
 	}
 }
 
