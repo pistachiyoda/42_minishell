@@ -30,6 +30,15 @@ void	exec_relative_or_absolute(char *command_path, char **args, char **envp)
 	exit(1);
 }
 
+void	handle_empty_command(char *command)
+{
+	if (command[0] == '\0')
+	{
+		print_error("", EMESS_NO_CMD);
+		exit(127);
+	}
+}
+
 void	exec_command(t_cmd_block *cmd_block, char **envp)
 {
 	char		*path_val;
@@ -48,6 +57,7 @@ void	exec_command(t_cmd_block *cmd_block, char **envp)
 		free_env(env);
 		exit(result);
 	}
+	handle_empty_command(cmd_block->command);
 	path_val = get_env_val("PATH", envp);
 	real_command_path = resolve_path(cmd_block->command, path_val);
 	if (!real_command_path)

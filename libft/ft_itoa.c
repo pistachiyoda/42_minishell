@@ -6,7 +6,7 @@
 /*   By: fmai <fmai@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/12 18:10:25 by fmai              #+#    #+#             */
-/*   Updated: 2021/05/30 22:14:40 by fmai             ###   ########.fr       */
+/*   Updated: 2022/03/22 19:10:20 by fmai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ static char	*if_int_minmax(void)
 	char	*str;
 
 	str = (char *)malloc(sizeof(char) * 12);
+	if (str == NULL)
+		return (NULL);
 	ft_memcpy(str, "-2147483648\0", 12);
 	return (str);
 }

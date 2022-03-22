@@ -1,5 +1,14 @@
 #include "minishell.h"
 
+void	handle_NULL(char	*command, char *path_val)
+{
+	if (path_val == NULL)
+	{
+		print_error(command, EMESS_NO_FILE_DIR);
+		exit(127);
+	}
+}
+
 char	*resolve_path(char	*command, char *path_val)
 {
 	char	**paths;
@@ -7,6 +16,7 @@ char	*resolve_path(char	*command, char *path_val)
 	char	*full_path;
 	int		i;
 
+	handle_NULL(command, path_val);
 	paths = ft_split_wrapper(path_val, ':');
 	i = 0;
 	while (paths[i] != NULL)
