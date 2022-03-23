@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_env_val.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmai      <fmai@student.42tokyo.jp>        +#+  +:+       +#+        */
+/*   By: fmai <fmai@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 23:03:08 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/21 23:03:08 by fmai             ###   ########.fr       */
+/*   Updated: 2022/03/23 13:39:10 by fmai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ char	**split_into_two(char *str, char splitter)
 	return (set_data(str, key_cnt, val_cnt));
 }
 
-// 最初の=で二つに分割する
 char	*get_env_val(char *key, char **envp)
 {
 	int		i;

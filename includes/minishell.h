@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmai      <fmai@student.42tokyo.jp>        +#+  +:+       +#+        */
+/*   By: fmai <fmai@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 01:15:20 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/23 01:15:20 by fmai             ###   ########.fr       */
+/*   Updated: 2022/03/23 13:39:42 by fmai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,10 +229,10 @@ bool		is_absolute(char *command_path);
 void		sigint_handler(int sig);
 void		set_signal(void (*func1)(int), void (*func2)(int));
 
-// [後々削除]debug/debug_funcs.c
+// debug/debug_funcs.c
 void		print_cmd_lst(t_list *cmd_lst);
 t_list		*set_dataset(char *str);
 void		print_leaks(const char *text);
-// [後々削除]tmp_parser/tmp_parse_data.c
+// tmp_parser/tmp_parse_data.c
 void		tmp_parse_data(t_list **cmd_lst, char *str);
 #endif
