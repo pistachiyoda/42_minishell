@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmai      <fmai@student.42tokyo.jp>        +#+  +:+       +#+        */
+/*   By: fmai <fmai@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 13:36:58 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/12 13:36:58 by fmai             ###   ########.fr       */
+/*   Updated: 2022/03/23 12:05:35 by fmai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,16 +54,16 @@ int	ft_exit(t_cmd_block *cmd_block)
 	char		*first_arg;
 	long long	status;
 
-	if (cnt_args(cmd_block) >= 3)
-	{
-		print_error("exit", EMESS_TM_ARGS);
-		return (1);
-	}
 	first_arg = cmd_block->args[1];
 	if (first_arg == NULL)
 	{
 		ft_putstr_fd("exit\n", 2);
 		exit(g_status);
+	}
+	if (cnt_args(cmd_block) >= 3 && is_numeric(first_arg))
+	{
+		print_error("exit", EMESS_TM_ARGS);
+		return (1);
 	}
 	status = ft_atol(first_arg, &is_invalid);
 	if (!is_numeric(first_arg) || is_invalid)

@@ -97,3 +97,8 @@ exec_test "exit -9223372036854775810"
 exec_test "exit -4"
 exec_test "exit wrong"
 exec_test "exit wrong_command"
+exec_test_error "exit 123 abc" #exitせず
+exec_test_error "exit 123 456 789" #exitせず
+exec_test "exit abc 123" # exitする
+exec_test "exit abc def ghi 123" #exitする
+exec_test "exit abc 123 def 456 ghi" #exitする
