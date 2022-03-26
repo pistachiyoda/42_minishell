@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmai      <fmai@student.42tokyo.jp>        +#+  +:+       +#+        */
+/*   By: fmai <fmai@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 23:03:40 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/21 23:03:40 by fmai             ###   ########.fr       */
+/*   Updated: 2022/03/26 13:26:00 by fmai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	update_pwd_envs(char *key, char *wd, t_environ *env)
 	free_cmd_block_after_exec(update_cmd_data);
 }
 
-void	update_pwd(char *path, t_environ *env)
+int	update_pwd(char *path, t_environ *env)
 {
 	char		*old_wd;
 	char		*current_wd;
@@ -51,9 +51,15 @@ void	update_pwd(char *path, t_environ *env)
 	old_wd = get_env_val("PWD", envp);
 	free_2d_array(envp);
 	if (old_wd == NULL)
+	{
 		old_wd = getcwd(NULL, 1024);
+		if (old_wd == NULL)
+			return (1);
+	}
 	update_pwd_envs("OLDPWD", old_wd, env);
 	current_wd = getcwd(NULL, 1024);
+	if (current_wd == NULL)
+		return (1);
 	if (is_double_slash(path)
 		|| (is_double_slash(old_wd) && !is_absolute(path)))
 		current_wd = ft_xstrjoin_with_free(
@@ -61,6 +67,7 @@ void	update_pwd(char *path, t_environ *env)
 	update_pwd_envs("PWD", current_wd, env);
 	free(old_wd);
 	free(current_wd);
+	return (0);
 }
 
 int	chdir_wrapper(char *path)
@@ -91,9 +98,10 @@ int	ft_cd(t_cmd_block *cmd_block, t_environ *env)
 		envp = t_environ_to_vector(env);
 		path = get_env_val("HOME", envp);
 	}
-	if (chdir_wrapper(path) == -1)
+	if (chdir_wrapper(path) != 0)
 		return (1);
-	update_pwd(path, env);
+	if (update_pwd(path, env) != 0)
+		return (1);
 	if (!cmd_block->args[1])
 	{
 		free(path);
