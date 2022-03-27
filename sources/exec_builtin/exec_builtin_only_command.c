@@ -6,7 +6,7 @@
 /*   By: fmai <fmai@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 01:15:20 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/23 13:22:09 by fmai             ###   ########.fr       */
+/*   Updated: 2022/03/27 00:42:30 by fmai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,21 +89,21 @@ int	run_builtin_only_command(t_list *cmd_list, t_environ *env)
 	fd_list = dup_builtin_redirects(first_redirect);
 	if (fd_list == NULL)
 		return (1);
-	status = handle_heredoc_input(env, cmd_list);
-	if (status > 128)
+	if (handle_heredoc_input(env, cmd_list) > 128)
 		return (free_and_return(fd_list, 1));
 	status = handle_redirects((t_cmd_block *)cmd_list->content);
 	if (status != 0)
+	{
+		reset_dup(first_redirect, fd_list);
 		return (free_and_return(fd_list, status));
+	}
 	status = run_builtin_command((t_cmd_block *)cmd_list->content, env);
 	if (status != 0)
 	{
 		reset_dup(first_redirect, fd_list);
 		return (free_and_return(fd_list, status));
 	}
-	status = reset_dup(first_redirect, fd_list);
-	if (status != 0)
-		return (free_and_return(fd_list, status));
-	free(fd_list);
-	return (status);
+	if (reset_dup(first_redirect, fd_list) != 0)
+		return (free_and_return(fd_list, 1));
+	return (free_and_return(fd_list, status));
 }
