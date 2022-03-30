@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmai <fmai@student.42tokyo.jp>             +#+  +:+       +#+        */
+/*   By: mmasubuc <mmasubuc@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 01:15:20 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/23 13:39:42 by fmai             ###   ########.fr       */
+/*   Updated: 2022/03/30 19:38:57 by mmasubuc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,13 @@ void		free_cmd_list_after_exec(t_list *cmd_list);
 
 // utils/check_str_type.c
 int			check_str_type(char *str);
-bool		is_quote_type_switched(char *str, int i, int *status);
 bool		is_character_contained(char *str, int *i);
-bool		is_blank(char c);
 bool		is_space_at_end(char *str);
+
+// utils/check_char_type.c
+bool		is_quote_type_switched(char *str, int i, int *status);
+bool		is_blank(char c);
+bool		is_special_char(char c);
 
 // utils/print_error.c
 void		syntax_error(char *str);

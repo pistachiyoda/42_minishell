@@ -124,10 +124,13 @@ extern "C" {
 
 	// utils/check_str_type.c
 	int			check_str_type(char *str);
-	bool		is_quote_type_switched(char *str, int i, int *status);
 	bool		is_character_contained(char *str, int *i);
-	bool		is_blank(char c);
 	bool		is_space_at_end(char *str);
+
+	// utils/check_char_type.c
+	bool		is_quote_type_switched(char *str, int i, int *status);
+	bool		is_blank(char c);
+	bool		is_special_char(char c);
 
 	// utils/print_error.c
 	void		syntax_error(char *str);
@@ -288,12 +291,16 @@ extern "C" {
 	t_expand	init_struct(void);
 	bool		set_expanded_to_words(t_environ *env, char *str, t_list **words, int type);
 
-	// expansion/param_expansion.c
-	size_t		get_left_len(char *str, int i);
-	void		expand_exit_status(t_expand *data, char **head);
+	// sources/expansion/param_expansion.c
 	void		add_dollar_mark(char **head, char *str);
+	void		add_before_dollar_quote(t_expand *data, char *str, char **head);
+	void		param_expansion(
+					t_environ *env, t_expand *data, char *str, char **head);
+
+	// sources/expansion/expand_env.c
+	void		expand_exit_status(t_expand *data, char **head);
+	size_t		get_left_len(char *str, int i);
 	char		*expand_env(t_environ *env, t_expand *data, char *str, char **head);
-	void		param_expansion(t_environ *env, t_expand *data, char *str, char **head);
 
 	// expansion/word_splitting.c
 	bool		is_allspace_or_null(t_expand *data, char **head, int *j);
