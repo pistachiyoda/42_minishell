@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmai      <fmai@student.42tokyo.jp>        +#+  +:+       +#+        */
+/*   By: mmasubuc <mmasubuc@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 00:31:33 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/23 00:31:33 by fmai             ###   ########.fr       */
+/*   Updated: 2022/03/30 20:58:29 by mmasubuc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ bool	is_valid_cmd_list(t_list **cmd_list, t_environ *env)
 	if (!str)
 		exit_program(g_status);
 	if (ft_strlen(str) == 0)
+	{
+		free(str);
 		return (false);
+	}
 	add_history(str);
 	if (!lexer(str, &words) || !parser(words, cmd_list, str))
 		return (false);

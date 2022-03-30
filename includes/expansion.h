@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmai      <fmai@student.42tokyo.jp>        +#+  +:+       +#+        */
+/*   By: mmasubuc <mmasubuc@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 23:03:08 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/21 23:03:08 by fmai             ###   ########.fr       */
+/*   Updated: 2022/03/30 20:42:54 by mmasubuc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,15 @@ bool		set_expanded_to_words(
 				t_environ *env, char *str, t_list **words, int type);
 
 // sources/expansion/param_expansion.c
-size_t		get_left_len(char *str, int i);
-void		expand_exit_status(t_expand *data, char **head);
 void		add_dollar_mark(char **head, char *str);
-char		*expand_env(t_environ *env, t_expand *data, char *str, char **head);
+void		add_before_dollar_quote(t_expand *data, char *str, char **head);
 void		param_expansion(
 				t_environ *env, t_expand *data, char *str, char **head);
+
+// sources/expansion/expand_env.c
+void		expand_exit_status(t_expand *data, char **head);
+size_t		get_left_len(char *str, int i);
+char		*expand_env(t_environ *env, t_expand *data, char *str, char **head);
 
 // sources/expansion/word_splitting.c
 bool		is_allspace_or_null(t_expand *data, char **head, int *j);

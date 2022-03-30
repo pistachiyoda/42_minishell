@@ -29,6 +29,7 @@ SOURCES =\
 	../sources/utils/free.c\
 	../sources/utils/free2.c\
 	../sources/utils/check_str_type.c\
+	../sources/utils/check_char_type.c\
 	../sources/utils/print_error.c\
 	../sources/utils/malloc_check.c\
 	../sources/utils/malloc_check2.c\
@@ -39,7 +40,6 @@ SOURCES =\
 	../sources/utils/get_env_val.c\
 	../sources/utils/exit_program.c\
 	../sources/debug/debug_funcs.c\
-	../sources/debug/set_dataset.c\
 	../sources/env/create_environ.c\
     ../sources/env/t_environ_to_vector.c\
 	../sources/env/is_env_registered.c\
@@ -60,6 +60,7 @@ SOURCES =\
 	../sources/expansion/expansion.c\
 	../sources/expansion/set_expanded_to_words.c\
 	../sources/expansion/param_expansion.c\
+	../sources/expansion/expand_env.c\
 	../sources/expansion/word_splitting.c\
 	../sources/expansion/quote_removal.c
 OBJ = $(SOURCES:.c=.o)
