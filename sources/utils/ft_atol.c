@@ -6,7 +6,7 @@
 /*   By: fmai <fmai@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 13:36:58 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/30 10:32:04 by fmai             ###   ########.fr       */
+/*   Updated: 2022/03/30 11:10:12 by fmai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,14 @@ int	return_invalid(bool *is_invalid)
 	return (0);
 }
 
+void	set_minus(char c, long long *sign)
+{
+	if (c == '-')
+		*sign = -1LL;
+	else
+		*sign = 1LL;
+}
+
 // unsigned long long 18446744073709551615
 long long	ft_atol(const char *str, bool *is_invalid)
 {
@@ -45,10 +53,7 @@ long long	ft_atol(const char *str, bool *is_invalid)
 		str++;
 	if (ft_strlen(str) == 1 && (*str == '-' || *str == '+'))
 		return (return_invalid(is_invalid));
-	if (*str == '-')
-		sign = -1LL;
-	else
-		sign = 1LL;
+	set_minus(*str, &sign);
 	if (*str == '-' || *str == '+')
 		str++;
 	n = 0;
