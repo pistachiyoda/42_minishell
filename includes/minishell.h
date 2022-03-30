@@ -6,7 +6,7 @@
 /*   By: mmasubuc <mmasubuc@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 01:15:20 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/30 19:38:57 by mmasubuc         ###   ########.fr       */
+/*   Updated: 2022/03/30 22:54:43 by mmasubuc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,7 +234,6 @@ void		set_signal(void (*func1)(int), void (*func2)(int));
 
 // debug/debug_funcs.c
 void		print_cmd_lst(t_list *cmd_lst);
-t_list		*set_dataset(char *str);
 void		print_leaks(const char *text);
 // tmp_parser/tmp_parse_data.c
 void		tmp_parse_data(t_list **cmd_lst, char *str);

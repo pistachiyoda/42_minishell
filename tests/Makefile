@@ -40,7 +40,6 @@ SOURCES =\
 	../sources/utils/get_env_val.c\
 	../sources/utils/exit_program.c\
 	../sources/debug/debug_funcs.c\
-	../sources/debug/set_dataset.c\
 	../sources/env/create_environ.c\
     ../sources/env/t_environ_to_vector.c\
 	../sources/env/is_env_registered.c\
