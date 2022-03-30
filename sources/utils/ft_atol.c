@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atol.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmai      <fmai@student.42tokyo.jp>        +#+  +:+       +#+        */
+/*   By: fmai <fmai@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 13:36:58 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/12 13:36:58 by fmai             ###   ########.fr       */
+/*   Updated: 2022/03/30 10:32:04 by fmai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ long long	ft_atol(const char *str, bool *is_invalid)
 
 	while (is_space_for_atol(*str))
 		str++;
+	if (ft_strlen(str) == 1 && (*str == '-' || *str == '+'))
+		return (return_invalid(is_invalid));
 	if (*str == '-')
 		sign = -1LL;
 	else
@@ -50,8 +52,10 @@ long long	ft_atol(const char *str, bool *is_invalid)
 	if (*str == '-' || *str == '+')
 		str++;
 	n = 0;
-	while (ft_isdigit(*str))
+	while (*str)
 	{
+		if (ft_isdigit(*str) == 0)
+			return (return_invalid(is_invalid));
 		n = (unsigned long long)10 * n + (unsigned long long)(*str - '0');
 		if (sign == 1LL && n > (unsigned long long)LLONG_MAX)
 			return (return_invalid(is_invalid));
