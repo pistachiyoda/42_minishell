@@ -56,14 +56,33 @@ exec_test "pwd test"
 exec_test 'echo $TEST'
 exec_test 'echo "$TEST"'
 exec_test "echo '$TEST'"
-exec_test 'echo "$TEST$TEST$TEST"' 
-# exec_test 'echo "$TEST$TEST=lol$TEST"'
+exec_test 'echo "$TEST$TEST$TEST"'
+exec_test 'echo "$TEST$TEST=lol$TEST"'
+exec_test 'echo "$TEST$TEST=lol$TEST0"'
+exec_test 'echo "$TEST$TEST=lol"'
+exec_test 'echo "$TEST$TEST0=lol"'
+exec_test 'echo "$TEST$TEST =lol$TEST=lol  "'
 exec_test 'echo "   $TEST lol $TEST"'
 exec_test 'echo $TEST$TEST$TEST'
 exec_test 'echo    $TEST lol $TEST'
 exec_test 'echo test "" test "" test'
 exec_test 'echo "$"'
+exec_test 'echo "$="'
+exec_test 'echo $='
+exec_test 'echo $?"a"'
+exec_test "echo \$?'a'"
+exec_test 'echo $?a'
+exec_test 'echo $=$a$""'
+exec_test 'echo $=aa$TEST=aa'
+exec_test 'echo $"="'
+exec_test 'echo $""'
+exec_test "echo $''"
+exec_test "echo $'aa'"
+exec_test "echo $'$TEST'"
+exec_test 'echo $"aa"'
+exec_test 'echo $"$TEST"'
 exec_test 'echo "$?TEST"'
+exec_test 'echo "$?$TEST"'
 exec_test 'echo $TEST $TEST'
 exec_test 'echo "$T1TEST"'
 
@@ -76,7 +95,13 @@ exec_test "export TEST \n $EXPORT_SHOW"
 exec_test_error "export \"\"=\"\" \n $ENV_SHOW"
 exec_test "export TES=T=\"\" \n $ENV_SHOW"
 exec_test "export TEST=LOL \n echo \$TEST \n $ENV_SHOW"
-# exec_test 'export TEST=LOL \n echo $TEST$TEST$TEST=lol$TEST'
+exec_test 'export TEST=LOL \n echo $TEST$TEST$TEST=lol$TEST'
+exec_test 'export TEST=LOL \n echo $TEST$TEST$TEST:lol$TEST'
+exec_test 'export TEST=LOL \n echo $TEST$TEST$TEST0=lol$TEST'
+exec_test 'export TEST=LOL \n echo $TEST$TEST$TEST''=lol$TEST'
+exec_test 'export TEST=LOL \n echo $TEST$TEST$TEST=lol '
+exec_test 'export TEST=LOL \n echo $TEST$TEST$TEST0lol '
+exec_test 'export TEST=LOL \n echo $TEST0lol $  $a$^$TEST+a'
 exec_test "$ENV_SHOW"
 exec_test "$EXPORT_SHOW"
 exec_test "export TEST\n export TEST\n $EXPORT_SHOW"
