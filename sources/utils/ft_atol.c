@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atol.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmai      <fmai@student.42tokyo.jp>        +#+  +:+       +#+        */
+/*   By: fmai <fmai@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 13:36:58 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/12 13:36:58 by fmai             ###   ########.fr       */
+/*   Updated: 2022/03/30 11:10:12 by fmai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,14 @@ int	return_invalid(bool *is_invalid)
 	return (0);
 }
 
+void	set_minus(char c, long long *sign)
+{
+	if (c == '-')
+		*sign = -1LL;
+	else
+		*sign = 1LL;
+}
+
 // unsigned long long 18446744073709551615
 long long	ft_atol(const char *str, bool *is_invalid)
 {
@@ -43,15 +51,16 @@ long long	ft_atol(const char *str, bool *is_invalid)
 
 	while (is_space_for_atol(*str))
 		str++;
-	if (*str == '-')
-		sign = -1LL;
-	else
-		sign = 1LL;
+	if (ft_strlen(str) == 1 && (*str == '-' || *str == '+'))
+		return (return_invalid(is_invalid));
+	set_minus(*str, &sign);
 	if (*str == '-' || *str == '+')
 		str++;
 	n = 0;
-	while (ft_isdigit(*str))
+	while (*str)
 	{
+		if (ft_isdigit(*str) == 0)
+			return (return_invalid(is_invalid));
 		n = (unsigned long long)10 * n + (unsigned long long)(*str - '0');
 		if (sign == 1LL && n > (unsigned long long)LLONG_MAX)
 			return (return_invalid(is_invalid));

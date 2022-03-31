@@ -72,4 +72,273 @@ TEST(expand_env_G, multi_env_with_space)
 	STRCMP_EQUAL("/bin/zsh testmai test   ", ret);
 }
 
-// エッジケースっぽいの
+// single_quote
+TEST(expand_env_G, single_quote_after)
+{
+	char *ret;
+
+	ret = call_expand("$USER'");
+	STRCMP_EQUAL("mai'", ret);
+}
+
+TEST(expand_env_G, single_quote_before)
+{
+	char *ret;
+
+	ret = call_expand("'$USER");
+	STRCMP_EQUAL("'mai", ret);
+}
+
+TEST(expand_env_G, single_quoted_after_and_before)
+{
+	char *ret;
+
+	ret = call_expand("'$USER'");
+	STRCMP_EQUAL("'mai'", ret);
+}
+
+// double_quote
+TEST(expand_env_G, double_quote_after)
+{
+	char *ret;
+
+	ret = call_expand("$USER\"");
+	STRCMP_EQUAL("mai\"", ret);
+}
+
+TEST(expand_env_G, double_quote_before)
+{
+	char *ret;
+
+	ret = call_expand("\"$USER");
+	STRCMP_EQUAL("\"mai", ret);
+}
+
+TEST(expand_env_G, double_quoted_after_and_before)
+{
+	char *ret;
+
+	ret = call_expand("\"$USER\"");
+	STRCMP_EQUAL("\"mai\"", ret);
+}
+
+// +
+TEST(expand_env_G, plus_after)
+{
+	char *ret;
+
+	ret = call_expand("$USER+");
+	STRCMP_EQUAL("mai+", ret);
+}
+
+TEST(expand_env_G, plus_before)
+{
+	char *ret;
+
+	ret = call_expand("+$USER");
+	STRCMP_EQUAL("+mai", ret);
+}
+
+TEST(expand_env_G, plus_after_and_before)
+{
+	char *ret;
+
+	ret = call_expand("+$USER+");
+	STRCMP_EQUAL("+mai+", ret);
+}
+
+// -
+TEST(expand_env_G, minus_after)
+{
+	char *ret;
+
+	ret = call_expand("$USER-");
+	STRCMP_EQUAL("mai-", ret);
+}
+
+TEST(expand_env_G, minus_before)
+{
+	char *ret;
+
+	ret = call_expand("-$USER");
+	STRCMP_EQUAL("-mai", ret);
+}
+
+TEST(expand_env_G, minus_after_and_before)
+{
+	char *ret;
+
+	ret = call_expand("-$USER-");
+	STRCMP_EQUAL("-mai-", ret);
+}
+
+// _
+TEST(expand_env_G, underscore_after)
+{
+	char *ret;
+
+	ret = call_expand("$USER_");
+	STRCMP_EQUAL("", ret);
+}
+
+TEST(expand_env_G, underscore_before)
+{
+	char *ret;
+
+	ret = call_expand("_$USER");
+	STRCMP_EQUAL("_mai", ret);
+}
+
+TEST(expand_env_G, underscore_after_and_before)
+{
+	char *ret;
+
+	ret = call_expand("_$USER_");
+	STRCMP_EQUAL("_", ret);
+}
+
+// :
+TEST(expand_env_G, colon_after)
+{
+	char *ret;
+
+	ret = call_expand("$USER:");
+	STRCMP_EQUAL("mai:", ret);
+}
+
+TEST(expand_env_G, colon_before)
+{
+	char *ret;
+
+	ret = call_expand(":$USER");
+	STRCMP_EQUAL(":mai", ret);
+}
+
+TEST(expand_env_G, colon_after_and_before)
+{
+	char *ret;
+
+	ret = call_expand(":$USER:");
+	STRCMP_EQUAL(":mai:", ret);
+}
+
+// $
+TEST(expand_env_G, dollar)
+{
+	char *ret;
+
+	ret = call_expand("$");
+	STRCMP_EQUAL("$", ret);
+}
+
+TEST(expand_env_G, dollar_with_equal)
+{
+	char *ret;
+
+	ret = call_expand("$=");
+	STRCMP_EQUAL("$=", ret);
+}
+
+TEST(expand_env_G, dollar_with_question1)
+{
+	char *ret;
+
+	ret = call_expand("$?a");
+	STRCMP_EQUAL("0a", ret);
+}
+
+TEST(expand_env_G, dollar_with_question2)
+{
+	char *ret;
+
+	ret = call_expand("$?\"a\"");
+	STRCMP_EQUAL("0\"a\"", ret);
+}
+
+TEST(expand_env_G, dollar_with_question3)
+{
+	char *ret;
+
+	ret = call_expand("$=$a$\"\"");
+	STRCMP_EQUAL("$=$\"\"", ret);
+}
+
+TEST(expand_env_G, dollar_with_question4)
+{
+	char *ret;
+
+	ret = call_expand("$=aa$TEST=aa");
+	STRCMP_EQUAL("$=aa=aa", ret);
+}
+
+TEST(expand_env_G, dollar_with_question5)
+{
+	char *ret;
+
+	ret = call_expand("$\"=\"");
+	STRCMP_EQUAL("$\"=\"", ret);
+}
+
+TEST(expand_env_G, dollar_with_question6)
+{
+	char *ret;
+
+	ret = call_expand("$\"\"");
+	STRCMP_EQUAL("$\"\"", ret);
+}
+
+TEST(expand_env_G, dollar_with_question7)
+{
+	char *ret;
+
+	ret = call_expand("$\'\'");
+	STRCMP_EQUAL("$\'\'", ret);
+}
+
+TEST(expand_env_G, dollar_with_question8)
+{
+	char *ret;
+
+	ret = call_expand("$\'aa\'");
+	STRCMP_EQUAL("$\'aa\'", ret);
+}
+
+TEST(expand_env_G, dollar_with_question9)
+{
+	char *ret;
+
+	ret = call_expand("$\'$TEST\'");
+	STRCMP_EQUAL("$\'\'", ret);
+}
+
+TEST(expand_env_G, dollar_with_question10)
+{
+	char *ret;
+
+	ret = call_expand("$\"aa\"");
+	STRCMP_EQUAL("$\"aa\"", ret);
+}
+
+TEST(expand_env_G, dollar_with_question11)
+{
+	char *ret;
+
+	ret = call_expand("$\"$TEST\"");
+	STRCMP_EQUAL("$\"\"", ret);
+}
+
+TEST(expand_env_G, dollar_with_question12)
+{
+	char *ret;
+
+	ret = call_expand("$?TEST");
+	STRCMP_EQUAL("0TEST", ret);
+}
+
+TEST(expand_env_G, dollar_with_question13)
+{
+	char *ret;
+
+	ret = call_expand("$?$TEST");
+	STRCMP_EQUAL("0", ret);
+}

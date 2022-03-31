@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmasubuc <mmasubuc@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: fmai <fmai@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 01:15:20 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/30 22:54:43 by mmasubuc         ###   ########.fr       */
+/*   Updated: 2022/03/31 22:31:26 by fmai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,10 @@ char		*expand_env_variables_in_buf(t_environ *env, char *buf);
 void		handle_unused_heredoc(char *str);
 void		flush_heredoc(char *str, int doc_pipe_fds[2]);
 
+// exec_command_line/handle_heredoc3.c
+void		handle_unused_heredoc(char *str);
+void		flush_heredoc(char *str, int doc_pipe_fds[2]);
+
 // exec_command_line/close_doc_pipe_fds.c
 int			close_doc_pipe_fd(t_cmd_block *cmd_block);
 
@@ -231,10 +235,4 @@ bool		is_absolute(char *command_path);
 // signal/signal.c
 void		sigint_handler(int sig);
 void		set_signal(void (*func1)(int), void (*func2)(int));
-
-// debug/debug_funcs.c
-void		print_cmd_lst(t_list *cmd_lst);
-void		print_leaks(const char *text);
-// tmp_parser/tmp_parse_data.c
-void		tmp_parse_data(t_list **cmd_lst, char *str);
 #endif

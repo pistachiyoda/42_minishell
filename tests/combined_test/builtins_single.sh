@@ -119,7 +119,9 @@ exec_test "unset TEST1 TEST2 TEST3 \n $ENV_SHOW"
 # EXIT ## ステータスコードのみ確認。出力結果は手動テストの必要あり！！！！
 exec_test "exit 42"
 exec_test "exit 42 53 68"
-exec_test "exit 259"
+exec_test "exit 255"
+exec_test "exit 256"
+exec_test "exit 1000"
 exec_test "exit 9223372036854775807"
 exec_test "exit -9223372036854775808"
 exec_test "exit 9223372036854775808"
@@ -129,7 +131,29 @@ exec_test "exit wrong"
 exec_test "exit wrong_command"
 exec_test_error "exit 123 abc" #exitせず
 exec_test_error "exit 123 456 789" #exitせず
+exec_test_error "exit 42 + " #exitせず
 exec_test "exit abc 123" # exitする
 exec_test "exit abc def ghi 123" #exitする
 exec_test "exit abc 123 def 456 ghi" #exitする
+exec_test "exit + 42 " #exitする
 exec_test "exit 000000000000000000000000000000000000000000000000000000"
+exec_test 'exit "+"'
+exec_test 'exit "-"'
+exec_test 'exit " 42"'
+# exec_test 'exit "42 "' # テストケースだとうまくいかないが手動だとうまく行く
+exec_test 'exit " \t 42"'
+# exec_test 'exit " \n\n 42"' #テストケースだとうまくいかないが、手動（ctrl v + ctrl jでの改行）ではうまくいく
+exec_test 'exit " \v 42"'
+exec_test 'exit " \f 42"'
+# exec_test 'exit " \r 42"' # \rの入力の仕方がわからないため一旦コメントアウト。。
+exec_test 'exit " +42"'
+exec_test 'exit " -42"'
+exec_test 'exit " ++42"'
+exec_test 'exit " --42"'
+exec_test 'exit " +-+42"'
+exec_test 'exit " +42 -42"'
+exec_test 'exit " + 42"'
+exec_test 'exit " +9223372036854775807"'
+exec_test 'exit " -9223372036854775808"'
+exec_test 'exit " +9223372036854775808"'
+exec_test 'exit " -9223372036854775810"'

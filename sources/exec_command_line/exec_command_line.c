@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_command_line.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmai      <fmai@student.42tokyo.jp>        +#+  +:+       +#+        */
+/*   By: fmai <fmai@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 23:03:08 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/22 21:11:39 by fmai             ###   ########.fr       */
+/*   Updated: 2022/03/31 22:16:38 by fmai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,10 @@ int	exec_command_line(
 	pids = ft_xmalloc(sizeof(int) * cmd_cnt, "exec_command_line");
 	status = handle_heredoc_input(env, cmd_list);
 	if (status > 128)
+	{
+		free(pids);
 		return (1);
+	}
 	if (cmd_cnt == 1)
 	{
 		status = (handle_single_block((t_cmd_block *)cmd_list->content, envp));

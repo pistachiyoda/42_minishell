@@ -6,7 +6,7 @@
 /*   By: fmai <fmai@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 13:36:58 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/23 12:05:35 by fmai             ###   ########.fr       */
+/*   Updated: 2022/03/30 10:33:03 by fmai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,6 @@ int	cnt_args(t_cmd_block *cmd_block)
 	while (cmd_block->args[i])
 		i ++;
 	return (i);
-}
-
-bool	is_numeric(char *arg)
-{
-	int	i;
-
-	i = 0;
-	if (arg[i] == '+' || arg[i] == '-')
-		i ++;
-	while (arg[i])
-	{
-		if (ft_isdigit(arg[i]) == 0)
-			return (false);
-		i ++;
-	}
-	return (true);
 }
 
 void	print_non_numeric_error(char *arg)
@@ -60,13 +44,13 @@ int	ft_exit(t_cmd_block *cmd_block)
 		ft_putstr_fd("exit\n", 2);
 		exit(g_status);
 	}
-	if (cnt_args(cmd_block) >= 3 && is_numeric(first_arg))
+	status = ft_atol(first_arg, &is_invalid);
+	if (cnt_args(cmd_block) >= 3 && !is_invalid)
 	{
 		print_error("exit", EMESS_TM_ARGS);
 		return (1);
 	}
-	status = ft_atol(first_arg, &is_invalid);
-	if (!is_numeric(first_arg) || is_invalid)
+	if (is_invalid)
 	{
 		ft_putstr_fd("exit\n", 2);
 		print_non_numeric_error(first_arg);
