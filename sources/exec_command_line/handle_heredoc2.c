@@ -6,7 +6,7 @@
 /*   By: fmai <fmai@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 01:15:20 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/31 19:37:50 by fmai             ###   ########.fr       */
+/*   Updated: 2022/03/31 20:39:17 by fmai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,15 @@ char	*expand_env_variables(t_environ *env, char *key)
 	return (ret);
 }
 
+bool	is_special_char_for_heredoc(char c)
+{
+	if (c != ' ' && c != '\n' && c != '\0'
+		&& c != '\"' && c != '\'' && c != '$'
+		&& (ft_isalnum(c) == 1 || c == '_'))
+		return (false);
+	return (true);
+}
+
 char	*get_key(char *buf, int *i)
 {
 	int		cnt;
@@ -34,9 +43,7 @@ char	*get_key(char *buf, int *i)
 
 	cnt = 0;
 	(*i)++;
-	while (buf[*i] != ' ' && buf[*i] != '\n' && buf[*i] != '\0'
-		&& buf[*i] != '\"' && buf[*i] != '\'' && buf[*i] != '$'
-		&& (ft_isalnum(buf[*i]) == 1 || buf[*i] == '_'))
+	while (!is_special_char_for_heredoc(buf[*i]))
 	{
 		cnt ++;
 		(*i)++;
@@ -68,7 +75,15 @@ char	*expand_env_variables_in_buf(t_environ *env, char *buf)
 	{
 		if (buf[i] == '$')
 		{
-			value = expand_env_variables(env, get_key(buf, &i));
+			if (buf[i + 1] == '?')
+			{
+				value = ft_xitoa(g_status, "expand_env");
+				i++;
+			}
+			else if (is_special_char_for_heredoc(buf[i + 1]))
+				value = ft_xstrdup("$", "expand_env");
+			else
+				value = expand_env_variables(env, get_key(buf, &i));
 			joined_str = ft_xstrjoin_with_free(joined_str, value, "expand_env");
 		}
 		else

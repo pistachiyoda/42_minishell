@@ -221,3 +221,124 @@ TEST(expand_env_G, colon_after_and_before)
 	ret = call_expand(":$USER:");
 	STRCMP_EQUAL(":mai:", ret);
 }
+
+// $
+TEST(expand_env_G, dollar)
+{
+	char *ret;
+
+	ret = call_expand("$");
+	STRCMP_EQUAL("$", ret);
+}
+
+TEST(expand_env_G, dollar_with_equal)
+{
+	char *ret;
+
+	ret = call_expand("$=");
+	STRCMP_EQUAL("$=", ret);
+}
+
+TEST(expand_env_G, dollar_with_question1)
+{
+	char *ret;
+
+	ret = call_expand("$?a");
+	STRCMP_EQUAL("0a", ret);
+}
+
+TEST(expand_env_G, dollar_with_question2)
+{
+	char *ret;
+
+	ret = call_expand("$?\"a\"");
+	STRCMP_EQUAL("0\"a\"", ret);
+}
+
+TEST(expand_env_G, dollar_with_question3)
+{
+	char *ret;
+
+	ret = call_expand("$=$a$\"\"");
+	STRCMP_EQUAL("$=$\"\"", ret);
+}
+
+TEST(expand_env_G, dollar_with_question4)
+{
+	char *ret;
+
+	ret = call_expand("$=aa$TEST=aa");
+	STRCMP_EQUAL("$=aa=aa", ret);
+}
+
+TEST(expand_env_G, dollar_with_question5)
+{
+	char *ret;
+
+	ret = call_expand("$\"=\"");
+	STRCMP_EQUAL("$\"=\"", ret);
+}
+
+TEST(expand_env_G, dollar_with_question6)
+{
+	char *ret;
+
+	ret = call_expand("$\"\"");
+	STRCMP_EQUAL("$\"\"", ret);
+}
+
+TEST(expand_env_G, dollar_with_question7)
+{
+	char *ret;
+
+	ret = call_expand("$\'\'");
+	STRCMP_EQUAL("$\'\'", ret);
+}
+
+TEST(expand_env_G, dollar_with_question8)
+{
+	char *ret;
+
+	ret = call_expand("$\'aa\'");
+	STRCMP_EQUAL("$\'aa\'", ret);
+}
+
+TEST(expand_env_G, dollar_with_question9)
+{
+	char *ret;
+
+	ret = call_expand("$\'$TEST\'");
+	STRCMP_EQUAL("$\'\'", ret);
+}
+
+TEST(expand_env_G, dollar_with_question10)
+{
+	char *ret;
+
+	ret = call_expand("$\"aa\"");
+	STRCMP_EQUAL("$\"aa\"", ret);
+}
+
+TEST(expand_env_G, dollar_with_question11)
+{
+	char *ret;
+
+	ret = call_expand("$\"$TEST\"");
+	STRCMP_EQUAL("$\"\"", ret);
+}
+
+TEST(expand_env_G, dollar_with_question12)
+{
+	char *ret;
+
+	ret = call_expand("$?TEST");
+	STRCMP_EQUAL("0TEST", ret);
+}
+
+TEST(expand_env_G, dollar_with_question13)
+{
+	char *ret;
+
+	ret = call_expand("$?$TEST");
+	STRCMP_EQUAL("0", ret);
+}
