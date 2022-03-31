@@ -15,6 +15,7 @@ CFILES =\
 	sources/exec_command_line/handle_file.c\
 	sources/exec_command_line/handle_heredoc.c\
 	sources/exec_command_line/handle_heredoc2.c\
+	sources/exec_command_line/handle_heredoc3.c\
 	sources/exec_command_line/close_doc_pipe_fds.c\
 	sources/exec_command_line/handle_redirect.c\
 	sources/exec_command_line/handle_input_redirect.c\

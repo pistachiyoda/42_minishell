@@ -6,7 +6,7 @@
 /*   By: fmai <fmai@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 01:15:20 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/31 20:39:17 by fmai             ###   ########.fr       */
+/*   Updated: 2022/03/31 20:48:27 by fmai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,19 @@ char	*get_key(char *buf, int *i)
 	return (key);
 }
 
+char	*get_expanded_value(char *buf, int *i, t_environ *env)
+{
+	if (buf[(*i) + 1] == '?')
+	{
+		(*i)++;
+		return(ft_xitoa(g_status, "expand_env"));
+	}
+	else if (is_special_char_for_heredoc(buf[(*i) + 1]))
+		return(ft_xstrdup("$", "expand_env"));
+	else
+		return(expand_env_variables(env, get_key(buf, i)));
+}
+
 char	*expand_env_variables_in_buf(t_environ *env, char *buf)
 {
 	int		i;
@@ -75,15 +88,7 @@ char	*expand_env_variables_in_buf(t_environ *env, char *buf)
 	{
 		if (buf[i] == '$')
 		{
-			if (buf[i + 1] == '?')
-			{
-				value = ft_xitoa(g_status, "expand_env");
-				i++;
-			}
-			else if (is_special_char_for_heredoc(buf[i + 1]))
-				value = ft_xstrdup("$", "expand_env");
-			else
-				value = expand_env_variables(env, get_key(buf, &i));
+			value = get_expanded_value(buf, &i, env);
 			joined_str = ft_xstrjoin_with_free(joined_str, value, "expand_env");
 		}
 		else
@@ -97,23 +102,4 @@ char	*expand_env_variables_in_buf(t_environ *env, char *buf)
 		i++;
 	}
 	return (joined_str);
-}
-
-void	handle_unused_heredoc(char *str)
-{
-	free(str);
-	exit(0);
-}
-
-void	flush_heredoc(char *str, int doc_pipe_fds[2])
-{
-	close_wrapper(doc_pipe_fds[0]);
-	if (write(doc_pipe_fds[1], str, ft_strlen(str)) == -1)
-	{
-		perror("write()");
-		exit(1);
-	}
-	close_wrapper(doc_pipe_fds[1]);
-	free(str);
-	exit(0);
 }
