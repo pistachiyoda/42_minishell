@@ -6,7 +6,7 @@
 /*   By: fmai <fmai@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 01:15:20 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/31 20:49:15 by fmai             ###   ########.fr       */
+/*   Updated: 2022/03/31 22:31:26 by fmai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,10 +235,4 @@ bool		is_absolute(char *command_path);
 // signal/signal.c
 void		sigint_handler(int sig);
 void		set_signal(void (*func1)(int), void (*func2)(int));
-
-// debug/debug_funcs.c
-void		print_cmd_lst(t_list *cmd_lst);
-void		print_leaks(const char *text);
-// tmp_parser/tmp_parse_data.c
-void		tmp_parse_data(t_list **cmd_lst, char *str);
 #endif

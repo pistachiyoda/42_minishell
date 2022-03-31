@@ -20,7 +20,6 @@ CFILES =\
 	sources/exec_command_line/handle_redirect.c\
 	sources/exec_command_line/handle_input_redirect.c\
 	sources/exec_command_line/handle_pipe.c\
-	sources/tmp_parser/tmp_parse_data.c\
 	sources/runner/run_builtin_command.c\
 	sources/exec_builtin/exec_builtin_only_command.c\
     sources/signal/signal.c\
@@ -37,7 +36,6 @@ CFILES =\
 	sources/utils/ft_atol.c\
 	sources/utils/get_env_val.c\
 	sources/utils/exit_program.c\
-	sources/debug/debug_funcs.c\
 	sources/env/create_environ.c\
 	sources/env/t_environ_to_vector.c\
 	sources/env/is_env_registered.c\
