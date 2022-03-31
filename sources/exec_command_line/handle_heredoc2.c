@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_heredoc2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmai      <fmai@student.42tokyo.jp>        +#+  +:+       +#+        */
+/*   By: fmai <fmai@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 01:15:20 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/23 01:15:20 by fmai             ###   ########.fr       */
+/*   Updated: 2022/03/31 18:00:13 by fmai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,9 @@ char	*get_key(char *buf, int *i)
 	cnt = 0;
 	(*i)++;
 	while (buf[*i] != '$' && buf[*i] != ' '
-		&& buf[*i] != '\n' && buf[*i] != '\0')
+		&& buf[*i] != '\n' && buf[*i] != '\0'
+		&& buf[*i] != '"' && buf[*i] != '\''
+		&& !is_special_char(buf[*i]))
 	{
 		cnt ++;
 		(*i)++;
