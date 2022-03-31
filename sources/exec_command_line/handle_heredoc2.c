@@ -6,7 +6,7 @@
 /*   By: fmai <fmai@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 01:15:20 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/31 20:48:27 by fmai             ###   ########.fr       */
+/*   Updated: 2022/03/31 22:18:03 by fmai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,12 @@ char	*get_expanded_value(char *buf, int *i, t_environ *env)
 	if (buf[(*i) + 1] == '?')
 	{
 		(*i)++;
-		return(ft_xitoa(g_status, "expand_env"));
+		return (ft_xitoa(g_status, "expand_env"));
 	}
 	else if (is_special_char_for_heredoc(buf[(*i) + 1]))
-		return(ft_xstrdup("$", "expand_env"));
+		return (ft_xstrdup("$", "expand_env"));
 	else
-		return(expand_env_variables(env, get_key(buf, i)));
+		return (expand_env_variables(env, get_key(buf, i)));
 }
 
 char	*expand_env_variables_in_buf(t_environ *env, char *buf)
