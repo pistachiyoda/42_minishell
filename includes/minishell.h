@@ -6,7 +6,7 @@
 /*   By: fmai <fmai@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 01:15:20 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/31 22:31:26 by fmai             ###   ########.fr       */
+/*   Updated: 2022/04/01 15:30:35 by fmai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,6 +231,7 @@ int			ft_cd(t_cmd_block *cmd_block, t_environ *env);
 // builtin/cd2.c
 bool		is_double_slash(char *command_path);
 bool		is_absolute(char *command_path);
+int			chdir_wrapper(char *path);
 
 // signal/signal.c
 void		sigint_handler(int sig);
