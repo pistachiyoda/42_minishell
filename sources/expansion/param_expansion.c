@@ -6,7 +6,7 @@
 /*   By: mmasubuc <mmasubuc@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 23:03:08 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/30 20:42:15 by mmasubuc         ###   ########.fr       */
+/*   Updated: 2022/04/01 13:52:25 by mmasubuc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,6 @@ void	param_expansion(t_environ *env, t_expand *data, char *str, char **head)
 	add_before_dollar_quote(data, str, head);
 	data->managed_i = data->i + 1;
 	if (*head == NULL || (value && data->managed_i == (int)ft_strlen(str)
-			&& is_space_at_end(*head)))
+			&& ft_strlen(value) != 0 && is_space_at_end(*head)))
 		data->end = true;
 }
