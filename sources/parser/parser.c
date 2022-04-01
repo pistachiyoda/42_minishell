@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmai      <fmai@student.42tokyo.jp>        +#+  +:+       +#+        */
+/*   By: mmasubuc <mmasubuc@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 23:03:08 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/21 23:03:08 by fmai             ###   ########.fr       */
+/*   Updated: 2022/04/01 10:47:34 by mmasubuc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,7 @@ void	set_cmd_block(t_list **words, t_cmd_block *cmd)
 				ft_xlstnew(set_redirect(words), "parser"));
 		if (*words != NULL && ft_strncmp((*words)->content, "|", 1) != 0
 			&& (!is_redirect((*words)->next) || (*words)->next == NULL))
-		{
-			if (cmd->command == NULL)
-				cmd->command = ft_xstrdup((*words)->content, "parser");
 			set_args(words, cmd);
-		}
 	}
 }
 
