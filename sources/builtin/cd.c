@@ -6,7 +6,7 @@
 /*   By: fmai <fmai@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 23:03:40 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/26 13:26:00 by fmai             ###   ########.fr       */
+/*   Updated: 2022/04/01 15:28:36 by fmai             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,12 @@ void	update_pwd_envs(char *key, char *wd, t_environ *env)
 	free_cmd_block_after_exec(update_cmd_data);
 }
 
+int	free_str_and_return(char *str)
+{
+	free(str);
+	return (1);
+}
+
 int	update_pwd(char *path, t_environ *env)
 {
 	char		*old_wd;
@@ -59,7 +65,7 @@ int	update_pwd(char *path, t_environ *env)
 	update_pwd_envs("OLDPWD", old_wd, env);
 	current_wd = getcwd(NULL, 1024);
 	if (current_wd == NULL)
-		return (1);
+		return (free_str_and_return(old_wd));
 	if (is_double_slash(path)
 		|| (is_double_slash(old_wd) && !is_absolute(path)))
 		current_wd = ft_xstrjoin_with_free(
@@ -67,22 +73,6 @@ int	update_pwd(char *path, t_environ *env)
 	update_pwd_envs("PWD", current_wd, env);
 	free(old_wd);
 	free(current_wd);
-	return (0);
-}
-
-int	chdir_wrapper(char *path)
-{
-	char		*e_mes;
-	int			ret;
-
-	ret = chdir(path);
-	if (ret == -1)
-	{
-		e_mes = ft_strjoin_wrapper("minishell: cd: ", path);
-		perror(e_mes);
-		free(e_mes);
-		return (1);
-	}
 	return (0);
 }
 
