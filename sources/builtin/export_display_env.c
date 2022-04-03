@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_display_env.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmai      <fmai@student.42tokyo.jp>        +#+  +:+       +#+        */
+/*   By: mmasubuc <mmasubuc@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 23:03:08 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/21 23:03:08 by fmai             ###   ########.fr       */
+/*   Updated: 2022/04/01 21:16:10 by mmasubuc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,9 @@ void	print_env(t_environ *min)
 	int	i;
 
 	i = 0;
-	if (min->value == NULL)
+	if (min->key == NULL)
+		return ;
+	else if (min->value == NULL)
 		printf("declare -x %s\n", min->key);
 	else
 	{

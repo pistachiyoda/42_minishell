@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quote_removal.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmai      <fmai@student.42tokyo.jp>        +#+  +:+       +#+        */
+/*   By: mmasubuc <mmasubuc@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 23:03:08 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/21 23:03:08 by fmai             ###   ########.fr       */
+/*   Updated: 2022/04/03 12:09:43 by mmasubuc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,13 @@ void	concat_expanded_and_left(char *str, char **head, t_expand *data)
 	*head = front;
 }
 
-void	concat_all(char *str, char **head, int i)
+void	concat_all(char *str, char **head, int i, int type)
 {
 	char	*front;
 
-	if (!ft_strchr(&str[i + 1], '$') && !ft_strchr(&str[i + 1], '\'')
-		&& !ft_strchr(&str[i + 1], '"') && str[i + 1] != '\0')
+	if ((!ft_strchr(&str[i + 1], '\'') && !ft_strchr(&str[i + 1], '"')
+			&& str[i + 1] != '\0')
+		&& (!ft_strchr(&str[i + 1], '$') || type == QUOTED_HEREDOC))
 	{
 		front = ft_xstrjoin(*head, &str[i + 1], "expansion");
 		free(*head);
@@ -62,7 +63,7 @@ void	quote_removal(char *str, char **head, t_expand *data, int type)
 	else if (ft_strnstr(&str[data->prev_q], "$", data->i - data->prev_q) \
 	&& str[data->i] == '"' && data->status == NONE && data->i != data->prev_q)
 		concat_expanded_and_left(str, head, data);
-	concat_all(str, head, data->i);
+	concat_all(str, head, data->i, type);
 	data->prev_q = data->i + 1;
 }
 

@@ -312,7 +312,7 @@ extern "C" {
 	// expansion/quote_removal.c
 	void		concat_normal_str(char *str, char **head, t_expand *data);
 	void		concat_expanded_and_left(char *str, char **head, t_expand *data);
-	void		concat_all(char *str, char **head, int i);
+	void		concat_all(char *str, char **head, int i, int type);
 	void		quote_removal(char *str, char **head, t_expand *data, int type);
 	void		set_head_before_dollar(char *str, char **head, t_expand data);
 

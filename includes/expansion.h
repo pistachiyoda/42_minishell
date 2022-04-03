@@ -6,7 +6,7 @@
 /*   By: mmasubuc <mmasubuc@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 23:03:08 by fmai              #+#    #+#             */
-/*   Updated: 2022/03/30 20:42:54 by mmasubuc         ###   ########.fr       */
+/*   Updated: 2022/04/03 12:04:16 by mmasubuc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void		word_splitting(t_list **words, t_expand *data, char **head);
 // sources/expansion/quote_removal.c
 void		concat_normal_str(char *str, char **head, t_expand *data);
 void		concat_expanded_and_left(char *str, char **head, t_expand *data);
-void		concat_all(char *str, char **head, int i);
+void		concat_all(char *str, char **head, int i, int type);
 void		quote_removal(char *str, char **head, t_expand *data, int type);
 void		set_head_before_dollar(char *str, char **head, t_expand data);
 
